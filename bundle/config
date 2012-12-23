@@ -1,0 +1,4 @@
+---
+BUNDLE_PATH: .bundle
+BUNDLE_SHEBANG: ruby-local-exec
+BUNDLE_BIN: ./.bundle/bin
