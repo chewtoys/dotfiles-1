@@ -1,73 +1,55 @@
 (require 'cl)
-(setq ring-bell-function 'ignore)
-
-;; packages
 (require 'package)
 (add-to-list 'package-archives 
              '("marmalade" .
                "http://marmalade-repo.org/packages/"))
 (package-initialize)
-
 (when (not package-archive-contents)
   (package-refresh-contents))
-
-;; Add in your own as you wish:
-
-(defvar my-packages '(starter-kit starter-kit-lisp starter-kit-bindings starter-kit-ruby
-                                  solarized-theme clojure-mode fuzzy auto-indent-mode
-                                  clojure-test-mode markdown-mode yaml-mode paredit marmalade
-                                  slime nrepl guru-mode ruby-block
-                                  ruby-end ruby-tools ack-and-a-half rainbow-delimiters)
-
+(defvar my-packages
+  '(solarized-theme clojure-mode fuzzy auto-indent-mode yasnippet
+                    clojure-test-mode markdown-mode yaml-mode marmalade
+                    slime nrepl starter-kit starter-kit-lisp starter-kit-bindings
+                    rainbow-delimiters exec-path-from-shell expand-region)
   "A list of packages to ensure are installed at launch.")
-
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
 
-(set-default-font "Monaco 14")
-
-(load-theme 'solarized-dark t)
-(server-start)
-
-(setq mac-option-modifier 'control)
-(setq mac-command-modifier 'meta)
-
-;; delete the selection with a keypress
-(delete-selection-mode t)
-
-;; revert buffers automatically when underlying files are changed externally
-(global-auto-revert-mode t)
-
-;; shorter aliases for ack-and-a-half commands
-(defalias 'ack 'ack-and-a-half)
-(defalias 'ack-same 'ack-and-a-half-same)
-(defalias 'ack-find-file 'ack-and-a-half-find-file)
-(defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
-
-;; nrepl 
 (add-hook 'clojure-mode-hook
           'nrepl-interaction-mode)
-(add-hook 'nrepl-mode-hook 'paredit-mode)
-(add-hook 'nrepl-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'nrepl-mode-hook
+          'rainbow-delimiters-mode)
 
-;; guru-mode
-(require 'guru-mode)
+(remove-hook 'prog-mode-hook 'esk-turn-on-idle-highlight-mode)
+(global-set-key (kbd "C-=") 'er/expand-region)
 
-(setq default-frame-alist (append (list 
-                                   '(width  . 181)  ; Width set to 81 characters 
-                                   '(height . 50)) ; Height set to 60 lines 
-                                  default-frame-alist))
+(server-start)
+
+(if window-system
+    (progn
+      (set-default-font "Menlo 15")
+      (set-frame-position (selected-frame) 180 100)
+      (set-frame-size (selected-frame) 181 50)
+      (load-theme 'solarized-dark t)
+      )
+  )
+
+(require 'yasnippet) ;; not yasnippet-bundle
+(setq yas/root-directory '("~/.emacs.d/elpa/yasnippet-0.8.0/snippets"
+                           "~/.emacs.custom/yasnippet/snippets"))
+(mapc 'yas/load-directory yas/root-directory)
+(yas/global-mode t)
 
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
-  '(make-backup-files nil)
-  '(auto-save-default nil)
-  '(default-input-method "russian-typewriter")
-  )
+ '(make-backup-files nil)
+ '(auto-save-default nil)
+ '(default-input-method "russian-typewriter")
+ '(ring-bell-function 'ignore)
+ '(global-auto-revert-mode t)
+;; '(mac-command-modifier 'meta)
+;; '(mac-option-modifier 'control)
+ )
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
