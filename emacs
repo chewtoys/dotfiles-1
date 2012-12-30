@@ -37,7 +37,7 @@
 
 (require 'yasnippet) ;; not yasnippet-bundle
 (setq yas/root-directory '("~/.emacs.d/elpa/yasnippet-0.8.0/snippets"
-                           "~/.emacs.custom/yasnippet/snippets"))
+                           "~/.emacs.custom/snippets"))
 (mapc 'yas/load-directory yas/root-directory)
 (yas/global-mode t)
 
