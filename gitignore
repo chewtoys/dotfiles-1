@@ -1,16 +1,59 @@
+# OSX
 .DS_Store
-*.sw[nop]
-.bundle
-.sass-cache/
-db/*.sqlite3
-log/*.log
-rerun.txt
-tags
-tmp/**/*
-!tmp/cache/.keep
-vendor/bundler_gems
-vim/.netrwhist
-zeus.json
-*#
-.#*
+.AppleDouble
+.LSOverride
+Icon
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+# Emacs
 *~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+.elc
+auto-save-list
+tramp
+.\#*
+
+# Org-mode
+.org-id-locations
+*_archive
+
+# IntelliJ Idea
+
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# SublimeText project files
+*.sublime-workspace
+
+### SASS Ignores - "Sassy CSS" http://sass-lang.com/
+*.sass-cache
+
+# Ignore tags created by etags and ctags
+TAGS
+!TAGS/
+tags
+!tags/
+
+# TextMate
+*.tmproj
+*.tmproject
+tmtags
+
+# Vim
+.*.sw[a-z]
+*.un~
+Session.vim
+.netrwhist
+
+# Bundle
+.bundle
