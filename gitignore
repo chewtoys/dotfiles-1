@@ -57,3 +57,4 @@ Session.vim
 
 # Bundle
 .bundle
+*.lock

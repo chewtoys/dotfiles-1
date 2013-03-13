@@ -6,7 +6,6 @@
   editor = vim
   quotepath = false
   pager = cat
-  autocrlf = input
 [push]
   default = current
 [color]
