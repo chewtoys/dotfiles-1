@@ -2,10 +2,10 @@
   name = Evsyukov Denis
   email = denis@evsyukov.org
 [core]
-  excludesfile = ~/.gitignore
+  excludesfile = /Users/juev/.gitignore
   editor = vim
   quotepath = false
-  pager = cat
+  pager = less
 [push]
   default = current
 [color]
@@ -32,3 +32,9 @@
   whitespace = fix
 [format]
   pretty = %Cblue%h%Creset %Cgreen[%ar]%Creset (%an) %s
+[difftool "sourcetree"]
+  cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+  path = 
+[mergetool "sourcetree"]
+  cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+  trustExitCode = true

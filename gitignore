@@ -58,3 +58,7 @@ Session.vim
 # Bundle
 .bundle
 *.lock
+
+# Direnv stuff
+.direnv
+.envrc
