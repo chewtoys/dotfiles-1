@@ -11,9 +11,10 @@ Set zsh as your login shell.
 Install
 -------
 
-    git clone git@github.com:Juev/dotfiles.git ~/.dotfiles
-    cd ~/.dotfiles
-    ./install.sh
+    $ curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sh
+    $ git clone git@github.com:Juev/dotfiles.git ~/.dotfiles
+    $ cd ~/.dotfiles
+    $ ./install.sh
 
 This will create symlinks for config files in your home directory. If you
 include the line "DO NOT EDIT BELOW THIS LINE" anywhere in a config file, it
