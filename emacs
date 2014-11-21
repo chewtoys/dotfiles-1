@@ -84,3 +84,7 @@
 
 ;;(set-default-font "Inconsolata 14")
 (electric-pair-mode)
+
+(require 'flycheck)
+(add-hook 'js-mode-hook
+          (lambda () (flycheck-mode t)))
