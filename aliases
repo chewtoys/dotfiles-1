@@ -21,7 +21,7 @@ alias be="b exec"
 # alias route="netstat -nr"
 
 #heroku
-alias heroku='/usr/local/bin/heroku'
+#alias heroku='/usr/local/bin/heroku'
 
 # rbenv
 alias r="rbenv"
