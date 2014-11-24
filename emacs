@@ -11,7 +11,11 @@
 (setq package-archive-enable-alist '(("melpa" deft magit)))
 
 (defvar juev/packages '(auto-complete
+			autopair
+                        better-defaults
 			coffee-mode
+                        dash
+                        dash-functional
 			flycheck
 			htmlize
 			magit
@@ -41,15 +45,7 @@
 
 (setq default-input-method "russian-computer")
 
-(scroll-bar-mode -1)
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-
 (setq sentence-end-double-space nil)
-
-(delete-selection-mode t)
-(transient-mark-mode t)
-(setq x-select-enable-clipboard t)
 
 (setq make-backup-files nil)
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -61,19 +57,7 @@
 (global-set-key (kbd "RET") 'newline-and-indent)
 (global-set-key (kbd "C-;") 'comment-or-uncomment-region)
 (global-set-key (kbd "M-/") 'hippie-expand)
-(global-set-key (kbd "C-+") 'text-scale-increase)
-(global-set-key (kbd "C--") 'text-scale-decrease)
-(global-set-key (kbd "C-c C-k") 'compile)
 (global-set-key (kbd "C-x g") 'magit-status)
-
-(ido-mode t)
-(setq ido-enable-flex-matching t
-      ido-use-virtual-buffers t)
-
-(setq column-number-mode t)
-
-(require 'auto-complete-config)
-(ac-config-default)
 
 (require 'yasnippet)
 (yas-global-mode 1)
@@ -82,9 +66,15 @@
     (load-theme 'solarized-light t)
   (load-theme 'wombat t))
 
-;;(set-default-font "Inconsolata 14")
-(electric-pair-mode)
+(when (eq system-type 'darwin)
+  (set-default-font "Inconsolata 15")
+  (setq mac-command-modifier 'meta)
+  (define-key global-map [home] 'beginning-of-line)
+  (define-key global-map [end] 'end-of-line)
+  )
 
 (require 'flycheck)
 (add-hook 'js-mode-hook
           (lambda () (flycheck-mode t)))
+
+(eval-after-load "dash" '(dash-enable-font-lock))
