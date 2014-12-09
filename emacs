@@ -2,42 +2,11 @@
       user-mail-address "denis@evsyukov.org")
 
 (require 'cl)
-
-(load "package")
-(package-initialize)
+(require 'package)
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
-
-(setq package-archive-enable-alist '(("melpa" deft magit)))
-
-(defvar juev/packages '(auto-complete
-			autopair
-                        better-defaults
-			coffee-mode
-                        dash
-                        dash-functional
-			flycheck
-			htmlize
-			magit
-			markdown-mode
-			org
-			solarized-theme
-			yaml-mode
-			js2-mode
-			yasnippet)
-  "Default packages")
-
-(defun juev/packages-installed-p ()
-  (loop for pkg in juev/packages
-        when (not (package-installed-p pkg)) do (return nil)
-        finally (return t)))
-
-(unless (juev/packages-installed-p)
-  (message "%s" "Refreshing package database...")
-  (package-refresh-contents)
-  (dolist (pkg juev/packages)
-    (when (not (package-installed-p pkg))
-      (package-install pkg))))
+             '("melpa" . "http://melpa.org/packages/") t)
+(package-initialize)
+(require 'use-package)
 
 (setq inhibit-splash-screen t
       initial-scratch-message nil
@@ -45,7 +14,15 @@
 
 (setq default-input-method "russian-computer")
 
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+
 (setq sentence-end-double-space nil)
+
+(delete-selection-mode t)
+(transient-mark-mode t)
+(setq x-select-enable-clipboard t)
 
 (setq make-backup-files nil)
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -57,13 +34,33 @@
 (global-set-key (kbd "RET") 'newline-and-indent)
 (global-set-key (kbd "C-;") 'comment-or-uncomment-region)
 (global-set-key (kbd "M-/") 'hippie-expand)
+(global-set-key (kbd "C-+") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
+(global-set-key (kbd "C-c C-k") 'compile)
 (global-set-key (kbd "C-x g") 'magit-status)
 
-(require 'yasnippet)
-(yas-global-mode 1)
+(ido-mode t)
+(setq ido-enable-flex-matching t
+      ido-use-virtual-buffers t)
+
+(setq column-number-mode t)
+
+(use-package auto-complete-config
+  :ensure auto-complete
+  :init
+  (ac-config-default))
+
+(use-package yasnippet
+  :ensure t
+  :idle
+  (yas-global-mode 1))
 
 (if window-system
-    (load-theme 'solarized-light t)
+    (progn
+      (use-package solarized-theme
+        :idle (load-theme 'solarized-light t)
+        :ensure t)
+      (set-default-font "Consolas 15"))
   (load-theme 'wombat t))
 
 (when (eq system-type 'darwin)
@@ -72,9 +69,29 @@
   (define-key global-map [home] 'beginning-of-line)
   (define-key global-map [end] 'end-of-line)
   )
+;; (electric-pair-mode)
 
-(require 'flycheck)
-(add-hook 'js-mode-hook
-          (lambda () (flycheck-mode t)))
+(use-package flycheck
+  :ensure t
+  :init
+  (add-hook 'js-mode-hook
+	    (lambda () (flycheck-mode t))))
 
-(eval-after-load "dash" '(dash-enable-font-lock))
+(use-package better-defaults
+  :ensure t)
+(use-package markdown-mode
+  :ensure t)
+(use-package htmlize
+  :ensure t)
+(use-package org)
+(use-package js2-mode
+  :ensure t
+  :mode ("\\.js\'" . js2-mode))
+(use-package magit
+  :ensure t)
+(use-package emmet-mode
+  :ensure t
+  :init
+  (add-hook 'html-mode-hook 'emmet-mode)
+  (add-hook 'css-mode-hook  'emmet-mode))
+
