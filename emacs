@@ -18,6 +18,9 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 
+(setq visible-bell nil)
+(setq ring-bell-function 'ignore)
+
 (setq sentence-end-double-space nil)
 
 (delete-selection-mode t)
@@ -27,16 +30,18 @@
 (setq make-backup-files nil)
 (defalias 'yes-or-no-p 'y-or-n-p)
 
+(setq-default vc-follow-symlinks nil)
+
 (prefer-coding-system 'utf-8)
 (when (display-graphic-p)
   (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
 
+(setq-default buffer-file-coding-system 'utf-8-unix)
+
 (global-set-key (kbd "RET") 'newline-and-indent)
-;;(global-set-key (kbd "C-;") 'comment-or-uncomment-region)
 (global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
-(global-set-key (kbd "C-c C-k") 'compile)
 (global-set-key (kbd "C-x g") 'magit-status)
 
 (ido-mode t)
@@ -45,27 +50,27 @@
 
 (setq column-number-mode t)
 
-(use-package auto-complete-config
-  :ensure auto-complete
-  :init
-  (ac-config-default))
+(use-package company
+  :ensure company
+  :config
+  (add-hook 'prog-mode-hook 'company-mode))
 
 (use-package yasnippet
   :ensure t
   :diminish yas-minor-mode
-  :commands yas-global-mode
-  :init
+  :config
   (progn
-    (yas-global-mode 1)
-;    (yas-load-directory "~/elisp/snippets")
-    (setq yas-key-syntaxes '("w_" "w_." "^ "))))
+    (yas-reload-all)
+    (add-hook 'prog-mode-hook
+          '(lambda ()
+             (yas-minor-mode)))))
 
 (if window-system
     (progn
       (use-package solarized-theme
-        :idle (load-theme 'solarized-light t)
+        :config (load-theme 'solarized-light t)
         :ensure t)
-      (set-default-font "Consolas 15"))
+      (set-default-font "Consolas 13"))
   (load-theme 'wombat t))
 
 (when (eq system-type 'darwin)
@@ -101,12 +106,14 @@
 (use-package emmet-mode
   :ensure t
   :config
-  (add-hook 'html-mode-hook 'emmet-mode)
-  (add-hook 'css-mode-hook  'emmet-mode))
+  (progn
+    (add-hook 'html-mode-hook 'emmet-mode)
+    (add-hook 'css-mode-hook  'emmet-mode)))
 
 (use-package ethan-wspace
   :ensure t
   :init
   (progn
     (global-ethan-wspace-mode 1)
-    (setq mode-require-final-newline)))
+    (setq require-final-newline nil)
+    (setq mode-require-final-newline nil)))
