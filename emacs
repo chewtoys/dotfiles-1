@@ -32,7 +32,7 @@
   (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
 
 (global-set-key (kbd "RET") 'newline-and-indent)
-(global-set-key (kbd "C-;") 'comment-or-uncomment-region)
+;;(global-set-key (kbd "C-;") 'comment-or-uncomment-region)
 (global-set-key (kbd "M-/") 'hippie-expand)
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
@@ -52,8 +52,13 @@
 
 (use-package yasnippet
   :ensure t
-  :idle
-  (yas-global-mode 1))
+  :diminish yas-minor-mode
+  :commands yas-global-mode
+  :init
+  (progn
+    (yas-global-mode 1)
+;    (yas-load-directory "~/elisp/snippets")
+    (setq yas-key-syntaxes '("w_" "w_." "^ "))))
 
 (if window-system
     (progn
@@ -69,13 +74,17 @@
   (define-key global-map [home] 'beginning-of-line)
   (define-key global-map [end] 'end-of-line)
   )
-;; (electric-pair-mode)
+
+(use-package autopair
+  :ensure t
+  :config
+    (autopair-global-mode))
 
 (use-package flycheck
   :ensure t
-  :init
+  :config
   (add-hook 'js-mode-hook
-	    (lambda () (flycheck-mode t))))
+            (lambda () (flycheck-mode t))))
 
 (use-package better-defaults
   :ensure t)
@@ -91,7 +100,13 @@
   :ensure t)
 (use-package emmet-mode
   :ensure t
-  :init
+  :config
   (add-hook 'html-mode-hook 'emmet-mode)
   (add-hook 'css-mode-hook  'emmet-mode))
 
+(use-package ethan-wspace
+  :ensure t
+  :init
+  (progn
+    (global-ethan-wspace-mode 1)
+    (setq mode-require-final-newline)))
