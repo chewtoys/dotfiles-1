@@ -1,12 +1,15 @@
 (setq user-full-name "Denis Evsyukov"
       user-mail-address "denis@evsyukov.org")
 
-(require 'cl)
+(require 'cl-lib)
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
 (require 'use-package)
+
+(setq debug-on-error t)
+(setq edebug-trace t)
 
 (setq inhibit-splash-screen t
       initial-scratch-message nil
@@ -28,6 +31,16 @@
 (setq x-select-enable-clipboard t)
 
 (setq make-backup-files nil)
+(setq savehist-file "~/.emacs.d/savehist")
+(savehist-mode 1)
+(setq history-length t)
+(setq history-delete-duplicates t)
+(setq savehist-save-minibuffer-history 1)
+(setq savehist-additional-variables
+      '(kill-ring
+        search-ring
+        regexp-search-ring))
+
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 (setq-default vc-follow-symlinks nil)
@@ -44,15 +57,11 @@
 (global-set-key (kbd "C--") 'text-scale-decrease)
 (global-set-key (kbd "C-x g") 'magit-status)
 
-(ido-mode t)
-(setq ido-enable-flex-matching t
-      ido-use-virtual-buffers t)
-
 (setq column-number-mode t)
 
 (use-package company
-  :ensure company
-  :config
+  :ensure t
+  :init
   (progn
     (setq company-idle-delay 0)
     (add-hook 'prog-mode-hook 'company-mode)))
@@ -60,36 +69,39 @@
 (use-package yasnippet
   :ensure t
   :diminish yas-minor-mode
-  :config
+  :init
   (progn
     (yas-reload-all)
     (add-hook 'prog-mode-hook
           '(lambda ()
              (yas-minor-mode)))))
 
-(if window-system
-    (progn
-      (use-package solarized-theme
-        :config (load-theme 'solarized-light t)
-        :ensure t)
-      (set-default-font "Consolas 13"))
-  (load-theme 'wombat t))
+(use-package color-theme
+  :ensure t
+  :init
+  (use-package color-theme-solarized
+    :ensure t
+    :init
+    (color-theme-solarized 'dark)))
+
+(when window-system
+  (set-frame-size (selected-frame) 160 54)
+  (set-default-font "Consolas 13"))
 
 (when (eq system-type 'darwin)
   (set-default-font "Inconsolata 15")
   (setq mac-command-modifier 'meta)
   (define-key global-map [home] 'beginning-of-line)
-  (define-key global-map [end] 'end-of-line)
-  )
+  (define-key global-map [end] 'end-of-line))
 
 (use-package autopair
   :ensure t
-  :config
+  :init
     (autopair-global-mode))
 
 (use-package flycheck
   :ensure t
-  :config
+  :init
   (add-hook 'js-mode-hook
             (lambda () (flycheck-mode t))))
 
@@ -107,7 +119,7 @@
   :ensure t)
 (use-package emmet-mode
   :ensure t
-  :config
+  :init
   (progn
     (add-hook 'html-mode-hook 'emmet-mode)
     (add-hook 'css-mode-hook  'emmet-mode)))
@@ -122,10 +134,13 @@
 
 (use-package ido-vertical-mode
   :ensure t
-  :config
+  :init
   (progn
     (ido-mode 1)
-    (ido-vertical-mode 1)))
+    (ido-vertical-mode 1)
+    (ido-mode t)
+    (setq ido-enable-flex-matching t
+          ido-use-virtual-buffers t)))
 
 (setq org-default-notes-file (concat org-directory "~/notes.org"))
 (define-key global-map "\C-cc" 'org-capture)
@@ -134,3 +149,54 @@
          "* TODO %?\n  %i\n  %a")
         ("j" "Journal" entry (file+datetree "~/org/journal.org")
          "* %?\nEntered on %U\n  %i\n  %a")))
+
+(use-package guide-key
+  :ensure t
+  :diminish guide-key-mode
+  :init
+  (progn
+    (setq guide-key/guide-key-sequence '("C-x" "C-c"))
+    (setq guide-key/recursive-key-sequence-flag t)
+    (guide-key-mode 1)))
+
+
+(use-package expand-region
+  :ensure t
+  :bind ("C-=" . er/expand-region))
+
+(use-package "eldoc"
+  :diminish eldoc-mode
+  :commands turn-on-eldoc-mode
+  :init
+  (progn
+    (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+    (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+    (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)))
+
+(use-package erefactor
+  :ensure t
+  :init
+  (define-key emacs-lisp-mode-map "\C-c\C-v" erefactor-map))
+
+(define-key emacs-lisp-mode-map (kbd "C-c .") 'find-function-at-point)
+(bind-key "C-c f" 'find-function)
+
+(use-package projectile
+  :ensure t
+  :diminish projectile-mode
+  :init
+  (progn
+    (setq projectile-keymap-prefix (kbd "C-c p"))
+    (setq projectile-completion-system 'default)
+    (setq projectile-enable-caching t)
+    (projectile-global-mode)))
+
+(use-package rainbow-delimiters
+  :ensure t
+  :init
+  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+
+(use-package miniedit
+  :ensure t
+  :commands minibuffer-edit
+  :init (miniedit-install))
