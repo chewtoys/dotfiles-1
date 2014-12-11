@@ -53,7 +53,9 @@
 (use-package company
   :ensure company
   :config
-  (add-hook 'prog-mode-hook 'company-mode))
+  (progn
+    (setq company-idle-delay 0)
+    (add-hook 'prog-mode-hook 'company-mode)))
 
 (use-package yasnippet
   :ensure t
@@ -117,3 +119,18 @@
     (global-ethan-wspace-mode 1)
     (setq require-final-newline nil)
     (setq mode-require-final-newline nil)))
+
+(use-package ido-vertical-mode
+  :ensure t
+  :config
+  (progn
+    (ido-mode 1)
+    (ido-vertical-mode 1)))
+
+(setq org-default-notes-file (concat org-directory "~/notes.org"))
+(define-key global-map "\C-cc" 'org-capture)
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline "~/org/gtd.org" "Tasks")
+         "* TODO %?\n  %i\n  %a")
+        ("j" "Journal" entry (file+datetree "~/org/journal.org")
+         "* %?\nEntered on %U\n  %i\n  %a")))
