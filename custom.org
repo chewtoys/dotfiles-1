@@ -1,0 +1,441 @@
+#+TITLE: Denis Evsyukov Emacs configuration
+#+OPTIONS: toc:4 h:4
+
+* Configuration
+** About this file
+<<babel-init>>
+
+Inspired by the [[http://eschulte.me/emacs24-starter-kit/#installation][Emacs Starter Kit]], I set up my configuration file using Org-babel. 
+
+To be precise, this is what's in the first part of my =~/.emacs=:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+  (require 'cl-lib)
+  (require 'package)
+  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+  (package-initialize)
+  (setq package-enable-at-startup nil)
+  (org-babel-load-file "~/.custom.org")
+#+END_SRC
+** Personal Information
+#+BEGIN_SRC emacs-lisp
+  (setq  user-full-name "Denis Evsyukov"
+         user-mail-address "denis@evsyukov.org")
+#+END_SRC
+** Emacs initialization
+*** Load use-package
+#+BEGIN_SRC emacs-lisp
+  (require 'use-package)
+#+END_SRC
+*** Load secrets
+I keep slightly more sensitive information in a separate file so that I can easily publish my main configuration.
+
+#+BEGIN_SRC emacs-lisp
+  (load "~/.emacs.secrets" t)
+#+END_SRC
+** General configuration
+*** Backups
+#+BEGIN_SRC emacs-lisp
+  (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+#+END_SRC
+
+Disk space is cheap. Save lots.
+
+#+BEGIN_SRC emacs-lisp
+  (setq delete-old-versions -1)
+  (setq version-control t)
+  (setq vc-make-backup-files t)
+  (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
+#+END_SRC
+*** History
+From http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html
+#+BEGIN_SRC emacs-lisp
+  (setq savehist-file "~/.emacs.d/savehist")
+  (savehist-mode 1)
+  (setq history-length t)
+  (setq history-delete-duplicates t)
+  (setq savehist-save-minibuffer-history 1)
+  (setq savehist-additional-variables
+        '(kill-ring
+          search-ring
+          regexp-search-ring))
+#+END_SRC
+*** Dont follow link
+#+BEGIN_SRC emacs-lisp
+  (setq-default vc-follow-symlinks nil)
+#+END_SRC
+*** Move to beginning of line
+Copied from http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
+
+#+BEGIN_SRC emacs-lisp
+  (defun juev/smarter-move-beginning-of-line (arg)
+    "Move point back to indentation of beginning of line.
+
+  Move point to the first non-whitespace character on this line.
+  If point is already there, move to the beginning of the line.
+  Effectively toggle between the first non-whitespace character and
+  the beginning of the line.
+
+  If ARG is not nil or 1, move forward ARG - 1 lines first.  If
+  point reaches the beginning or end of the buffer, stop there."
+    (interactive "^p")
+    (setq arg (or arg 1))
+
+    ;; Move lines first
+    (when (/= arg 1)
+      (let ((line-move-visual nil))
+        (forward-line (1- arg))))
+
+    (let ((orig-point (point)))
+      (back-to-indentation)
+      (when (= orig-point (point))
+        (move-beginning-of-line 1))))
+
+  ;; remap C-a to `smarter-move-beginning-of-line'
+  (global-set-key [remap move-beginning-of-line]
+                  'juev/smarter-move-beginning-of-line)
+#+END_SRC
+
+*** Windows configuration
+When you're starting out, tooltips, menus, and the tool bar can be very helpful. [[http://sachachua.com/blog/2014/03/emacs-basics-using-mouse/][(Emacs Basics: Using the Mouse]]). Eventually, you may want to reclaim that extra little bit of screenspace. The following code turns those things off when using a graphical Emacs.
+
+#+BEGIN_SRC emacs-lisp
+  (when window-system
+    (tooltip-mode -1)
+    (tool-bar-mode -1)
+    (menu-bar-mode -1)
+    (scroll-bar-mode -1))
+#+END_SRC
+
+Splash screen 
+#+BEGIN_SRC emacs-lisp
+  (setq inhibit-splash-screen t)
+  (setq initial-scratch-message nil)
+#+END_SRC
+
+Window size and font size.
+#+BEGIN_SRC emacs-lisp
+  (when window-system
+    (set-frame-size (selected-frame) 170 50)
+    (set-default-font "Consolas 13"))
+#+END_SRC
+
+OSX Specific
+#+BEGIN_SRC emacs-lisp
+  (when (eq system-type 'darwin)
+    (set-default-font "Inconsolata 15")
+    (set-frame-size (selected-frame) 160 54)
+    (menu-bar-mode t)
+    (setq mac-command-modifier 'meta)
+    (define-key global-map [home] 'juev/smarter-move-beginning-of-line)
+    (define-key global-map [end] 'end-of-line)
+    ;; (setq ns-use-srgb-colorspace nil)
+    )
+#+END_SRC
+
+Non blink cursor
+#+BEGIN_SRC emacs-lisp
+  (blink-cursor-mode -1)
+#+END_SRC
+*** Sentences end with a single space
+In my world, sentences end with a single space. This makes sentence navigation commands work for me.
+
+#+BEGIN_SRC emacs-lisp
+  (setq sentence-end-double-space nil)
+#+END_SRC
+*** Change "yes or no" to "y or n"
+Lazy people like me never want to type "yes" when "y" will suffice.
+
+#+BEGIN_SRC emacs-lisp
+  (fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+*** Disable bell
+#+BEGIN_SRC emacs-lisp
+  (setq visible-bell nil)
+  (setq ring-bell-function 'ignore)
+#+END_SRC
+*** Color theme
+#+BEGIN_SRC emacs-lisp
+  (load-theme 'misterioso t)
+#+END_SRC
+*** Help - guide-key
+It's hard to remember keyboard shortcuts. The =guide-key= package pops up help after a short delay.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package guide-key
+    :ensure t
+    :diminish guide-key-mode
+    :init
+    (progn
+      (setq guide-key/guide-key-sequence '("C-x" "C-c"))
+      (guide-key-mode 1)))
+#+END_SRC
+*** UTF-8
+From http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.html
+
+#+BEGIN_SRC emacs-lisp
+  (prefer-coding-system 'utf-8)
+  (when (display-graphic-p)
+    (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
+  (setq-default buffer-file-coding-system 'utf-8-unix)
+#+END_SRC
+*** Killing text
+From https://github.com/itsjeyd/emacs-config/blob/emacs24/init.el
+
+#+BEGIN_SRC emacs-lisp
+  (defadvice kill-region (before slick-cut activate compile)
+    "When called interactively with no active region, kill a single line instead."
+    (interactive
+     (if mark-active (list (region-beginning) (region-end))
+       (list (line-beginning-position)
+             (line-beginning-position 2)))))
+#+END_SRC
+*** Configure the keyboard
+Russian keycode
+#+BEGIN_SRC emacs-lisp
+  (setq default-input-method "russian-computer")
+#+END_SRC
+
+Global keycode
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "M-/") 'hippie-expand)
+  (global-set-key (kbd "C-+") 'text-scale-increase)
+  (global-set-key (kbd "C--") 'text-scale-decrease)
+#+END_SRC
+
+Disable Tab
+#+BEGIN_SRC emacs-lisp
+  (setq-default indent-tabs-mode nil)
+#+END_SRC
+*** Frequently-accessed files
+Registers allow you to jump to a file or other location quickly. To jump to a register, use =C-x r j= followed by the letter of the register. Using registers for all these file shortcuts is probably a bit of a waste since I can easily define my own keymap, but since I rarely go beyond register A anyway...
+
+#+BEGIN_SRC emacs-lisp :results silent
+  (mapcar
+   (lambda (r)
+     (set-register (car r) (cons 'file (cdr r))))
+   '((?i . "~/.custom.org")
+     (?o . "~/Dropbox/Org/organizer.org")
+     (?j . "~/Dropbox/Org/journal.org")))
+#+END_SRC
+*** Recent files
+#+BEGIN_SRC emacs-lisp
+  (require 'recentf)
+  (setq recentf-max-saved-items 200
+        recentf-max-menu-items 15)
+  (recentf-mode)
+#+END_SRC
+** Writing
+*** Clean up spaces
+#+BEGIN_SRC emacs-lisp
+  (bind-key "M-SPC" 'cycle-spacing)
+#+END_SRC
+** Packages
+*** ido-vertical-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package ido-vertical-mode
+    :ensure t
+    :init
+    (progn
+      (ido-mode t)
+      (ido-vertical-mode 1)
+      (setq ido-enable-flex-matching t
+            ido-use-virtual-buffers t)))
+#+END_SRC
+*** expand-region
+#+BEGIN_SRC emacs-lisp
+  (use-package expand-region
+    :ensure t
+    :bind ("C-=" . er/expand-region))
+#+END_SRC
+*** exec-path-from-shell
+#+BEGIN_SRC emacs-lisp
+  (use-package exec-path-from-shell
+    :ensure t
+    :init
+    (when (memq window-system '(mac ns))
+      (exec-path-from-shell-initialize)))
+#+END_SRC
+** Org
+I use [[http://www.orgmode.org][Org Mode]] to take notes, publish my blog, and do all sorts of stuff.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :ensure t
+    :diminish org-mode
+    :init
+    (progn
+      (add-hook 'org-mode-hook 'turn-on-visual-line-mode)))
+#+END_SRC
+*** Flycheck use hunspell
+#+BEGIN_SRC emacs-lisp
+  (setq ispell-program-name "/usr/local/bin/hunspell")
+#+END_SRC
+*** Keyboard shortcuts
+#+BEGIN_SRC emacs-lisp
+  (bind-key "C-c r" 'org-capture)
+  (bind-key "C-c a" 'org-agenda)
+  (bind-key "C-c l" 'org-store-link)
+  (bind-key "C-c L" 'org-insert-link-global)
+  (bind-key "C-c O" 'org-open-at-point-global)
+  (bind-key "C-TAB" 'org-cycle org-mode-map)
+  (bind-key "C-c v" 'org-show-todo-tree org-mode-map)
+  (bind-key "C-c C-r" 'org-refile org-mode-map)
+  (bind-key "C-c R" 'org-reveal org-mode-map)
+#+END_SRC
+*** Navigation
+From http://stackoverflow.com/questions/15011703/is-there-an-emacs-org-mode-command-to-jump-to-an-org-heading
+#+BEGIN_SRC emacs-lisp
+  (setq org-goto-interface 'outline
+        org-goto-max-level 10)
+  (require 'imenu)
+  (setq org-startup-folded nil)
+  (bind-key "M-o" 'imenu)
+  (bind-key "C-c j" 'org-clock-goto) ;; jump to current task from anywhere
+  (bind-key "C-c C-w" 'org-refile)
+  (setq org-cycle-include-plain-lists 'integrate)
+#+END_SRC
+
+*** Taking notes
+My org files are in my =personal= directory, which is actually a symlink to a directory in my Dropbox. That way, I can update my Org files from multiple computers.
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-directory "~/Dropbox/Org")
+  (setq org-default-notes-file "~/Dropbox/Org/organizer.org")
+#+END_SRC
+
+** Coding
+*** Tab width of 2 is compact and readable
+#+BEGIN_SRC emacs-lisp
+  (setq-default tab-width 2)
+#+END_SRC
+*** New lines are always indented
+I almost always want to go to the right indentation on the next line.
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "RET") 'newline-and-indent)
+#+END_SRC
+*** Show column number
+I sometimes need to know where I am in a line.
+#+BEGIN_SRC emacs-lisp
+  (column-number-mode 1)
+#+END_SRC
+*** Emacs Lisp
+**** Edebug
+Did you know edebug has a trace function? I didn't. Thanks, agumonkey!
+
+#+BEGIN_SRC emacs-lisp
+  (setq debug-on-error t
+        edebug-trace t)
+#+END_SRC
+
+While edebugging, use T to view a trace buffer (=*edebug-trace*=). Emacs will quickly execute the rest of your code, printing out the arguments and return values for each expression it evaluates.
+**** Eldoc
+Eldoc provides minibuffer hints when working with Emacs Lisp.
+#+BEGIN_SRC emacs-lisp
+  (use-package "eldoc"
+    :diminish eldoc-mode
+    :commands turn-on-eldoc-mode
+    :config
+    (progn
+      (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+      (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+      (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)))
+#+END_SRC
+**** Jumping to code
+#+BEGIN_SRC emacs-lisp
+  (define-key emacs-lisp-mode-map (kbd "C-c .") 'find-function-at-point)
+  (bind-key "C-c f" 'find-function)
+#+END_SRC
+
+**** rainbow-delimiters
+#+BEGIN_SRC emacs-lisp
+  (use-package rainbow-delimiters
+    :ensure t
+    :init
+    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+#+END_SRC
+**** paredit
+#+BEGIN_SRC emacs-lisp
+  (use-package paredit
+    :ensure t
+    :diminish paredit-mode
+    :init
+    (progn
+      (add-hook 'lisp-mode-hook 'enable-paredit-mode)
+      (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
+      (add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
+      (add-hook 'json-mode-hook 'enable-paredit-mode)))
+#+END_SRC
+*** Snippets
+#+BEGIN_SRC emacs-lisp
+  (use-package yasnippet
+    :ensure t
+    :diminish yas-minor-mode
+    :config
+    (progn
+      (yas-reload-all)
+      (add-hook 'prog-mode-hook
+                '(lambda ()
+                   (yas-minor-mode)))))
+#+END_SRC
+*** Projects
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :ensure t
+    :diminish projectile-mode
+    :init 
+    (progn
+      (setq projectile-keymap-prefix (kbd "C-c p")) 
+      (setq projectile-completion-system 'default)
+      (setq projectile-enable-caching t)
+      (projectile-global-mode)))
+#+END_SRC
+*** Autocomplete
+#+BEGIN_SRC emacs-lisp
+  (use-package company
+    :ensure t
+    :init
+    :diminish company-mode
+    (progn
+      (setq company-idle-delay 0)
+      (add-hook 'prog-mode-hook 'company-mode)))
+#+END_SRC
+*** Markdown-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package markdown-mode
+    :ensure t
+    :mode ("\\.md$". markdown-mode))
+#+END_SRC
+*** JS2-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package js2-mode
+    :ensure t
+    :mode ("\\.js" . js2-mode)
+    :init
+    (progn
+      (add-hook 'js2-mode-hook 'flycheck-mode)
+      (add-hook 'js2-mode-hook 'company-mode)))
+#+END_SRC
+**** json-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package json-mode
+    :ensure t
+    :mode "\\.json"
+    :config
+    (progn
+      (bind-keys
+       :map json-mode-map
+       ("{" . paredit-open-curly)
+       ("}" . paredit-close-curly))))
+#+END_SRC
+
+*** emmet-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package emmet-mode
+    :ensure t
+    :init
+    (progn
+      (add-hook 'html-mode-hook 'emmet-mode)
+      (add-hook 'css-mode-hook  'emmet-mode)))
+#+END_SRC
