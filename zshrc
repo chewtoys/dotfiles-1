@@ -73,3 +73,4 @@ export NVM_DIR="/Users/juev/.nvm"
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
+export PATH="/Users/juev/.cask/bin:$PATH"
