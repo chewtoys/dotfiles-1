@@ -142,15 +142,14 @@ Window size and font size.
 
 OSX Specific
 #+BEGIN_SRC emacs-lisp
-  (when (eq system-type 'darwin)
-    (set-default-font "Inconsolata 15")
-    (set-frame-size (selected-frame) 160 54)
-    (menu-bar-mode t)
-    (setq mac-command-modifier 'meta)
-    (define-key global-map [home] 'juev/smarter-move-beginning-of-line)
-    (define-key global-map [end] 'end-of-line)
-    ;; (setq ns-use-srgb-colorspace nil)
-    )
+  (when (eq system-type 'darwin) 
+      (set-default-font "Inconsolata 15")
+      (set-frame-size (selected-frame) 160 54)
+      (setq mac-command-modifier 'meta)
+      (define-key global-map [home] 'juev/smarter-move-beginning-of-line)
+      (define-key global-map [end] 'end-of-line)
+      ;; (setq ns-use-srgb-colorspace nil)
+      )
 #+END_SRC
 
 Non blink cursor
