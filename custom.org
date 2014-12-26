@@ -252,8 +252,8 @@ Registers allow you to jump to a file or other location quickly. To jump to a re
    (lambda (r)
      (set-register (car r) (cons 'file (cdr r))))
    '((?i . "~/.custom.org")
-     (?o . "~/Dropbox/Org/organizer.org")
-     (?j . "~/Dropbox/Org/journal.org")))
+     (?o . "~/Google Drive/Org/organizer.org")
+     (?j . "~/Google Drive/Org/journal.org")))
 #+END_SRC
 
 *** Recent files
@@ -358,8 +358,8 @@ From http://stackoverflow.com/questions/15011703/is-there-an-emacs-org-mode-comm
 My org files are in my =personal= directory, which is actually a symlink to a directory in my Dropbox. That way, I can update my Org files from multiple computers.
 
 #+BEGIN_SRC emacs-lisp
-  (setq org-directory "~/Dropbox/Org")
-  (setq org-default-notes-file "~/Dropbox/Org/organizer.org")
+  (setq org-directory "~/Google Drive/Org")
+  (setq org-default-notes-file "~/Google Drive/Org/organizer.org")
 #+END_SRC
 
 ** Coding
