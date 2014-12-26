@@ -265,6 +265,12 @@ Registers allow you to jump to a file or other location quickly. To jump to a re
   (recentf-mode)
 #+END_SRC
 
+*** iBuffer
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+#+END_SRC
+
 ** Writing
 
 *** Clean up spaces
@@ -284,6 +290,8 @@ Registers allow you to jump to a file or other location quickly. To jump to a re
     (progn
       (ido-mode t)
       (ido-vertical-mode 1)
+      (setq ido-ignore-buffers '("^ " "*Completions*" "*Shell Command Output*"
+                                 "*Messages*" "Async Shell Command"))
       (setq ido-enable-flex-matching t
             ido-use-virtual-buffers t)))
 #+END_SRC
