@@ -4,10 +4,9 @@
 * Configuration
 
 ** About this file
-
 <<babel-init>>
 
-Inspired by the [[http://eschulte.me/emacs24-starter-kit/#installation][Emacs Starter Kit]], I set up my configuration file using Org-babel. 
+Inspired by the [[http://eschulte.me/emacs24-starter-kit/#installation][Emacs Starter Kit]], I set up my configuration file using Org-babel.
 
 To be precise, this is what's in the first part of my =~/.emacs=:
 
@@ -29,11 +28,32 @@ To be precise, this is what's in the first part of my =~/.emacs=:
 #+END_SRC
 
 ** Emacs initialization
-
 *** Load use-package
 
 #+BEGIN_SRC emacs-lisp
   (require 'use-package)
+#+END_SRC
+
+*** Use auto-compile
+
+From https://github.com/tarsius/auto-compile
+
+Dont show buffer *Compile-log*
+#+BEGIN_SRC emacs-lisp
+  (setq auto-compile-display-buffer nil)
+  (setq auto-compile-mode-line-counter t)
+#+END_SRC
+
+Use auto-compile onLoad and onSave
+#+BEGIN_SRC emacs-lisp
+  (use-package auto-compile
+    :ensure t
+    :init
+    (progn
+      (setq load-prefer-newer t)
+      (require 'auto-compile)
+      (auto-compile-on-load-mode 1)
+      (auto-compile-on-save-mode 1)))
 #+END_SRC
 
 *** Load secrets
@@ -45,7 +65,6 @@ I keep slightly more sensitive information in a separate file so that I can easi
 #+END_SRC
 
 ** General configuration
-
 *** Backups
 
 #+BEGIN_SRC emacs-lisp
@@ -127,7 +146,7 @@ When you're starting out, tooltips, menus, and the tool bar can be very helpful.
     (scroll-bar-mode -1))
 #+END_SRC
 
-Splash screen 
+Splash screen
 #+BEGIN_SRC emacs-lisp
   (setq inhibit-splash-screen t)
   (setq initial-scratch-message nil)
@@ -142,7 +161,7 @@ Window size and font size.
 
 OSX Specific
 #+BEGIN_SRC emacs-lisp
-  (when (eq system-type 'darwin) 
+  (when (eq system-type 'darwin)
       (set-default-font "Inconsolata 15")
       (set-frame-size (selected-frame) 160 54)
       (setq mac-command-modifier 'meta)
@@ -272,7 +291,6 @@ Registers allow you to jump to a file or other location quickly. To jump to a re
 #+END_SRC
 
 ** Writing
-
 *** Clean up spaces
 
 #+BEGIN_SRC emacs-lisp
@@ -280,7 +298,6 @@ Registers allow you to jump to a file or other location quickly. To jump to a re
 #+END_SRC
 
 ** Packages
-
 *** ido-vertical-mode
 
 #+BEGIN_SRC emacs-lisp
@@ -371,7 +388,6 @@ My org files are in my =personal= directory, which is actually a symlink to a di
 #+END_SRC
 
 ** Coding
-
 *** Tab width of 2 is compact and readable
 
 #+BEGIN_SRC emacs-lisp
@@ -469,9 +485,9 @@ Eldoc provides minibuffer hints when working with Emacs Lisp.
   (use-package projectile
     :ensure t
     :diminish projectile-mode
-    :init 
+    :init
     (progn
-      (setq projectile-keymap-prefix (kbd "C-c p")) 
+      (setq projectile-keymap-prefix (kbd "C-c p"))
       (setq projectile-completion-system 'default)
       (setq projectile-enable-caching t)
       (projectile-global-mode)))
@@ -532,4 +548,35 @@ Eldoc provides minibuffer hints when working with Emacs Lisp.
     (progn
       (add-hook 'html-mode-hook 'emmet-mode)
       (add-hook 'css-mode-hook  'emmet-mode)))
+#+END_SRC
+*** Indentation and buffer cleanup
+
+This re-indents, untabifies, and cleans up whitespace. It is stolen directly from the emacs-starter-kit.
+
+#+BEGIN_SRC emacs-lisp
+  (defun untabify-buffer ()
+    (interactive)
+    (untabify (point-min) (point-max)))
+
+  (defun indent-buffer ()
+    (interactive)
+    (indent-region (point-min) (point-max)))
+
+  (defun cleanup-buffer ()
+    "Perform a bunch of operations on the whitespace content of a buffer."
+    (interactive)
+    (indent-buffer)
+    (untabify-buffer)
+    (delete-trailing-whitespace))
+
+  (defun cleanup-region (beg end)
+    "Remove tmux artifacts from region."
+    (interactive "r")
+    (dolist (re '("\\\\│\·*\n" "\W*│\·*"))
+      (replace-regexp re "" nil beg end)))
+
+  (global-set-key (kbd "C-x M-t") 'cleanup-region)
+  (global-set-key (kbd "C-c n") 'cleanup-buffer)
+
+  (setq-default show-trailing-whitespace t)
 #+END_SRC
