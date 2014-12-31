@@ -28,6 +28,7 @@ To be precise, this is what's in the first part of my =~/.emacs=:
 #+END_SRC
 
 ** Emacs initialization
+
 *** Load use-package
 
 #+BEGIN_SRC emacs-lisp
@@ -65,6 +66,7 @@ I keep slightly more sensitive information in a separate file so that I can easi
 #+END_SRC
 
 ** General configuration
+
 *** Backups
 
 #+BEGIN_SRC emacs-lisp
@@ -140,16 +142,18 @@ When you're starting out, tooltips, menus, and the tool bar can be very helpful.
 
 #+BEGIN_SRC emacs-lisp
   (when window-system
-    (tooltip-mode -1)
-    (tool-bar-mode -1)
-    (menu-bar-mode -1)
-    (scroll-bar-mode -1))
+    (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+    (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+    (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+    (if (fboundp 'tool-bar-mode) (tooltip-mode -1)))
 #+END_SRC
 
-Splash screen
+Startup Messages
 #+BEGIN_SRC emacs-lisp
-  (setq inhibit-splash-screen t)
-  (setq initial-scratch-message nil)
+  (setq inhibit-splash-screen t
+        inhbit-startup-message t
+        initial-scratch-message ""
+        inhibit-startup-echo-area-message t)
 #+END_SRC
 
 Window size and font size.
@@ -244,22 +248,35 @@ From https://github.com/itsjeyd/emacs-config/blob/emacs24/init.el
 #+END_SRC
 
 *** Configure the keyboard
+**** Russian keycode
 
-Russian keycode
 #+BEGIN_SRC emacs-lisp
   (setq default-input-method "russian-computer")
 #+END_SRC
 
-Global keycode
+**** Global keycode
+
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "M-/") 'hippie-expand)
   (global-set-key (kbd "C-+") 'text-scale-increase)
   (global-set-key (kbd "C--") 'text-scale-decrease)
 #+END_SRC
 
-Disable Tab
+**** Disable Tab
+
 #+BEGIN_SRC emacs-lisp
   (setq-default indent-tabs-mode nil)
+#+END_SRC
+
+**** backward-kill-line
+
+This binding comes from Emacs Redux. Note that we don’t need a new function, just an anonymous function.
+
+#+BEGIN_SRC emacs-lisp
+  (bind-key "C-<backspace>" (lambda ()
+                              (interactive)
+                              (kill-line 0)
+                              (indent-according-to-mode)))
 #+END_SRC
 
 *** Frequently-accessed files
@@ -290,7 +307,24 @@ Registers allow you to jump to a file or other location quickly. To jump to a re
   (global-set-key (kbd "C-x C-b") 'ibuffer)
 #+END_SRC
 
+*** Apropos
+
+Let apropos commands perform more extensive searches than default. This also comes from Better Defaults.
+
+#+BEGIN_SRC emacs-lisp
+  (setq apropos-do-all t)
+#+END_SRC
+
+*** Auto Revert Mode
+
+Revert buffers automatically when underlying files are changed externally.
+
+#+BEGIN_SRC emacs-lisp
+  (global-auto-revert-mode t)
+#+END_SRC
+
 ** Writing
+
 *** Clean up spaces
 
 #+BEGIN_SRC emacs-lisp
@@ -298,6 +332,7 @@ Registers allow you to jump to a file or other location quickly. To jump to a re
 #+END_SRC
 
 ** Packages
+
 *** ido-vertical-mode
 
 #+BEGIN_SRC emacs-lisp
@@ -331,6 +366,16 @@ Registers allow you to jump to a file or other location quickly. To jump to a re
       (exec-path-from-shell-initialize)))
 #+END_SRC
 
+*** Golden Ratio
+
+#+BEGIN_SRC emacs-lisp
+  (use-package golden-ratio
+    :ensure t
+    :diminish golden-ratio-mode
+    :init
+    (golden-ratio-mode 1))
+#+END_SRC
+
 ** Org
 
 I use [[http://www.orgmode.org][Org Mode]] to take notes, publish my blog, and do all sorts of stuff.
@@ -341,7 +386,16 @@ I use [[http://www.orgmode.org][Org Mode]] to take notes, publish my blog, and d
     :diminish org-mode
     :init
     (progn
-      (add-hook 'org-mode-hook 'turn-on-visual-line-mode)))
+      (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
+      (setq default-major-mode 'org-mode
+            org-directory "~/Google Drive/Org/"
+            org-log-done t
+            org-startup-indented t
+            org-startup-truncated nil
+            org-startup-with-inline-images t
+            org-completion-use-ido t
+            org-default-notes-file (concat org-directory "notes.org")
+            org-goto-interface 'outline-path-completion)))
 #+END_SRC
 
 *** Flycheck use hunspell
@@ -378,16 +432,8 @@ From http://stackoverflow.com/questions/15011703/is-there-an-emacs-org-mode-comm
   (setq org-cycle-include-plain-lists 'integrate)
 #+END_SRC
 
-*** Taking notes
-
-My org files are in my =personal= directory, which is actually a symlink to a directory in my Dropbox. That way, I can update my Org files from multiple computers.
-
-#+BEGIN_SRC emacs-lisp
-  (setq org-directory "~/Google Drive/Org")
-  (setq org-default-notes-file "~/Google Drive/Org/organizer.org")
-#+END_SRC
-
 ** Coding
+
 *** Tab width of 2 is compact and readable
 
 #+BEGIN_SRC emacs-lisp
@@ -580,3 +626,40 @@ This re-indents, untabifies, and cleans up whitespace. It is stolen directly fro
 
   (setq-default show-trailing-whitespace t)
 #+END_SRC
+
+** Functions
+
+*** Edit as Root
+
+This tip comes from an [[http://emacs-fu.blogspot.kr/2013/03/editing-with-root-privileges-once-more.html][emacs-fu blog post]].
+
+#+BEGIN_SRC emacs-lisp
+  (defun find-file-as-root ()
+    "Like `ido-find-file, but automatically edit the file with
+  root-privileges (using tramp/sudo), if the file is not writable by
+  user."
+    (interactive)
+    (let ((file (ido-read-file-name "Edit as root: ")))
+      (unless (file-writable-p file)
+        (setq file (concat "/sudo:root@localhost:" file)))
+      (find-file file)))
+
+  (bind-key "C-x F" 'find-file-as-root)
+#+END_SRC
+
+*** Unfill Paragraph
+
+This function greedily borrowed from Sacha.
+
+#+BEGIN_SRC emacs-lisp
+  (defun unfill-paragraph (&optional region)
+    "Takes a multi-line paragraph and makes it into a single line of text."
+    (interactive (progn
+                   (barf-if-buffer-read-only)
+                   (list t)))
+    (let ((fill-column (point-max)))
+      (fill-paragraph nil region)))
+
+  (bind-key "M-Q" 'unfill-paragraph)
+#+END_SRC
+
