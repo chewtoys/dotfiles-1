@@ -394,8 +394,20 @@ I use [[http://www.orgmode.org][Org Mode]] to take notes, publish my blog, and d
             org-startup-truncated nil
             org-startup-with-inline-images t
             org-completion-use-ido t
-            org-default-notes-file (concat org-directory "notes.org")
-            org-goto-interface 'outline-path-completion)))
+            org-default-notes-file (concat org-directory "/notes.org")
+            org-goto-interface 'outline-path-completion
+            org-capture-templates
+            '(("t" "Todo" entry (file+headline (concat org-directory "/tasks.org") "Tasks")
+               "* TODO %?\n")
+              ("j" "Journal" plain (file+datetree (concat org-directory "/journal.org"))
+               "* %?\nEntered on %U\n")
+              ("n" "Notes" entry (file+headline (concat org-directory "/notes.org") "Notes")
+               "* %U %?\n\n")
+              ("n" "Daily note" table-line (file+olp (concat org-directory "/notes.org") "Daily notes")
+               "| %u | %^{Note} |"
+               :immediate-finish t))
+            org-agenda-files (list (concat org-directory "/tasks.org")
+                                   (concat org-directory "/notes.org")))))
 #+END_SRC
 
 *** Flycheck use hunspell
@@ -407,7 +419,7 @@ I use [[http://www.orgmode.org][Org Mode]] to take notes, publish my blog, and d
 *** Keyboard shortcuts
 
 #+BEGIN_SRC emacs-lisp
-  (bind-key "C-c r" 'org-capture)
+  (bind-key "C-c c" 'org-capture)
   (bind-key "C-c a" 'org-agenda)
   (bind-key "C-c l" 'org-store-link)
   (bind-key "C-c L" 'org-insert-link-global)
