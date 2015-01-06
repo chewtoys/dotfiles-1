@@ -160,13 +160,14 @@ Window size and font size.
 #+BEGIN_SRC emacs-lisp
   (when window-system
     (set-frame-size (selected-frame) 170 50)
-    (set-default-font "Consolas 13"))
+    (set-default-font "Consolas 13" nil t)
+  )
 #+END_SRC
 
 OSX Specific
 #+BEGIN_SRC emacs-lisp
   (when (eq system-type 'darwin)
-      (set-default-font "Inconsolata 15")
+      (set-default-font "Inconsolata 15" nil t)
       (set-frame-size (selected-frame) 160 54)
       (setq mac-command-modifier 'meta)
       (define-key global-map [home] 'juev/smarter-move-beginning-of-line)
