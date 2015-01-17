@@ -141,11 +141,10 @@ Copied from http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-begi
 When you're starting out, tooltips, menus, and the tool bar can be very helpful. [[http://sachachua.com/blog/2014/03/emacs-basics-using-mouse/][(Emacs Basics: Using the Mouse]]). Eventually, you may want to reclaim that extra little bit of screenspace. The following code turns those things off when using a graphical Emacs.
 
 #+BEGIN_SRC emacs-lisp
-  (when window-system
-    (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-    (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-    (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-    (if (fboundp 'tool-bar-mode) (tooltip-mode -1)))
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+  (tooltip-mode -1)
 #+END_SRC
 
 Startup Messages
@@ -389,8 +388,10 @@ I use [[http://www.orgmode.org][Org Mode]] to take notes, publish my blog, and d
       (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
       (setq default-major-mode 'org-mode
             org-directory "~/Google Drive/Org/"
+            org-agenda-inhibit-startup t
+            org-agenda-use-tag-inheritance nil
             org-log-done t
-            org-startup-indented t
+            org-startup-indented nil
             org-startup-truncated nil
             org-startup-with-inline-images t
             org-completion-use-ido t
@@ -529,6 +530,7 @@ Eldoc provides minibuffer hints when working with Emacs Lisp.
   (use-package yasnippet
     :ensure t
     :diminish yas-minor-mode
+    :idle
     :config
     (progn
       (yas-reload-all)
