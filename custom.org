@@ -39,6 +39,7 @@ To be precise, this is what's in the first part of my =~/.emacs=:
 
 #+BEGIN_SRC emacs-lisp
   (require 'use-package)
+;;  (load "~/.emacs.d/elpa/benchmark-init-20141004.609/benchmark-init.el")
 #+END_SRC
 
 *** Use auto-compile
@@ -49,17 +50,6 @@ Dont show buffer *Compile-log*
 #+BEGIN_SRC emacs-lisp
   (setq auto-compile-display-buffer nil)
   (setq auto-compile-mode-line-counter t)
-#+END_SRC
-
-Use auto-compile onLoad and onSave
-#+BEGIN_SRC emacs-lisp
-  (use-package auto-compile
-    :ensure t
-    :init
-    (progn
-      (setq load-prefer-newer t)
-      (auto-compile-on-load-mode 1)
-      (auto-compile-on-save-mode 1)))
 #+END_SRC
 
 *** Load secrets
@@ -106,39 +96,6 @@ From http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.htm
 
 #+BEGIN_SRC emacs-lisp
   (setq-default vc-follow-symlinks nil)
-#+END_SRC
-
-*** Move to beginning of line
-
-Copied from http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
-
-#+BEGIN_SRC emacs-lisp
-  (defun juev/smarter-move-beginning-of-line (arg)
-    "Move point back to indentation of beginning of line.
-
-  Move point to the first non-whitespace character on this line.
-  If point is already there, move to the beginning of the line.
-  Effectively toggle between the first non-whitespace character and
-  the beginning of the line.
-
-  If ARG is not nil or 1, move forward ARG - 1 lines first.  If
-  point reaches the beginning or end of the buffer, stop there."
-    (interactive "^p")
-    (setq arg (or arg 1))
-
-    ;; Move lines first
-    (when (/= arg 1)
-      (let ((line-move-visual nil))
-        (forward-line (1- arg))))
-
-    (let ((orig-point (point)))
-      (back-to-indentation)
-      (when (= orig-point (point))
-        (move-beginning-of-line 1))))
-
-  ;; remap C-a to `smarter-move-beginning-of-line'
-  (global-set-key [remap move-beginning-of-line]
-                  'juev/smarter-move-beginning-of-line)
 #+END_SRC
 
 *** Windows configuration
@@ -211,7 +168,7 @@ Lazy people like me never want to type "yes" when "y" will suffice.
 *** Color theme
 
 #+BEGIN_SRC emacs-lisp
-  (load-theme 'misterioso t)
+;;  (load-theme 'misterioso t)
 #+END_SRC
 
 *** Help - guide-key
@@ -239,19 +196,6 @@ From http://www.wisdomandwonder.com/wordpress/wp-content/uploads/2014/03/C3F.htm
   (setq-default buffer-file-coding-system 'utf-8-unix)
 #+END_SRC
 
-*** Killing text
-
-From https://github.com/itsjeyd/emacs-config/blob/emacs24/init.el
-
-#+BEGIN_SRC emacs-lisp
-  (defadvice kill-region (before slick-cut activate compile)
-    "When called interactively with no active region, kill a single line instead."
-    (interactive
-     (if mark-active (list (region-beginning) (region-end))
-       (list (line-beginning-position)
-             (line-beginning-position 2)))))
-#+END_SRC
-
 *** Configure the keyboard
 **** Russian keycode
 
@@ -273,67 +217,10 @@ From https://github.com/itsjeyd/emacs-config/blob/emacs24/init.el
   (setq-default indent-tabs-mode nil)
 #+END_SRC
 
-**** backward-kill-line
-
-This binding comes from Emacs Redux. Note that we don’t need a new function, just an anonymous function.
-
-#+BEGIN_SRC emacs-lisp
-  (bind-key "C-<backspace>" (lambda ()
-                              (interactive)
-                              (kill-line 0)
-                              (indent-according-to-mode)))
-#+END_SRC
-
-*** Frequently-accessed files
-
-Registers allow you to jump to a file or other location quickly. To jump to a register, use =C-x r j= followed by the letter of the register. Using registers for all these file shortcuts is probably a bit of a waste since I can easily define my own keymap, but since I rarely go beyond register A anyway...
-
-#+BEGIN_SRC emacs-lisp :results silent
-  (mapcar
-   (lambda (r)
-     (set-register (car r) (cons 'file (cdr r))))
-   '((?i . "~/.custom.org")
-     (?o . "~/Google Drive/Org/organizer.org")
-     (?j . "~/Google Drive/Org/journal.org")))
-#+END_SRC
-
-*** Recent files
-
-#+BEGIN_SRC emacs-lisp
-  (require 'recentf)
-  (setq recentf-max-saved-items 200
-        recentf-max-menu-items 15)
-  (recentf-mode)
-#+END_SRC
-
 *** iBuffer
 
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-x C-b") 'ibuffer)
-#+END_SRC
-
-*** Apropos
-
-Let apropos commands perform more extensive searches than default. This also comes from Better Defaults.
-
-#+BEGIN_SRC emacs-lisp
-  (setq apropos-do-all t)
-#+END_SRC
-
-*** Auto Revert Mode
-
-Revert buffers automatically when underlying files are changed externally.
-
-#+BEGIN_SRC emacs-lisp
-  (global-auto-revert-mode t)
-#+END_SRC
-
-** Writing
-
-*** Clean up spaces
-
-#+BEGIN_SRC emacs-lisp
-  (bind-key "M-SPC" 'cycle-spacing)
 #+END_SRC
 
 ** Packages
@@ -351,33 +238,6 @@ Revert buffers automatically when underlying files are changed externally.
                                  "*Messages*" "Async Shell Command"))
       (setq ido-enable-flex-matching t
             ido-use-virtual-buffers t)))
-#+END_SRC
-
-*** expand-region
-
-#+BEGIN_SRC emacs-lisp
-  (use-package expand-region
-    :ensure t
-    :bind ("C-=" . er/expand-region))
-#+END_SRC
-
-*** exec-path-from-shell
-
-#+BEGIN_SRC emacs-lisp
-  (use-package exec-path-from-shell
-    :ensure t
-    :init
-    (when (memq window-system '(mac ns))
-      (exec-path-from-shell-initialize)))
-#+END_SRC
-
-*** Golden Ratio
-
-#+BEGIN_SRC emacs-lisp
-  (use-package golden-ratio
-    :diminish golden-ratio-mode
-    :init
-    (golden-ratio-mode 1))
 #+END_SRC
 
 ** Org
@@ -422,34 +282,6 @@ I use [[http://www.orgmode.org][Org Mode]] to take notes, publish my blog, and d
   (setq ispell-program-name "/usr/local/bin/hunspell")
 #+END_SRC
 
-*** Keyboard shortcuts
-
-#+BEGIN_SRC emacs-lisp
-  (bind-key "C-c c" 'org-capture)
-  (bind-key "C-c a" 'org-agenda)
-  (bind-key "C-c l" 'org-store-link)
-  (bind-key "C-c L" 'org-insert-link-global)
-  (bind-key "C-c O" 'org-open-at-point-global)
-  (bind-key "C-TAB" 'org-cycle org-mode-map)
-  (bind-key "C-c v" 'org-show-todo-tree org-mode-map)
-  (bind-key "C-c C-r" 'org-refile org-mode-map)
-  (bind-key "C-c R" 'org-reveal org-mode-map)
-#+END_SRC
-
-*** Navigation
-
-From http://stackoverflow.com/questions/15011703/is-there-an-emacs-org-mode-command-to-jump-to-an-org-heading
-#+BEGIN_SRC emacs-lisp
-  (setq org-goto-interface 'outline
-        org-goto-max-level 10)
-  (require 'imenu)
-  (setq org-startup-folded nil)
-  (bind-key "M-o" 'imenu)
-  (bind-key "C-c j" 'org-clock-goto) ;; jump to current task from anywhere
-  (bind-key "C-c C-w" 'org-refile)
-  (setq org-cycle-include-plain-lists 'integrate)
-#+END_SRC
-
 ** Coding
 
 *** Tab width of 2 is compact and readable
@@ -472,104 +304,6 @@ I sometimes need to know where I am in a line.
   (column-number-mode 1)
 #+END_SRC
 
-*** Emacs Lisp
-
-**** Edebug
-
-Did you know edebug has a trace function? I didn't. Thanks, agumonkey!
-
-#+BEGIN_SRC emacs-lisp
-  (setq debug-on-error t
-        edebug-trace t)
-#+END_SRC
-
-While edebugging, use T to view a trace buffer (=*edebug-trace*=). Emacs will quickly execute the rest of your code, printing out the arguments and return values for each expression it evaluates.
-
-**** Eldoc
-
-Eldoc provides minibuffer hints when working with Emacs Lisp.
-#+BEGIN_SRC emacs-lisp
-  (use-package "eldoc"
-    :diminish eldoc-mode
-    :commands turn-on-eldoc-mode
-    :config
-    (progn
-      (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-      (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
-      (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)))
-#+END_SRC
-
-**** Jumping to code
-
-#+BEGIN_SRC emacs-lisp
-  (define-key emacs-lisp-mode-map (kbd "C-c .") 'find-function-at-point)
-  (bind-key "C-c f" 'find-function)
-#+END_SRC
-
-**** rainbow-delimiters
-
-#+BEGIN_SRC emacs-lisp
-  (use-package rainbow-delimiters
-    :ensure t
-    :init
-    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
-#+END_SRC
-
-**** paredit
-
-#+BEGIN_SRC emacs-lisp
-  (use-package paredit
-    :ensure t
-    :diminish paredit-mode
-    :init
-    (progn
-      (add-hook 'lisp-mode-hook 'enable-paredit-mode)
-      (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
-      (add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
-      (add-hook 'json-mode-hook 'enable-paredit-mode)))
-#+END_SRC
-
-*** Snippets
-
-#+BEGIN_SRC emacs-lisp
-  (use-package yasnippet
-    :ensure t
-    :diminish yas-minor-mode
-    :idle
-    :config
-    (progn
-      (yas-reload-all)
-      (add-hook 'prog-mode-hook
-                '(lambda ()
-                   (yas-minor-mode)))))
-#+END_SRC
-
-*** Projects
-
-#+BEGIN_SRC emacs-lisp
-  (use-package projectile
-    :ensure t
-    :diminish projectile-mode
-    :init
-    (progn
-      (setq projectile-keymap-prefix (kbd "C-c p"))
-      (setq projectile-completion-system 'default)
-      (setq projectile-enable-caching t)
-      (projectile-global-mode)))
-#+END_SRC
-
-*** Autocomplete
-
-#+BEGIN_SRC emacs-lisp
-  (use-package company
-    :ensure t
-    :init
-    :diminish company-mode
-    (progn
-      (setq company-idle-delay 0)
-      (add-hook 'prog-mode-hook 'company-mode)))
-#+END_SRC
-
 *** Markdown-mode
 
 #+BEGIN_SRC emacs-lisp
@@ -577,124 +311,3 @@ Eldoc provides minibuffer hints when working with Emacs Lisp.
     :ensure t
     :mode ("\\.md$". markdown-mode))
 #+END_SRC
-
-*** JS2-mode
-
-#+BEGIN_SRC emacs-lisp
-  (use-package js2-mode
-    :ensure t
-    :mode ("\\.js" . js2-mode)
-    :init
-    (progn
-      (add-hook 'js2-mode-hook 'flycheck-mode)
-      (add-hook 'js2-mode-hook 'company-mode)))
-#+END_SRC
-
-**** json-mode
-
-#+BEGIN_SRC emacs-lisp
-  (use-package json-mode
-    :ensure t
-    :mode "\\.json"
-    :config
-    (progn
-      (bind-keys
-       :map json-mode-map
-       ("{" . paredit-open-curly)
-       ("}" . paredit-close-curly))))
-#+END_SRC
-
-*** emmet-mode
-
-#+BEGIN_SRC emacs-lisp
-  (use-package emmet-mode
-    :ensure t
-    :init
-    (progn
-      (add-hook 'html-mode-hook 'emmet-mode)
-      (add-hook 'css-mode-hook  'emmet-mode)))
-#+END_SRC
-*** Indentation and buffer cleanup
-
-This re-indents, untabifies, and cleans up whitespace. It is stolen directly from the emacs-starter-kit.
-
-#+BEGIN_SRC emacs-lisp
-  (defun untabify-buffer ()
-    (interactive)
-    (untabify (point-min) (point-max)))
-
-  (defun indent-buffer ()
-    (interactive)
-    (indent-region (point-min) (point-max)))
-
-  (defun cleanup-buffer ()
-    "Perform a bunch of operations on the whitespace content of a buffer."
-    (interactive)
-    (indent-buffer)
-    (untabify-buffer)
-    (delete-trailing-whitespace))
-
-  (defun cleanup-region (beg end)
-    "Remove tmux artifacts from region."
-    (interactive "r")
-    (dolist (re '("\\\\│\·*\n" "\W*│\·*"))
-      (replace-regexp re "" nil beg end)))
-
-  (global-set-key (kbd "C-x M-t") 'cleanup-region)
-  (global-set-key (kbd "C-c n") 'cleanup-buffer)
-
-  (setq-default show-trailing-whitespace t)
-#+END_SRC
-
-*** Cider
-
-#+BEGIN_SRC emacs-lisp
-  (use-package cider
-    :ensure t
-    :config
-    (progn
-      (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
-      (setq nrepl-log-messages t)
-      (setq nrepl-hide-special-buffers t)
-      (add-hook 'cider-repl-mode-hook 'company-mode)
-      (add-hook 'cider-mode-hook 'company-mode)
-      (add-hook 'cider-repl-mode-hook 'paredit-mode)
-      (add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
-      ))
-#+END_SRC
-** Functions
-
-*** Edit as Root
-
-This tip comes from an [[http://emacs-fu.blogspot.kr/2013/03/editing-with-root-privileges-once-more.html][emacs-fu blog post]].
-
-#+BEGIN_SRC emacs-lisp
-  (defun find-file-as-root ()
-    "Like `ido-find-file, but automatically edit the file with
-  root-privileges (using tramp/sudo), if the file is not writable by
-  user."
-    (interactive)
-    (let ((file (ido-read-file-name "Edit as root: ")))
-      (unless (file-writable-p file)
-        (setq file (concat "/sudo:root@localhost:" file)))
-      (find-file file)))
-
-  (bind-key "C-x F" 'find-file-as-root)
-#+END_SRC
-
-*** Unfill Paragraph
-
-This function greedily borrowed from Sacha.
-
-#+BEGIN_SRC emacs-lisp
-  (defun unfill-paragraph (&optional region)
-    "Takes a multi-line paragraph and makes it into a single line of text."
-    (interactive (progn
-                   (barf-if-buffer-read-only)
-                   (list t)))
-    (let ((fill-column (point-max)))
-      (fill-paragraph nil region)))
-
-  (bind-key "M-Q" 'unfill-paragraph)
-#+END_SRC
-

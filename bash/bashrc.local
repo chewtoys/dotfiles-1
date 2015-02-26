@@ -1,0 +1,103 @@
+#---------------------------------------------------------------
+# Local (system) bashrc File
+#---------------------------------------------------------------
+
+# Skip this config if we aren't in bash
+[[ -n "${BASH_VERSION}" ]] || return
+
+#---------------------------------------------------------------
+# Set Global Environment Variables
+#---------------------------------------------------------------
+#RUBY_MANAGER=
+
+export EDITOR=/usr/local/bin/vim
+# Docker
+export DOCKER_TLS_VERIFY=1
+export DOCKER_HOST=tcp://192.168.59.103:2376
+export DOCKER_CERT_PATH=/Users/juev/.boot2docker/certs/boot2docker-vm
+export BYOBU_PREFIX=$(brew --prefix)
+
+# NVM
+export NVM_DIR="/Users/juev/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
+export PATH="/Users/juev/.cask/bin:$PATH"
+
+export PATH=/usr/local/bin:$PATH
+export EDITOR=vim
+export VISUAL=vim
+
+#---------------------------------------------------------------
+# Set Host Prompt Color
+#---------------------------------------------------------------
+# The following color keywords are permitted:
+#
+# Normal colors
+# black red green yellow blue magenta cyan white default
+# 
+# Emphasized (bolded) colors
+# eblack ered egreen eyellow eblue emagenta ecyan ewhite
+#---------------------------------------------------------------
+PROMPT_COLOR=green
+
+# If you want a different prompt color when logged in over SSH
+REMOTE_PROMPT_COLOR=yellow
+
+
+#---------------------------------------------------------------
+# Host ssh aliases
+#---------------------------------------------------------------
+#alias host="ssh host.domain.com"
+
+alias pg='ps aux | grep -i'
+
+alias l='ls'
+alias ls='ls -Gh'
+alias ll='ls -lGh'
+alias la='ls -la'
+
+alias df='df -h'
+alias du='du -h'
+
+# zsh profile editing
+alias ze='$EDITOR ~/.zshrc'
+alias zs='source ~/.zshrc'
+
+# bundle alias
+alias b="bundle"
+alias bi="bundle install --path .bundle/gems --binstubs .bundle/bin"
+alias bu="b update"
+alias be="b exec"
+
+# alias route="netstat -nr"
+
+#heroku
+#alias heroku='/usr/local/bin/heroku'
+
+# rbenv
+alias r="rbenv"
+alias rr="rbenv rehash"
+
+alias v='vim'
+alias s='subl'
+
+alias emacs='/usr/local/Cellar/emacs/24.4/bin/emacs -nw'
+alias emacsclient='/usr/local/Cellar/emacs/24.4/bin/emacsclient'
+alias e='/usr/local/Cellar/emacs/24.4/bin/emacsclient -nw'
+
+# rsync
+alias pc="rsync -P"
+
+# brew update
+alias brewupd='brew update && brew upgrade && brew cleanup'
+
+# suffix based aliases
+#alias -s {md,markdown}="open -a Marked"
+#alias -s {pdf,jpg,jpeg,png,gif}="open -a Preview"
+#alias -s djvu="open -a DjVuReader"
+
+#fixopen osx finder
+alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user'
+
