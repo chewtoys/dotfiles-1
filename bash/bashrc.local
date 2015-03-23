@@ -90,6 +90,8 @@ alias e='/usr/local/Cellar/emacs/24.4/bin/emacsclient -nw'
 # rsync
 alias pc="rsync -P"
 
+alias g="grep --color=auto"
+
 # brew update
 alias brewupd='brew update && brew upgrade && brew cleanup'
 
