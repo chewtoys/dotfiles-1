@@ -103,3 +103,6 @@ alias brewupd='brew update && brew upgrade && brew cleanup'
 #fixopen osx finder
 alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user'
 
+#docker
+alias dr='docker run --rm -v $(pwd):/srv/work -p 127.0.0.1:4000:4000 juev/ruby'
+alias db='docker build --no-cache --force-rm -f Dockerfile -t'
