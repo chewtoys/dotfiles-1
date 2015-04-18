@@ -11,6 +11,8 @@
 #RUBY_MANAGER=
 
 export EDITOR=/usr/local/bin/vim
+export VISUAL=/usr/local/bin/vim
+
 # Docker
 export DOCKER_TLS_VERIFY=1
 export DOCKER_HOST=tcp://192.168.59.103:2376
@@ -18,16 +20,8 @@ export DOCKER_CERT_PATH=/Users/juev/.boot2docker/certs/boot2docker-vm
 export BYOBU_PREFIX=$(brew --prefix)
 
 # NVM
-export NVM_DIR="/Users/juev/.nvm"
+export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-
-### Added by the Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
-export PATH="/Users/juev/.cask/bin:$PATH"
-
-export PATH=/usr/local/bin:$PATH
-export EDITOR=vim
-export VISUAL=vim
 
 #---------------------------------------------------------------
 # Set Host Prompt Color

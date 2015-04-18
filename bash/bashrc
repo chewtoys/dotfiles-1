@@ -250,6 +250,13 @@ esac # uname -s
 # If a $HOME/bin directory exists, add it to the PATH in front
 __push_path PATH $HOME/bin
 
+### Added GOPATH
+export GOPATH="$HOME/Go"
+
+__push_path PATH $GOPATH/bin
+__push_path PATH /usr/local/heroku/bin
+__push_path PATH $HOME/.cask/bin
+
 # If a $HOME/man directory exists, add it to the MANPATH in front
 __push_path MANPATH $HOME/man
 
