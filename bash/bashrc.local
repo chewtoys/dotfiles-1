@@ -39,6 +39,7 @@ PROMPT_COLOR=green
 # If you want a different prompt color when logged in over SSH
 REMOTE_PROMPT_COLOR=yellow
 
+PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 
 #---------------------------------------------------------------
 # Host ssh aliases
