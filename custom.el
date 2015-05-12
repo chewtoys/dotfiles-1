@@ -3,8 +3,8 @@
 
 (eval-when-compile
   (require 'use-package))
-(require 'diminish)
-(require 'bind-key)
+(require 'diminish
+         'bind-key)
 
 (setq auto-compile-display-buffer nil)
 (setq auto-compile-mode-line-counter t)
@@ -83,3 +83,30 @@
     (add-hook 'c-mode-hook 'irony-mode)
     (add-hook 'objc-mode-hook 'irony-mode)))
 
+(use-package clojure-mode
+  :ensure t
+  :init
+  (progn
+    (use-package inf-clojure
+      :ensure t
+      :init
+      (add-hook 'clojure-mode-hook #'inf-clojure-minor-mode))))
+
+(use-package smartparents
+  :ensure smartparens
+  :init
+  (progn
+    (require 'smartparens-config)
+    (smartparens-global-mode t)
+    (add-hook 'clojure-mode-hook #'smartparens-strict-mode)))
+
+(use-package rainbow-delimiters
+  :ensure t
+  :init
+  (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+
+(use-package projectile
+  :ensure t
+  :init
+  (projectile-global-mode))
