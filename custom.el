@@ -3,9 +3,10 @@
 
 (eval-when-compile
   (require 'use-package))
-(require 'diminish
-         'bind-key)
+;; (require 'diminish
+;;          'bind-key)
 
+(setq use-package-verbose t)
 (setq auto-compile-display-buffer nil)
 (setq auto-compile-mode-line-counter t)
 
@@ -31,6 +32,8 @@
 
 (setq visible-bell nil)
 (setq ring-bell-function 'ignore)
+
+(setq make-backup-files nil)
 
 (prefer-coding-system 'utf-8)
 (when (display-graphic-p)
@@ -60,6 +63,7 @@
 
 (use-package ido-vertical-mode
   :ensure t
+  :defer t
   :init
   (progn
     (ido-mode t)
@@ -71,13 +75,14 @@
 
 (use-package exec-path-from-shell
   :ensure t
-  :init
+  :disabled t
+  :config
   (when (memq window-system '(mac ns))
     (exec-path-from-shell-initialize)))
 
 (use-package irony-mode
   :ensure irony
-  :init
+  :config
   (progn
     (add-hook 'c++-mode-hook 'irony-mode)
     (add-hook 'c-mode-hook 'irony-mode)
@@ -85,28 +90,36 @@
 
 (use-package clojure-mode
   :ensure t
-  :init
+  :mode (("\.clj$"      . clojure-mode)
+         ("\.cljs$"     . clojure-mode)
+         ("\.cljx$"     . clojure-mode)
+         ("\.edn$"      . clojure-mode)
+         ("\.boot$"     . clojure-mode)
+         ("\.cljs\.hl$" . clojure-mode))
+  :config
   (progn
     (use-package inf-clojure
       :ensure t
-      :init
+      :config
       (add-hook 'clojure-mode-hook #'inf-clojure-minor-mode))))
 
 (use-package smartparents
   :ensure smartparens
   :init
+  (smartparens-global-mode t)
+  :config
   (progn
     (require 'smartparens-config)
-    (smartparens-global-mode t)
     (add-hook 'clojure-mode-hook #'smartparens-strict-mode)))
 
 (use-package rainbow-delimiters
   :ensure t
   :init
-  (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
-  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+  (progn
+    (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
+    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)))
 
 (use-package projectile
   :ensure t
-  :init
+  :config
   (projectile-global-mode))
