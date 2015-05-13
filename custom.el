@@ -3,19 +3,12 @@
 
 (eval-when-compile
   (require 'use-package))
-;; (require 'diminish
-;;          'bind-key)
 
 (setq use-package-verbose t)
 (setq auto-compile-display-buffer nil)
 (setq auto-compile-mode-line-counter t)
 
 (load "~/.emacs.secrets" t)
-
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-(tooltip-mode -1)
 
 (setq inhibit-splash-screen t
       inhbit-startup-message t
@@ -42,24 +35,23 @@
 
 (setq default-input-method "russian-computer")
 
-;;(global-set-key (kbd "M-/") 'hippie-expand)
-(global-set-key (kbd "C-+") 'text-scale-increase)
-(global-set-key (kbd "C--") 'text-scale-decrease)
-
-;; key bindings
 (when (eq system-type 'darwin) ;; mac specific settings
   (setq mac-option-modifier 'alt)
   (setq mac-command-modifier 'meta)
   (global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
   (define-key global-map [home] 'beginning-of-line)
-  (define-key global-map [end] 'end-of-line))
+  (define-key global-map [end] 'end-of-line)
+  (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+  (setq exec-path (append exec-path '("/usr/local/bin"))))
 
 (setq-default indent-tabs-mode nil)
-(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 (setq-default tab-width 2)
 (global-set-key (kbd "RET") 'newline-and-indent)
 (column-number-mode 1)
+
+(use-package better-defaults
+  :ensure t)
 
 (use-package ido-vertical-mode
   :ensure t
@@ -67,26 +59,12 @@
   :init
   (progn
     (ido-mode t)
-    (ido-vertical-mode 1)
-    (setq ido-ignore-buffers '("^ " "*Completions*" "*Shell Command Output*"
-                               "*Messages*" "Async Shell Command"))
-    (setq ido-enable-flex-matching t
-          ido-use-virtual-buffers t)))
-
-(use-package exec-path-from-shell
-  :ensure t
-  :disabled t
-  :config
-  (when (memq window-system '(mac ns))
-    (exec-path-from-shell-initialize)))
-
-(use-package irony-mode
-  :ensure irony
+    (ido-vertical-mode 1))
   :config
   (progn
-    (add-hook 'c++-mode-hook 'irony-mode)
-    (add-hook 'c-mode-hook 'irony-mode)
-    (add-hook 'objc-mode-hook 'irony-mode)))
+    (setq ido-ignore-buffers '("^ " "*Completions*" "*Shell Command Output*" "Async Shell Command"))
+    (setq ido-enable-flex-matching t
+          ido-use-virtual-buffers t)))
 
 (use-package clojure-mode
   :ensure t
@@ -97,14 +75,11 @@
          ("\.boot$"     . clojure-mode)
          ("\.cljs\.hl$" . clojure-mode))
   :config
-  (progn
-    (use-package inf-clojure
-      :ensure t
-      :config
-      (add-hook 'clojure-mode-hook #'inf-clojure-minor-mode))))
+  (use-package cider
+    :ensure t))
 
-(use-package smartparents
-  :ensure smartparens
+(use-package smartparens
+  :ensure t
   :init
   (smartparens-global-mode t)
   :config
@@ -114,7 +89,7 @@
 
 (use-package rainbow-delimiters
   :ensure t
-  :init
+  :config
   (progn
     (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)))
@@ -123,3 +98,9 @@
   :ensure t
   :config
   (projectile-global-mode))
+
+(use-package magit
+  :ensure t
+  :defer t
+  :config
+  (setq magit-last-seen-setup-instructions "1.4.0"))
