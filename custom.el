@@ -4,54 +4,49 @@
 (eval-when-compile
   (require 'use-package))
 
-(setq use-package-verbose t)
-(setq auto-compile-display-buffer nil)
-(setq auto-compile-mode-line-counter t)
+(setq use-package-verbose t
+      auto-compile-display-buffer nil
+      auto-compile-mode-line-counter t)
 
 (load "~/.emacs.secrets" t)
 
-(setq inhibit-splash-screen t
-      inhbit-startup-message t
-      initial-scratch-message ""
-      inhibit-startup-echo-area-message t)
-
-(when window-system
-  (set-frame-size (selected-frame) 170 50)
-  (set-default-font "Consolas 13" nil t))
-
-(blink-cursor-mode -1)
-
-(fset 'yes-or-no-p 'y-or-n-p)
-
-(setq visible-bell nil)
-(setq ring-bell-function 'ignore)
-
-(setq make-backup-files nil)
-
-(prefer-coding-system 'utf-8)
-(when (display-graphic-p)
-  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
-(setq-default buffer-file-coding-system 'utf-8-unix)
-
-(setq default-input-method "russian-computer")
-
-(when (eq system-type 'darwin) ;; mac specific settings
-  (setq mac-option-modifier 'alt)
-  (setq mac-command-modifier 'meta)
-  (global-set-key [kp-delete] 'delete-char) ;; sets fn-delete to be right-delete
-  (define-key global-map [home] 'beginning-of-line)
-  (define-key global-map [end] 'end-of-line)
-  (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
-  (setq exec-path (append exec-path '("/usr/local/bin"))))
-
-(setq-default indent-tabs-mode nil)
-
-(setq-default tab-width 2)
-(global-set-key (kbd "RET") 'newline-and-indent)
-(column-number-mode 1)
-
 (use-package better-defaults
-  :ensure t)
+  :ensure t
+  :config
+  (progn
+    (setq inhibit-splash-screen t
+          inhbit-startup-message t
+          initial-scratch-message ""
+          inhibit-startup-echo-area-message t
+          visible-bell nil
+          ring-bell-function 'ignore
+          make-backup-files nil
+          default-input-method "russian-computer")
+
+    (when window-system
+      (set-frame-size (selected-frame) 170 50)
+      (set-default-font "Consolas 13" nil t))
+
+    (when (display-graphic-p)
+      (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
+    (setq-default buffer-file-coding-system 'utf-8-unix)
+
+    (when (eq system-type 'darwin) ;; mac specific settings
+      (setq mac-command-modifier 'meta)
+      (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+      (setq exec-path (append exec-path '("/usr/local/bin"))))
+
+    (setq-default indent-tabs-mode nil
+                  tab-width 2)
+
+    (blink-cursor-mode -1)
+    (fset 'yes-or-no-p 'y-or-n-p)
+    (prefer-coding-system 'utf-8)
+    (column-number-mode 1)
+  
+    (global-set-key (kbd "RET") 'newline-and-indent)
+    (define-key global-map [home] 'back-to-indentation)
+    (define-key global-map [end] 'end-of-line)))
 
 (use-package ido-vertical-mode
   :ensure t
