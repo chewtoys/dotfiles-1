@@ -11,7 +11,7 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
- 
+
 (setq package-enable-at-startup nil)
 
 ;;(load "~/.custom.el" t)
@@ -42,6 +42,7 @@
           make-backup-files nil
           sentence-end-double-space nil
           scroll-preserve-screen-position 'always
+          find-file-visit-truename t
           default-input-method "russian-computer")
 
     (when window-system
@@ -64,7 +65,7 @@
     (fset 'yes-or-no-p 'y-or-n-p)
     (prefer-coding-system 'utf-8)
     (column-number-mode 1)
-  
+
     (global-set-key (kbd "RET") 'newline-and-indent)
     (global-set-key (kbd "M-/") 'hippie-expand)
     (define-key global-map [home] 'back-to-indentation)
@@ -104,7 +105,8 @@
       (progn
         (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
         (add-hook 'cider-mode-hook 'ac-cider-setup)
-        (add-hook 'cider-repl-mode-hook 'ac-cider-setup)))))
+        (add-hook 'cider-repl-mode-hook 'ac-cider-setup))
+      (setq clojure-defun-style-default-indent t))))
 
 (use-package paredit
   :ensure t
@@ -118,8 +120,6 @@
     (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
     (add-hook 'ielm-mode-hook #'enable-paredit-mode)
     (add-hook 'json-mode-hook #'enable-paredit-mode)))
-
-(setq clojure-defun-style-default-indent t)
 
 (use-package rainbow-delimiters
   :ensure t
@@ -143,4 +143,12 @@
   :ensure t
   :config
   (ac-config-default))
-    
+
+(use-package solarized-theme
+  :ensure t
+  :config
+  (progn
+    (setq solarized-scale-org-headlines nil)
+    (setq solarized-use-variable-pitch nil)
+    ;;(setq solarized-distinct-fringe-background t)
+    (load-theme 'solarized t)))
