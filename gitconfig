@@ -3,7 +3,7 @@
   email = denis@evsyukov.org
 [core]
   excludesfile = /Users/juev/.gitignore
-  editor = vim
+  editor = emacsclient -nw
   quotepath = false
   pager = less
 [push]
