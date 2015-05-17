@@ -151,4 +151,4 @@
     (setq solarized-scale-org-headlines nil)
     (setq solarized-use-variable-pitch nil)
     ;;(setq solarized-distinct-fringe-background t)
-    (load-theme 'solarized t)))
+    (load-theme 'solarized-light t)))
