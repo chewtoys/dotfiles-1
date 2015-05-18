@@ -29,6 +29,13 @@
 
 ;;(load "~/.emacs.secrets" t)
 
+;; This advises ido-find-file to reopen the selected file as root
+(defadvice ido-find-file (after find-file-sudo activate)
+  "Find file as root if necessary."
+  (unless (and buffer-file-name
+               (file-writable-p buffer-file-name))
+    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
 (use-package better-defaults
   :ensure t
   :config
