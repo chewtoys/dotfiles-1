@@ -152,3 +152,8 @@
     (setq solarized-use-variable-pitch nil)
     ;;(setq solarized-distinct-fringe-background t)
     (load-theme 'solarized-light t)))
+
+(use-package markdown-mode
+  :ensure t
+  :mode (("\.markdown$"      . markdown-mode)
+         ("\.md$"      . markdown-mode)))
