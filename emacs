@@ -21,6 +21,8 @@
 
 (eval-when-compile
   (require 'use-package))
+(require 'diminish)
+(require 'bind-key)
 
 (setq use-package-verbose t
       auto-compile-display-buffer nil
@@ -50,7 +52,9 @@
           sentence-end-double-space nil
           scroll-preserve-screen-position 'always
           find-file-visit-truename t
-          default-input-method "russian-computer")
+          default-input-method "russian-computer"
+          confirm-nonexistent-file-or-buffer nil
+          ido-create-new-buffer 'always)
 
     (when window-system
       (set-frame-size (selected-frame) 170 50)
@@ -72,10 +76,11 @@
     (fset 'yes-or-no-p 'y-or-n-p)
     (prefer-coding-system 'utf-8)
     (column-number-mode 1)
+    (windmove-default-keybindings)
 
     (global-set-key (kbd "RET") 'newline-and-indent)
     (global-set-key (kbd "M-/") 'hippie-expand)
-    (define-key global-map [home] 'back-to-indentation)
+    (define-key global-map [home] 'beginning-of-line)
     (define-key global-map [end] 'end-of-line)))
 
 (use-package ido-vertical-mode
@@ -84,12 +89,13 @@
   :init
   (progn
     (ido-mode t)
-    (ido-vertical-mode 1))
+    (ido-vertical-mode t))
   :config
   (progn
     (setq ido-ignore-buffers '("^ " "*Completions*" "*Shell Command Output*" "Async Shell Command"))
     (setq ido-enable-flex-matching t
-          ido-use-virtual-buffers t)))
+          ido-use-virtual-buffers t
+          ido-everywhere t)))
 
 (use-package clojure-mode
   :ensure t
@@ -102,18 +108,8 @@
   :config
   (progn
     (use-package cider
-      :ensure t
-      :config
-      (add-to-list 'ac-modes 'cider-mode)
-      (add-to-list 'ac-modes 'cider-repl-mode))
-    (use-package ac-cider
-      :ensure t
-      :init
-      (progn
-        (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
-        (add-hook 'cider-mode-hook 'ac-cider-setup)
-        (add-hook 'cider-repl-mode-hook 'ac-cider-setup))
-      (setq clojure-defun-style-default-indent t))))
+      :ensure t)
+    (setq clojure-defun-style-default-indent t)))
 
 (use-package paredit
   :ensure t
@@ -146,19 +142,33 @@
   :config
   (setq magit-last-seen-setup-instructions "1.4.0"))
 
-(use-package auto-complete
+(use-package company
   :ensure t
-  :config
-  (ac-config-default))
-
-(use-package solarized-theme
-  :ensure t
+  :diminish company-mode
   :config
   (progn
-    (setq solarized-scale-org-headlines nil)
-    (setq solarized-use-variable-pitch nil)
-    ;;(setq solarized-distinct-fringe-background t)
-    (load-theme 'solarized-light t)))
+    (setf company-idle-delay 0
+          company-minimum-prefix-length 2
+          company-show-numbers t
+          company-selection-wrap-around t
+          company-dabbrev-ignore-case 'keep-prefix
+          company-dabbrev-ignore-invisible t
+          company-dabbrev-downcase nil
+          tab-always-indent 'complete)
+    (add-to-list 'completion-styles 'initials t)
+    (global-company-mode t)))
+
+(use-package color-theme
+  :ensure t
+  :config
+  (use-package color-theme-solarized
+    :ensure t
+    :config
+    (progn
+      (setq solarized-scale-org-headlines nil)
+      (setq solarized-use-variable-pitch nil)
+      ;; (setq solarized-distinct-fringe-background t)
+      (load-theme 'solarized t))))
 
 (use-package markdown-mode
   :ensure t
