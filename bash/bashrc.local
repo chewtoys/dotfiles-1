@@ -62,7 +62,7 @@ alias du='du -h'
 alias v='vim'
 alias s='subl'
 
-alias emacs='/usr/local/opt/emacs/bin/emacsclien -nw'
+alias emacs='/usr/local/opt/emacs/bin/emacsclient -nw'
 alias e='/usr/local/opt/emacs/bin/emacsclient -nw'
 
 # rsync
@@ -71,7 +71,7 @@ alias pc="rsync -P"
 alias g="grep --color=auto"
 
 # brew update
-alias brewupd='brew update && brew upgrade && brew cleanup'
+alias update='brew update && brew upgrade && brew cleanup'
 
 #fixopen osx finder
 alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user'
