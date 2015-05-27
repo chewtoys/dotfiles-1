@@ -57,8 +57,8 @@
           ido-create-new-buffer 'always)
 
     (when window-system
-      (set-frame-size (selected-frame) 170 50)
-      (set-default-font "Consolas 13" nil t))
+      (set-frame-size (selected-frame) 190 60)
+      (set-default-font "DejaVu Sans Mono 14" nil t))
 
     (when (display-graphic-p)
       (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
@@ -142,22 +142,6 @@
   :config
   (setq magit-last-seen-setup-instructions "1.4.0"))
 
-(use-package company
-  :ensure t
-  :diminish company-mode
-  :config
-  (progn
-    (setf company-idle-delay 0
-          company-minimum-prefix-length 2
-          company-show-numbers t
-          company-selection-wrap-around t
-          company-dabbrev-ignore-case 'keep-prefix
-          company-dabbrev-ignore-invisible t
-          company-dabbrev-downcase nil
-          tab-always-indent 'complete)
-    (add-to-list 'completion-styles 'initials t)
-    (global-company-mode t)))
-
 (use-package color-theme
   :ensure t
   :config
@@ -165,9 +149,10 @@
     :ensure t
     :config
     (progn
+      (set-frame-parameter nil 'background-mode 'dark)
+      (set-terminal-parameter nil 'background-mode 'dark)
       (setq solarized-scale-org-headlines nil)
       (setq solarized-use-variable-pitch nil)
-      ;; (setq solarized-distinct-fringe-background t)
       (load-theme 'solarized t))))
 
 (use-package markdown-mode
