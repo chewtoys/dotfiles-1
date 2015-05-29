@@ -38,6 +38,13 @@
                (file-writable-p buffer-file-name))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
+(defadvice kill-region (before slick-cut activate compile)
+  "When called interactively with no active region, kill a single line instead."
+  (interactive
+   (if mark-active (list (region-beginning) (region-end))
+     (list (line-beginning-position)
+           (line-beginning-position 2)))))
+
 (use-package better-defaults
   :ensure t
   :config
@@ -54,11 +61,13 @@
           find-file-visit-truename t
           default-input-method "russian-computer"
           confirm-nonexistent-file-or-buffer nil
-          ido-create-new-buffer 'always)
+          ido-create-new-buffer 'always
+          echo-keystrokes 0.1
+          shift-select-mode nil)
 
     (when window-system
-      (set-frame-size (selected-frame) 190 60)
-      (set-default-font "DejaVu Sans Mono 14" nil t))
+      (set-frame-size (selected-frame) 170 50)
+      (set-default-font "DejaVu Sans Mono 13" nil t))
 
     (when (display-graphic-p)
       (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
@@ -72,14 +81,34 @@
     (setq-default indent-tabs-mode nil
                   tab-width 2)
 
+    (auto-compression-mode t)
+    (global-font-lock-mode t)
     (blink-cursor-mode -1)
     (fset 'yes-or-no-p 'y-or-n-p)
-    (prefer-coding-system 'utf-8)
+
+    (setq locale-coding-system 'utf-8) ; pretty
+    (set-terminal-coding-system 'utf-8) ; pretty
+    (set-keyboard-coding-system 'utf-8) ; pretty
+    (set-selection-coding-system 'utf-8) ; please
+    (prefer-coding-system 'utf-8) ; with sugar on top
+    
     (column-number-mode 1)
     (windmove-default-keybindings)
+    (delete-selection-mode 1)
+    ;; Show me empty lines after buffer end
+    (set-default 'indicate-empty-lines t)
+    (global-subword-mode 1)
+    (setq-default truncate-lines t)
+    ;; No electric indent
+    (setq electric-indent-mode nil)
 
     (global-set-key (kbd "RET") 'newline-and-indent)
     (global-set-key (kbd "M-/") 'hippie-expand)
+    ;; Completion that uses many different methods to find options.
+    (global-set-key (kbd "C-.") 'hippie-expand-no-case-fold)
+    (global-set-key (kbd "C-:") 'hippie-expand-lines)
+    (global-set-key (kbd "C-,") 'completion-at-point)
+
     (define-key global-map [home] 'beginning-of-line)
     (define-key global-map [end] 'end-of-line)))
 
@@ -159,3 +188,14 @@
   :ensure t
   :mode (("\.markdown$"      . markdown-mode)
          ("\.md$"      . markdown-mode)))
+
+(use-package smex
+  :ensure t
+  :init
+  (smex-initialize)
+  :config
+  (progn
+    ;; Smart M-x
+    (global-set-key (kbd "M-x") 'smex)
+    (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+    (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)))
