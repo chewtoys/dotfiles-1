@@ -102,7 +102,7 @@
     ;; No electric indent
     (setq electric-indent-mode nil)
 
-    (global-set-key (kbd "RET") 'newline-and-indent)
+;;    (global-set-key (kbd "RET") 'newline-and-indent)
     (global-set-key (kbd "M-/") 'hippie-expand)
     ;; Completion that uses many different methods to find options.
     (global-set-key (kbd "C-.") 'hippie-expand-no-case-fold)
@@ -168,7 +168,7 @@
 (use-package magit
   :ensure t
   :defer t
-  :config
+  :init
   (setq magit-last-seen-setup-instructions "1.4.0"))
 
 (use-package color-theme
@@ -199,3 +199,9 @@
     (global-set-key (kbd "M-x") 'smex)
     (global-set-key (kbd "M-X") 'smex-major-mode-commands)
     (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)))
+
+(use-package yaml-mode
+  :ensure t
+  :mode (("\\.yml$" . yaml-mode))
+  :config
+  (add-hook 'yaml-mode-hook (lambda () (electric-indent-local-mode -1))))
