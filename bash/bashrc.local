@@ -71,7 +71,7 @@ alias pc="rsync -P"
 alias g="grep --color=auto"
 
 # brew update
-alias update='brew update && brew upgrade && brew cleanup'
+alias update='brew update && brew upgrade --all && brew cleanup'
 
 #fixopen osx finder
 alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user'
