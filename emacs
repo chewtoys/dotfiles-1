@@ -187,7 +187,10 @@
 (use-package markdown-mode
   :ensure t
   :mode (("\.markdown$"      . markdown-mode)
-         ("\.md$"      . markdown-mode)))
+         ("\.md$"      . markdown-mode))
+  :config
+  (progn
+    (add-hook 'markdown-mode-hook #'visual-line-mode)))
 
 (use-package smex
   :ensure t
@@ -197,6 +200,7 @@
   (progn
     ;; Smart M-x
     (global-set-key (kbd "M-x") 'smex)
+    (global-set-key (kbd "C-c C-m") 'smex)
     (global-set-key (kbd "M-X") 'smex-major-mode-commands)
     (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)))
 
