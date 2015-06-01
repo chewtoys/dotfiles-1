@@ -45,6 +45,36 @@
      (list (line-beginning-position)
            (line-beginning-position 2)))))
 
+;; Functions
+;; Jekyll new post
+;;(require 'cl)
+(setq website-dir "~/Projects/juev.org/")
+
+(defun sluggify (str)
+  (replace-regexp-in-string
+   "[^a-z0-9-]" ""
+   (mapconcat 'identity
+              (remove-if-not 'identity
+                             (subseq (split-string
+                                      (downcase str) " ")
+                                     0 6))
+              "-")))
+
+(defun new-post (title)
+  (interactive "MTitle: ")
+  (let ((slug (sluggify title))
+        (date (current-time)))
+    (find-file (concat website-dir "source/_posts/"
+                       (format-time-string "%Y-%m-%d") "-" slug
+                       ".markdown"))
+    (insert "---\n")
+    (insert "layout: post\n")
+    (insert "title: \"") (insert title) (insert "\"\n")
+    (insert "date: ") (insert (format-time-string "%Y-%m-%d %H:%M")) (insert "\n")
+    (insert "tags:\n")
+    (insert "- \n")
+    (insert "---\n\n")))
+
 (use-package better-defaults
   :ensure t
   :config
