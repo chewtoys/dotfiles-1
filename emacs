@@ -239,3 +239,16 @@
   :mode (("\\.yml$" . yaml-mode))
   :config
   (add-hook 'yaml-mode-hook (lambda () (electric-indent-local-mode -1))))
+
+(use-package mmm-mode
+  :ensure t
+  :config
+  (progn
+    (setq mmm-global-mode 'maybe)
+    (mmm-add-classes
+     '((yaml-header-matters
+        :submode yaml-mode
+        :face mmm-code-submode-face
+        :front "\\`---"
+        :back "^---")))    
+    (mmm-add-mode-ext-class 'markdown-mode nil 'yaml-header-matters)))
