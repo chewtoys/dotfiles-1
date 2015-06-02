@@ -71,6 +71,7 @@
     (insert "layout: post\n")
     (insert "title: \"") (insert title) (insert "\"\n")
     (insert "date: ") (insert (format-time-string "%Y-%m-%d %H:%M")) (insert "\n")
+    (insert "image: \n")
     (insert "tags:\n")
     (insert "- \n")
     (insert "---\n\n")))
