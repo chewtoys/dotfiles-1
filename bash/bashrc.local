@@ -64,6 +64,7 @@ alias s='subl'
 
 alias emacs='/usr/local/opt/emacs/bin/emacsclient -nw'
 alias e='/usr/local/opt/emacs/bin/emacsclient -nw'
+alias killemacs='/usr/local/opt/emacs/bin/emacsclient -nw --eval "(kill-emacs)"'
 
 # rsync
 alias pc="rsync -P"
