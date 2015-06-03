@@ -130,15 +130,6 @@
     (set-default 'indicate-empty-lines t)
     (global-subword-mode 1)
     (setq-default truncate-lines t)
-    ;; No electric indent
-    (setq electric-indent-mode nil)
-
-;;    (global-set-key (kbd "RET") 'newline-and-indent)
-    (global-set-key (kbd "M-/") 'hippie-expand)
-    ;; Completion that uses many different methods to find options.
-    (global-set-key (kbd "C-.") 'hippie-expand-no-case-fold)
-    (global-set-key (kbd "C-:") 'hippie-expand-lines)
-    (global-set-key (kbd "C-,") 'completion-at-point)
 
     (define-key global-map [home] 'beginning-of-line)
     (define-key global-map [end] 'end-of-line)))
@@ -253,3 +244,27 @@
         :front "\\`---"
         :back "^---")))    
     (mmm-add-mode-ext-class 'markdown-mode nil 'yaml-header-matters)))
+
+(use-package helm
+  :ensure t
+  :bind (("M-x" . helm-M-x)
+         ("M-y" . helm-show-kill-ring)
+         ("C-x b" . helm-mini)
+         ("C-x C-f" . helm-find-files))
+  :init
+  (helm-mode 1)
+  :config
+  (progn
+    (helm-autoresize-mode t)
+    (setq helm-M-x-fuzzy-match t
+          helm-buffers-fuzzy-matching t
+          helm-recentf-fuzzy-match    t) ))
+
+(use-package auto-complete
+  :ensure t
+  :bind ("M-/" . auto-complete)
+  :init
+  (ac-config-default)
+  :config
+  (setq ac-auto-start nil))
+
