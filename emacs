@@ -1,4 +1,5 @@
-(require 'cl-lib)
+(eval-when-compile
+  (require 'cl))
 (require 'package)
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
@@ -89,12 +90,10 @@
           make-backup-files nil
           sentence-end-double-space nil
           scroll-preserve-screen-position 'always
-          find-file-visit-truename t
           default-input-method "russian-computer"
           confirm-nonexistent-file-or-buffer nil
           ido-create-new-buffer 'always
-          echo-keystrokes 0.1
-          shift-select-mode nil)
+          echo-keystrokes 0.1)
 
     (when window-system
       (set-frame-size (selected-frame) 170 50)
@@ -109,7 +108,7 @@
       (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
       (setq exec-path (append exec-path '("/usr/local/bin"))))
 
-    (setq-default indent-tabs-mode nil
+    (setq-default indent-tabs-mode t
                   tab-width 2)
 
     (auto-compression-mode t)
@@ -132,21 +131,21 @@
     (setq-default truncate-lines t)
 
     (define-key global-map [home] 'beginning-of-line)
-    (define-key global-map [end] 'end-of-line)))
+    (define-key global-map [end] 'end-of-line))
 
-(use-package ido-vertical-mode
-  :ensure t
-  :defer t
-  :init
-  (progn
-    (ido-mode t)
-    (ido-vertical-mode t))
-  :config
-  (progn
-    (setq ido-ignore-buffers '("^ " "*Completions*" "*Shell Command Output*" "Async Shell Command"))
-    (setq ido-enable-flex-matching t
-          ido-use-virtual-buffers t
-          ido-everywhere t)))
+  (use-package ido-vertical-mode
+    :ensure t
+    :defer t
+    :init
+    (progn
+      (ido-mode t)
+      (ido-vertical-mode t))
+    :config
+    (progn
+      (setq ido-ignore-buffers '("^ " "*Completions*" "*Shell Command Output*" "Async Shell Command"))
+      (setq ido-enable-flex-matching t
+            ido-use-virtual-buffers t
+            ido-everywhere t))))
 
 (use-package clojure-mode
   :ensure t
@@ -189,7 +188,6 @@
 
 (use-package magit
   :ensure t
-  :defer t
   :init
   (setq magit-last-seen-setup-instructions "1.4.0"))
 
@@ -214,18 +212,6 @@
   (progn
     (add-hook 'markdown-mode-hook #'visual-line-mode)))
 
-(use-package smex
-  :ensure t
-  :init
-  (smex-initialize)
-  :config
-  (progn
-    ;; Smart M-x
-    (global-set-key (kbd "M-x") 'smex)
-    (global-set-key (kbd "C-c C-m") 'smex)
-    (global-set-key (kbd "M-X") 'smex-major-mode-commands)
-    (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)))
-
 (use-package yaml-mode
   :ensure t
   :mode (("\\.yml$" . yaml-mode))
@@ -234,6 +220,7 @@
 
 (use-package mmm-mode
   :ensure t
+	:diminish mmm-mode
   :config
   (progn
     (setq mmm-global-mode 'maybe)
@@ -247,12 +234,19 @@
 
 (use-package helm
   :ensure t
-  :bind (("M-x" . helm-M-x)
+  :bind (("C-c h" . helm-mini)				 
+         ("C-x C-b" . helm-buffers-list)
+				 ("C-h a" . helm-apropos)
+         ("C-x b" . helm-buffers-list)
          ("M-y" . helm-show-kill-ring)
-         ("C-x b" . helm-mini)
-         ("C-x C-f" . helm-find-files))
+         ("M-x" . helm-M-x)
+         ("C-x c o" . helm-occur)
+         ("C-x c s" . helm-swoop))
+	:diminish helm-mode
   :init
-  (helm-mode 1)
+	(progn
+		(require 'helm-config)
+		(helm-mode))
   :config
   (progn
     (helm-autoresize-mode t)
