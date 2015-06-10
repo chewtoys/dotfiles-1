@@ -1,64 +1,23 @@
-# OSX
-.DS_Store
-.AppleDouble
-.LSOverride
-Icon
-
-# Thumbnails
-._*
-
-# Files that might appear on external disk
-.Spotlight-V100
-.Trashes
-
-# Emacs
 *~
-\#*\#
-/.emacs.desktop
-/.emacs.desktop.lock
-.elc
-auto-save-list
-tramp
-.\#*
 
-# Org-mode
-.org-id-locations
-*_archive
+# KDE directory preferences
+.directory
 
-# IntelliJ Idea
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
 
-*.iml
-*.ipr
-*.iws
-.idea/
-
-# SublimeText project files
-*.sublime-workspace
-
-### SASS Ignores - "Sassy CSS" http://sass-lang.com/
-*.sass-cache
-
-# Ignore tags created by etags and ctags
-TAGS
-!TAGS/
-tags
-!tags/
-
-# TextMate
-*.tmproj
-*.tmproject
-tmtags
-
-# Vim
-.*.sw[a-z]
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
 *.un~
 Session.vim
 .netrwhist
+*~
 
-# Bundle
-.bundle
-*.lock
-
-# Direnv stuff
-.direnv
-.envrc
+.extra
+.i3/logfile
+.irssi/away.log
+.irssi/config*
+.irssi/nicknames_whitelist
+.irssi/saved_colors
+.irssi/scripts/autorun/blocker.pl
+.rainbow_oauth
