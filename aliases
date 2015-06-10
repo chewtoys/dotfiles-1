@@ -1,13 +1,17 @@
 #!/bin/bash
 
 # debian specific aliases
-alias open='browser-exec "$@"'
-alias pbcopy='xclip -selection clipboard'
-alias pbpaste='xclip -selection clipboard -o'
+case $OSTYPE in linux*)
+  alias install="sudo aptitude install"
+  alias search="sudo aptitude search"
+  alias update="sudo aptitude update && sudo aptitude upgrade"
+esac
 
-alias install="sudo aptitude install"
-alias search="sudo aptitude search"
-alias update="sudo aptitude update && sudo aptitude upgrade"
+case $OSTYPE in darwin*)
+  alias install="brew install"
+  alias search="brew search"
+  alias update="brew update && brew upgrade --all && brew cleanup"
+esac
 
 # Easier navigation: .., ..., ...., ....., ~ and -
 alias ..="cd .."
