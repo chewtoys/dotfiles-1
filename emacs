@@ -203,7 +203,7 @@
       (setq solarized-scale-org-headlines nil)
       (setq solarized-use-variable-pitch nil)
       (load-theme 'solarized t))))
-
+	
 (use-package markdown-mode
   :ensure t
   :mode (("\.markdown$"      . markdown-mode)

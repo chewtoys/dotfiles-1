@@ -1,16 +1,18 @@
 #!/bin/bash
 
 # debian specific aliases
-case $OSTYPE in linux*)
-  alias install="sudo aptitude install"
-  alias search="sudo aptitude search"
-  alias update="sudo aptitude update && sudo aptitude upgrade"
-esac
-
-case $OSTYPE in darwin*)
-  alias install="brew install"
-  alias search="brew search"
-  alias update="brew update && brew upgrade --all && brew cleanup"
+case $OSTYPE in
+		linux*)
+				alias install="sudo aptitude install"
+				alias search="sudo aptitude search"
+				alias update="sudo aptitude update && sudo aptitude upgrade"
+		;;
+		darwin*)
+				alias install="brew install"
+				alias search="brew search"
+				alias update="brew update && brew upgrade --all && brew cleanup"
+				alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user'
+		;;
 esac
 
 # Easier navigation: .., ..., ...., ....., ~ and -
