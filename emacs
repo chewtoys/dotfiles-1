@@ -196,14 +196,22 @@
   :config
   (use-package color-theme-solarized
     :ensure t
-    :config
-    (progn
-      (set-frame-parameter nil 'background-mode 'dark)
-      (set-terminal-parameter nil 'background-mode 'dark)
-      (setq solarized-scale-org-headlines nil)
-      (setq solarized-use-variable-pitch nil)
-      (load-theme 'solarized t))))
-	
+		:init
+		(when (daemonp)
+			(add-hook 'after-make-frame-functions
+								(lambda (frame)
+									(select-frame frame)
+									(set-frame-parameter nil 'background-mode 'dark)
+									(set-terminal-parameter nil 'background-mode 'dark)
+									(load-theme 'solarized t))))
+		:config
+		(progn
+			(set-frame-parameter nil 'background-mode 'dark)
+			(set-terminal-parameter nil 'background-mode 'dark)
+			(setq solarized-scale-org-headlines nil)
+			(setq solarized-use-variable-pitch nil)
+			(load-theme 'solarized t))))
+
 (use-package markdown-mode
   :ensure t
   :mode (("\.markdown$"      . markdown-mode)
