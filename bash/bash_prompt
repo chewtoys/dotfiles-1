@@ -1,3 +1,4 @@
+# -*- mode: sh -*-
 # Shell prompt based on the Solarized Dark theme.
 # Screenshot: http://i.imgur.com/EkEtphC.png
 # Heavily inspired by @necolas’s prompt: https://github.com/necolas/dotfiles
@@ -59,7 +60,7 @@ prompt_git() {
 	fi;
 }
 
-if tput setaf 1 &> /dev/null; then
+if [ -x /usr/bin/tput ] && tput setaf 1 &> /dev/null; then
 	tput sgr0; # reset colors
 	bold=$(tput bold);
 	reset=$(tput sgr0);
