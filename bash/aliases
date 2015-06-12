@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# debian specific aliases
 case $OSTYPE in
 		linux*)
 				alias install="sudo aptitude install"
@@ -25,6 +24,7 @@ alias -- -="cd -"
 
 # Shortcuts
 alias dl="cd ~/Downloads"
+alias pr="cd ~/Projects"
 alias g="git"
 alias h="history"
 
@@ -121,6 +121,10 @@ alias cp='cp -i'
 
 # move file interactive
 alias mv='mv -i'
+
+# 
+alias pc="rsync -P"
+alias pg='ps aux | grep -i'
 
 # untar
 alias untar='tar xvf'
