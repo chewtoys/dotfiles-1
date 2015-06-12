@@ -90,9 +90,6 @@ case $OSTYPE in
 								. /etc/bash_completion
 						fi
 				fi
-				for file in /etc/bash_completion.d/* ; do
-						source "$file"
-				done
 				;;
 		darwin*)
 				if [ -f `brew --prefix`/etc/bash_completion ]; then
