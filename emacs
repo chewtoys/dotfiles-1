@@ -91,6 +91,8 @@
           default-input-method "russian-computer"
           confirm-nonexistent-file-or-buffer nil
           ido-create-new-buffer 'always
+					vc-follow-link t
+					vc-follow-symlinks t
           echo-keystrokes 0.1)
 
     (when window-system
@@ -195,17 +197,17 @@
 	:bind (("C-x v s" . magit-status)
 				 ("C-x v p" . magit-push))
   :init
-  (setq magit-last-seen-setup-instructions "1.4.0"))
+  (setq magit-last-seen-setup-instructions "1.4.0")
+	:config
+	(progn
+		(set-face-foreground 'magit-diff-add "green3")
+		(set-face-foreground 'magit-diff-del "red3")))
 
-(use-package color-theme :ensure t)
-(use-package color-theme-solarized :ensure t)
-(defun my/setup-color-theme ()
-  (interactive)
-  (color-theme-solarized-dark))
-
-(eval-after-load 'color-theme
-  '(when window-system
-		 (my/setup-color-theme)))
+(use-package sublime-themes
+	:ensure t
+	:defer t
+	:init
+	(load-theme 'hickey t))
 
 (use-package markdown-mode
   :ensure t
