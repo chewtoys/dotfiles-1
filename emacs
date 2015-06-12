@@ -15,8 +15,6 @@
 
 (setq package-enable-at-startup nil)
 
-;;(load "~/.custom.el" t)
-
 (setq  user-full-name "Denis Evsyukov"
        user-mail-address "denis@evsyukov.org")
 
@@ -106,7 +104,10 @@
     (when (eq system-type 'darwin) ;; mac specific settings
       (setq mac-command-modifier 'meta)
       (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
-      (setq exec-path (append exec-path '("/usr/local/bin"))))
+      (setq exec-path (append exec-path '("/usr/local/bin")))
+			(when window-system
+				(set-frame-size (selected-frame) 190 55)
+				(set-default-font "DejaVu Sans Mono 15" nil t)))
 
     (setq-default indent-tabs-mode t
                   tab-width 2)
@@ -183,34 +184,28 @@
 
 (use-package projectile
   :ensure t
+	:defer t
+	:diminish projectile-mode
   :config
   (projectile-global-mode))
 
 (use-package magit
   :ensure t
+	:defer t
+	:bind (("C-x v s" . magit-status)
+				 ("C-x v p" . magit-push))
   :init
   (setq magit-last-seen-setup-instructions "1.4.0"))
 
-(use-package color-theme
-  :ensure t
-  :config
-  (use-package color-theme-solarized
-    :ensure t
-		:init
-		(when (daemonp)
-			(add-hook 'after-make-frame-functions
-								(lambda (frame)
-									(select-frame frame)
-									(set-frame-parameter nil 'background-mode 'dark)
-									(set-terminal-parameter nil 'background-mode 'dark)
-									(load-theme 'solarized t))))
-		:config
-		(progn
-			(set-frame-parameter nil 'background-mode 'dark)
-			(set-terminal-parameter nil 'background-mode 'dark)
-			(setq solarized-scale-org-headlines nil)
-			(setq solarized-use-variable-pitch nil)
-			(load-theme 'solarized t))))
+(use-package color-theme :ensure t)
+(use-package color-theme-solarized :ensure t)
+(defun my/setup-color-theme ()
+  (interactive)
+  (color-theme-solarized-dark))
+
+(eval-after-load 'color-theme
+  '(when window-system
+		 (my/setup-color-theme)))
 
 (use-package markdown-mode
   :ensure t
