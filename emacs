@@ -203,11 +203,10 @@
 		(set-face-foreground 'magit-diff-add "green3")
 		(set-face-foreground 'magit-diff-del "red3")))
 
-(use-package sublime-themes
+(use-package material-theme
 	:ensure t
-	:defer t
 	:init
-	(load-theme 'hickey t))
+	(load-theme 'material t))
 
 (use-package markdown-mode
   :ensure t
@@ -225,6 +224,7 @@
 
 (use-package mmm-mode
   :ensure t
+	:defer t
 	:diminish mmm-mode
   :config
   (progn
