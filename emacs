@@ -203,10 +203,16 @@
 		(set-face-foreground 'magit-diff-add "green3")
 		(set-face-foreground 'magit-diff-del "red3")))
 
-(use-package material-theme
-	:ensure t
-	:init
-	(load-theme 'material t))
+(if window-system
+		(use-package basic-theme
+			:ensure t
+			:config
+			(load-theme 'basic t))
+
+	(use-package material-theme
+		:ensure t
+		:config
+		(load-theme 'material t)))
 
 (use-package markdown-mode
   :ensure t
@@ -267,3 +273,35 @@
   :config
   (setq ac-auto-start nil))
 
+(use-package evil-leader
+	:commands (evil-leader-mode)
+	:ensure t
+	:demand evil-leader
+	:init
+	(global-evil-leader-mode)
+	:config
+	(progn
+		(evil-leader/set-leader ",")
+		(evil-leader/set-key "w" 'save-buffer)
+		(evil-leader/set-key "q" 'kill-buffer-and-window)
+		(evil-leader/set-key "x" 'helm-M-x)
+		(evil-leader/set-key "f" 'find-file)))
+
+(use-package evil
+	:ensure t
+	:config
+	(progn
+		;; change mode-line color by evil state
+		(lexical-let ((default-color (cons (face-background 'mode-line)
+																			 (face-foreground 'mode-line))))
+			(add-hook 'post-command-hook
+								(lambda ()
+									(let ((color (cond ((minibufferp) default-color)
+																		 ((evil-insert-state-p) '("#e80000" . "#ffffff"))
+																		 ((evil-emacs-state-p)  '("#444488" . "#ffffff"))
+																		 ((buffer-modified-p)   '("#006fa0" . "#ffffff"))
+																		 (t default-color))))
+										(set-face-background 'mode-line (car color))
+										(set-face-foreground 'mode-line (cdr color))))))
+		(evil-mode t)))
+	
