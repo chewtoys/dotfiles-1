@@ -103,7 +103,7 @@
     (set-frame-size (selected-frame) 190 55)
     (set-default-font "DejaVu Sans Mono 15" nil t)))
 
-(setq-default indent-tabs-mode t
+(setq-default indent-tabs-mode nil
               tab-width 2)
 
 (auto-compression-mode t)
@@ -124,6 +124,13 @@
 
 (define-key global-map [home] 'beginning-of-line)
 (define-key global-map [end] 'end-of-line)
+
+(require 'whitespace)
+(global-whitespace-mode +1)
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(set-face-attribute 'whitespace-space nil :background nil :foreground "gray92")
+(set-face-attribute 'whitespace-trailing nil :background "plum1" :foreground "gray92")
+(setq whitespace-style '(face tabs spaces tabs-mark space-mark trailing))
 
 (use-package better-defaults
   :ensure t
