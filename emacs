@@ -64,46 +64,47 @@
     (insert "---\n")
     (insert "layout: post\n")
     (insert "title: \"") (insert title) (insert "\"\n")
-    (insert "date: ") (insert (format-time-string "%Y-%m-%d %H:%M")) (insert "\n")
+    (insert "date: ")
+    (insert (format-time-string "%Y-%m-%d %H:%M")) (insert "\n")
     (insert "image: \n")
     (insert "tags:\n")
     (insert "- \n")
     (insert "---\n\n")))
 
 (setq inhibit-splash-screen t
-			inhbit-startup-message t
-			initial-scratch-message ""
-			inhibit-startup-echo-area-message t
-			visible-bell nil
-			ring-bell-function 'ignore
-			make-backup-files nil
-			sentence-end-double-space nil
-			scroll-preserve-screen-position 'always
-			default-input-method "russian-computer"
-			confirm-nonexistent-file-or-buffer nil
-			ido-create-new-buffer 'always
-			vc-follow-link t
-			vc-follow-symlinks t
-			echo-keystrokes 0.1)
+      inhbit-startup-message t
+      initial-scratch-message ""
+      inhibit-startup-echo-area-message t
+      visible-bell nil
+      ring-bell-function 'ignore
+      make-backup-files nil
+      sentence-end-double-space nil
+      scroll-preserve-screen-position 'always
+      default-input-method "russian-computer"
+      confirm-nonexistent-file-or-buffer nil
+      ido-create-new-buffer 'always
+      vc-follow-link t
+      vc-follow-symlinks t
+      echo-keystrokes 0.1)
 
 (when window-system
-	(set-frame-size (selected-frame) 170 50)
-	(set-default-font "DejaVu Sans Mono 13" nil t))
+  (set-frame-size (selected-frame) 170 50)
+  (set-default-font "DejaVu Sans Mono 13" nil t))
 
 (when (display-graphic-p)
-	(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
+  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
 (setq-default buffer-file-coding-system 'utf-8-unix)
 
 (when (eq system-type 'darwin) ;; mac specific settings
-	(setq mac-command-modifier 'meta)
-	(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
-	(setq exec-path (append exec-path '("/usr/local/bin")))
-	(when window-system
-		(set-frame-size (selected-frame) 190 55)
-		(set-default-font "DejaVu Sans Mono 15" nil t)))
+  (setq mac-command-modifier 'meta)
+  (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+  (setq exec-path (append exec-path '("/usr/local/bin")))
+  (when window-system
+    (set-frame-size (selected-frame) 190 55)
+    (set-default-font "DejaVu Sans Mono 15" nil t)))
 
 (setq-default indent-tabs-mode t
-							tab-width 2)
+              tab-width 2)
 
 (auto-compression-mode t)
 (global-font-lock-mode t)
@@ -126,7 +127,7 @@
 
 (use-package better-defaults
   :ensure t
-	:config
+  :config
   (global-set-key
    (kbd "M-/")
    (make-hippie-expand-function
@@ -142,18 +143,18 @@
       try-complete-lisp-symbol) t)))
 
 (use-package ido-vertical-mode
-	:ensure t
-	:defer t
-	:init
-	(progn
-		(ido-mode t)
-		(ido-vertical-mode t))
-	:config
-	(progn
-		(setq ido-ignore-buffers '("^ " "*Completions*" "*Shell Command Output*" "Async Shell Command"))
-		(setq ido-enable-flex-matching t
-					ido-use-virtual-buffers t
-					ido-everywhere t)))
+  :ensure t
+  :defer t
+  :init
+  (progn
+    (ido-mode t)
+    (ido-vertical-mode t))
+  :config
+  (progn
+    (setq ido-ignore-buffers '("^ " "*Completions*" "*Shell Command Output*" "Async Shell Command"))
+    (setq ido-enable-flex-matching t
+          ido-use-virtual-buffers t
+          ido-everywhere t)))
 
 (use-package clojure-mode
   :ensure t
@@ -191,22 +192,22 @@
 
 (use-package projectile
   :ensure t
-	:defer t
-	:diminish projectile-mode
+  :defer t
+  :diminish projectile-mode
   :config
   (projectile-global-mode))
 
 (use-package magit
   :ensure t
-	:defer t
-	:bind (("C-x v s" . magit-status)
-				 ("C-x v p" . magit-push))
+  :defer t
+  :bind (("C-x v s" . magit-status)
+         ("C-x v p" . magit-push))
   :init
   (setq magit-last-seen-setup-instructions "1.4.0")
-	:config
-	(progn
-		(set-face-foreground 'magit-diff-add "green3")
-		(set-face-foreground 'magit-diff-del "red3")))
+  :config
+  (progn
+    (set-face-foreground 'magit-diff-add "green3")
+    (set-face-foreground 'magit-diff-del "red3")))
 
 (custom-set-faces
  '(mode-line ((default (:foreground "ivory" :background "DarkOrange2")))))
@@ -227,8 +228,8 @@
 
 (use-package mmm-mode
   :ensure t
-	:defer t
-	:diminish mmm-mode
+  :defer t
+  :diminish mmm-mode
   :config
   (progn
     (setq mmm-global-mode 'maybe)
@@ -237,5 +238,5 @@
         :submode yaml-mode
         :face mmm-code-submode-face
         :front "\\`---"
-        :back "^---")))    
+        :back "^---")))
     (mmm-add-mode-ext-class 'markdown-mode nil 'yaml-header-matters)))
