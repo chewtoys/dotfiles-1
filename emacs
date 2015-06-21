@@ -128,10 +128,11 @@
 (when window-system
   (require 'whitespace)
   (global-whitespace-mode +1)
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
   (set-face-attribute 'whitespace-space nil :background nil :foreground "gray80")
   (set-face-attribute 'whitespace-trailing nil :background "plum1" :foreground "gray80")
   (setq whitespace-style '(face tabs spaces tabs-mark space-mark trailing)))
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 (use-package better-defaults
   :ensure t
