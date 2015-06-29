@@ -201,7 +201,6 @@
 
 (use-package projectile
   :ensure t
-  :defer t
   :diminish projectile-mode
   :config
   (projectile-global-mode))
@@ -237,7 +236,6 @@
 
 (use-package mmm-mode
   :ensure t
-  :defer t
   :diminish mmm-mode
   :config
   (progn
