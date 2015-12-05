@@ -1,5 +1,9 @@
+# No bell
+set bell-style none
+
 # Make vi-mode to default
 set editing-mode vi
+set keymap vi-command
 
 # Make Tab autocomplete regardless of filename case
 set completion-ignore-case on
