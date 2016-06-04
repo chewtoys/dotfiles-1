@@ -1,8 +1,8 @@
 # go path
-export GOPATH=$HOME/.go
+#export GOPATH=$HOME/.go
 
 # Java
 #export JAVA_HOME=$HOME/.jdk/jdk8
 
 # update path
-export PATH=$HOME/bin:/usr/local/bin:/usr/local/go/bin:$PATH:$GOPATH/bin:/sbin
+export PATH=$HOME/bin:/usr/local/sbin:/usr/local/bin:/sbin
