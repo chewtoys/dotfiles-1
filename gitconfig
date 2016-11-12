@@ -168,3 +168,5 @@
 	user = Juev
 [credential]
 	helper = osxkeychain
+[pull]
+	rebase = true
