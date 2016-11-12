@@ -85,6 +85,7 @@
 	# More info: <http://www.git-tower.com/blog/make-git-rebase-safe-on-osx/>
 	trustctime = false
 	editor = vim
+	autocrlf = input
 
 [color]
 
@@ -137,6 +138,7 @@
 
 [url "git@github.com:"]
 
+    insteadOf = "gh:"
 	pushInsteadOf = https://github.com/
 	pushInsteadOf = "github:"
 	pushInsteadOf = "git://github.com/"
@@ -164,3 +166,5 @@
 
 [github]
 	user = Juev
+[credential]
+	helper = osxkeychain

@@ -2,8 +2,8 @@
 set bell-style none
 
 # Make vi-mode to default
-set editing-mode vi
-set keymap vi-command
+#set editing-mode emacs
+set keymap emacs
 
 # Make Tab autocomplete regardless of filename case
 set completion-ignore-case on
@@ -49,3 +49,5 @@ set convert-meta off
 ## enable Alt-arrows
 "\e[1;5D": backward-word ### Alt left
 "\e[1;5C": forward-word ### Alt right
+
+set show-all-if-unmodified on

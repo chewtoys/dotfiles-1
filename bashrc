@@ -129,3 +129,6 @@ eval "$(rbenv init -)"
 
 # print a fortune when the terminal opens
 fortune -a -s
+
+# added by travis gem
+[ -f /Users/juev/.travis/travis.sh ] && source /Users/juev/.travis/travis.sh
