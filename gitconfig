@@ -170,3 +170,5 @@
 	helper = osxkeychain
 [pull]
 	rebase = true
+[branch]
+	autosetuprebase = always
