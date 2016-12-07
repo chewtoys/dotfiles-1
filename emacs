@@ -88,20 +88,17 @@
       echo-keystrokes 0.1)
 
 (when window-system
-  (set-frame-size (selected-frame) 170 50)
-  (set-default-font "DejaVu Sans Mono 13" nil t))
+  (set-frame-size (selected-frame) 140 40)
+  (set-default-font "Fira Code 14" nil t))
 
 (when (display-graphic-p)
   (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
 (setq-default buffer-file-coding-system 'utf-8-unix)
 
 (when (eq system-type 'darwin) ;; mac specific settings
-  (setq mac-command-modifier 'meta)
+;;  (setq mac-command-modifier 'meta)
   (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
-  (setq exec-path (append exec-path '("/usr/local/bin")))
-  (when window-system
-    (set-frame-size (selected-frame) 190 55)
-    (set-default-font "DejaVu Sans Mono 15" nil t)))
+  (setq exec-path (append exec-path '("/usr/local/bin"))))
 
 (setq-default indent-tabs-mode nil
               tab-width 2)
@@ -121,9 +118,6 @@
 (windmove-default-keybindings)
 (delete-selection-mode 1)
 (setq-default truncate-lines t)
-
-(define-key global-map [home] 'beginning-of-line)
-(define-key global-map [end] 'end-of-line)
 
 (when window-system
   (require 'whitespace)
@@ -165,20 +159,6 @@
           ido-use-virtual-buffers t
           ido-everywhere t)))
 
-(use-package clojure-mode
-  :ensure t
-  :mode (("\.clj$"      . clojure-mode)
-         ("\.cljs$"     . clojure-mode)
-         ("\.cljx$"     . clojure-mode)
-         ("\.edn$"      . clojure-mode)
-         ("\.boot$"     . clojure-mode)
-         ("\.cljs\.hl$" . clojure-mode))
-  :config
-  (progn
-    (use-package cider
-      :ensure t)
-    (setq clojure-defun-style-default-indent t)))
-
 (use-package paredit
   :ensure t
   :diminish paredit-mode
@@ -218,6 +198,10 @@
     (set-face-foreground 'magit-diff-del "red3")))
 
 (custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(mode-line ((default (:foreground "ivory" :background "DarkOrange2")))))
 
 (use-package markdown-mode
@@ -247,3 +231,43 @@
         :front "\\`---"
         :back "^---")))
     (mmm-add-mode-ext-class 'markdown-mode nil 'yaml-header-matters)))
+
+(use-package anaconda-mode
+  :ensure t
+  :init
+  (progn
+    (use-package ac-anaconda
+      :ensure t)
+    (add-hook 'python-mode-hook 'anaconda-mode)
+    (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
+    (add-hook 'python-mode-hook 'ac-anaconda-setup)
+    (setq py-isort-options '("-sl"))))
+
+(use-package auto-complete
+  :ensure t
+  :init
+  (ac-config-default))
+
+;; (use-package evil
+;;   :ensure t
+;;   :init
+;;   (progn
+;;     (evil-mode t)
+;;     (setq evil-want-fine-undo t)
+;;     (define-key evil-normal-state-map [escape] 'keyboard-quit)
+;;     (define-key evil-visual-state-map [escape] 'keyboard-quit)
+;;     (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+;;     (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+;;     (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+;;     (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+;;     (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+;;     (define-key evil-motion-state-map (kbd "SPC") 'evil-ex)))
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (ac-anaconda evil anaconda-mode mmm-mode yaml-mode markdown-mode magit projectile rainbow-delimiters paredit ido-vertical-mode better-defaults use-package))))
