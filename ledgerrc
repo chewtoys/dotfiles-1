@@ -1,0 +1,4 @@
+--file ~/Documents/ledger.journal
+--wide
+--pager /usr/bin/less
+--sort date
