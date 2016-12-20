@@ -18,10 +18,6 @@
 (setq user-full-name "Denis Evsyukov"
       user-mail-address "denis@evsyukov.org")
 
-(eval-when-compile
-  (require 'use-package))
-(require 'diminish)
-(require 'bind-key)
 
 ;;(load "~/.emacs.secrets" t)
 
@@ -268,6 +264,36 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ledger-reports
+   (quote
+    (("qwe" "ledger -B b")
+     ("bal" "%(binary) -f %(ledger-file) bal")
+     ("reg" "%(binary) -f %(ledger-file) reg")
+     ("payee" "%(binary) -f %(ledger-file) reg @%(payee)")
+     ("account" "%(binary) -f %(ledger-file) reg %(account)"))))
  '(package-selected-packages
    (quote
-    (ac-anaconda evil anaconda-mode mmm-mode yaml-mode markdown-mode magit projectile rainbow-delimiters paredit ido-vertical-mode better-defaults use-package))))
+    (go-mode ledger ledger-mode ac-anaconda evil anaconda-mode mmm-mode yaml-mode markdown-mode magit projectile rainbow-delimiters paredit ido-vertical-mode better-defaults use-package))))
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((R . t)
+   (ditaa . t)
+   (dot . t)
+   (emacs-lisp . t)
+   (gnuplot . t)
+   (haskell . nil)
+   (latex . t)
+   (ledger . t)         ;this is the important one for this tutorial
+   (ocaml . nil)
+   (octave . t)
+   (python . t)
+   (ruby . t)
+   (screen . nil)
+   (sh . t)
+   (sql . nil)
+   (sqlite . t)))
+
+(use-package ledger-mode
+  :ensure t
+  :mode (("^ledger.dat$" . ledger-mode)))

@@ -132,3 +132,7 @@ fortune -a -s
 
 # added by travis gem
 [ -f /Users/juev/.travis/travis.sh ] && source /Users/juev/.travis/travis.sh
+
+export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python
+export PATH=$HOME/.local/bin:$PATH
+export GOPATH=$HOME/.go
