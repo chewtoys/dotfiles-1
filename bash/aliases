@@ -91,3 +91,5 @@ alias mv='mv -i'
 #
 alias pc="rsync -hP"
 alias pg='ps aux | grep -i'
+
+alias mirror='wget -mkEpnp'
