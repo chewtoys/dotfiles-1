@@ -88,35 +88,6 @@ alias cp='cp -i'
 # move file interactive
 alias mv='mv -i'
 
-# 
+#
 alias pc="rsync -hP"
 alias pg='ps aux | grep -i'
-
-# untar
-alias untar='tar xvf'
-
-case $OSTYPE in
-		linux*)
-				alias install="sudo aptitude install"
-				alias search="sudo aptitude search"
-				alias update="sudo aptitude update && sudo aptitude upgrade"
-				# copy working directory
-				alias cwd='pwd | tr -d "\r\n" | xclip -selection clipboard'
-				# Pipe my public key to my clipboard.
-				alias pubkey="more ~/.ssh/id_rsa.pub | xclip -selection clipboard | echo '=> Public key copied to pasteboard.'"
-				# Pipe my private key to my clipboard.
-				alias prikey="more ~/.ssh/id_rsa | xclip -selection clipboard | echo '=> Private key copied to pasteboard.'"
-		;;
-		darwin*)
-				alias install="brew install"
-				alias search="brew search"
-				alias update="brew update && brew upgrade --all && brew cleanup"
-				alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user'
-				# copy working directory
-				alias cwd='pwd | tr -d "\r\n" | pbcopy'
-				# Pipe my public key to my clipboard.
-				alias pubkey="more ~/.ssh/id_rsa.pub | pbcopy | echo '=> Public key copied to pasteboard.'"
-				# Pipe my private key to my clipboard.
-				alias prikey="more ~/.ssh/id_rsa | pbcopy | echo '=> Private key copied to pasteboard.'"
-		;;
-esac

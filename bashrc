@@ -101,7 +101,7 @@ esac
 # Load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
 # * ~/.extra can be used for other settings you don’t want to commit.
-for file in ~/.bash/{bash_prompt,aliases,functions,path,extra,exports,services}; do
+for file in ~/.bash/{bash_prompt,aliases,functions,path,exports,services}; do
 	[[ -r "$file" ]] && [[ -f "$file" ]] && source "$file"
 done
 unset file
@@ -129,10 +129,3 @@ eval "$(rbenv init -)"
 
 # print a fortune when the terminal opens
 fortune -a -s
-
-# added by travis gem
-[ -f /Users/juev/.travis/travis.sh ] && source /Users/juev/.travis/travis.sh
-
-export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python
-export PATH=$HOME/.local/bin:$PATH
-export GOPATH=$HOME/.go

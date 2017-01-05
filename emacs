@@ -52,7 +52,7 @@
 
 (defun new-post (title)
   (interactive "MTitle: ")
-  (let ((slug (sluggify title))
+  (let ((slug title)
         (date (current-time)))
     (find-file (concat website-dir "source/_posts/"
                        (format-time-string "%Y-%m-%d") "-" slug
@@ -92,9 +92,11 @@
 (setq-default buffer-file-coding-system 'utf-8-unix)
 
 (when (eq system-type 'darwin) ;; mac specific settings
-;;  (setq mac-command-modifier 'meta)
-  (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
-  (setq exec-path (append exec-path '("/usr/local/bin"))))
+  (exec-path-from-shell-initialize)
+  (exec-path-from-shell-copy-env "GOPATH")
+  ;; (setq mac-option-modifier 'alt)
+  ;; (setq mac-command-modifier 'control)
+  )
 
 (setq-default indent-tabs-mode nil
               tab-width 2)
@@ -264,36 +266,47 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ledger-reports
+'(package-selected-packages
    (quote
-    (("qwe" "ledger -B b")
-     ("bal" "%(binary) -f %(ledger-file) bal")
-     ("reg" "%(binary) -f %(ledger-file) reg")
-     ("payee" "%(binary) -f %(ledger-file) reg @%(payee)")
-     ("account" "%(binary) -f %(ledger-file) reg %(account)"))))
- '(package-selected-packages
-   (quote
-    (go-mode ledger ledger-mode ac-anaconda evil anaconda-mode mmm-mode yaml-mode markdown-mode magit projectile rainbow-delimiters paredit ido-vertical-mode better-defaults use-package))))
+    (go-rename go-autocomplete go-eldoc flycheck flycheck-gometalinter go-mode ledger ledger-mode ac-anaconda evil anaconda-mode mmm-mode yaml-mode markdown-mode magit projectile rainbow-delimiters paredit ido-vertical-mode better-defaults use-package))))
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((R . t)
-   (ditaa . t)
-   (dot . t)
-   (emacs-lisp . t)
-   (gnuplot . t)
-   (haskell . nil)
-   (latex . t)
-   (ledger . t)         ;this is the important one for this tutorial
-   (ocaml . nil)
-   (octave . t)
-   (python . t)
-   (ruby . t)
-   (screen . nil)
-   (sh . t)
-   (sql . nil)
-   (sqlite . t)))
-
-(use-package ledger-mode
+;;gometalinter
+(use-package flycheck-gometalinter
   :ensure t
-  :mode (("^ledger.dat$" . ledger-mode)))
+  :config
+  (progn
+    (flycheck-gometalinter-setup))
+
+  ;; gometalinter: skips 'vendor' directories and sets GO15VENDOREXPERIMENT=1
+  (setq flycheck-gometalinter-vendor t)
+  ;; gometalinter: only enable selected linters
+  (setq flycheck-gometalinter-disable-all t)
+  (setq flycheck-gometalinter-enable-linters
+        '("golint" "vet" "vetshadow" "golint" "ineffassign" "goconst" "gocyclo" "errcheck" "deadcode")))
+
+;; go-mode
+(use-package go-mode
+  :ensure t
+  :config
+  (progn
+    (add-hook 'before-save-hook 'gofmt-before-save)
+    (setq-default gofmt-command "goimports")
+    (add-hook 'go-mode-hook 'go-eldoc-setup)
+   ; (add-hook 'go-mode-hook 'yas-minor-mode)
+    (add-hook 'go-mode-hook 'flycheck-mode)))
+
+;; go-eldoc
+(use-package go-eldoc
+  :ensure t
+  :config
+  (progn
+    (add-hook 'go-mode-hook 'go-eldoc-setup)))
+
+;; go-autocomlete
+(use-package go-autocomplete
+  :ensure t)
+
+(use-package go-rename
+  :ensure t)
+
+;; (global-set-key (kbd "C-c C-n") (find-file "~/Documents/notes.org"))
