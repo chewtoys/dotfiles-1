@@ -8,7 +8,7 @@ export TERMINAL="urxvt";
 # Larger bash history (allow 32³ entries; default is 500)
 export HISTSIZE=50000000;
 export HISTFILESIZE=$HISTSIZE;
-export HISTCONTROL=ignoredups;
+export HISTCONTROL=ignoreboth:erasedups
 # Make some commands not show up in history
 export HISTIGNORE="ls:cd -:pwd:exit:date";
 
