@@ -18,41 +18,23 @@
 (setq user-full-name "Denis Evsyukov"
       user-mail-address "denis@evsyukov.org")
 
-
 ;;(load "~/.emacs.secrets" t)
-
-;; This advises ido-find-file to reopen the selected file as root
-(defadvice ido-find-file (after find-file-sudo activate)
-  "Find file as root if necessary."
-  (unless (and buffer-file-name
-               (file-writable-p buffer-file-name))
-    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
-
-(defadvice kill-region (before slick-cut activate compile)
-  "When called interactively with no active region, kill a single line instead."
-  (interactive
-   (if mark-active (list (region-beginning) (region-end))
-     (list (line-beginning-position)
-           (line-beginning-position 2)))))
 
 ;; Functions
 ;; Jekyll new post
-;;(require 'cl)
 (setq website-dir "~/Projects/juev.org/")
 
 (defun sluggify (str)
   (replace-regexp-in-string
    "[^a-z0-9-]" ""
    (mapconcat 'identity
-              (remove-if-not 'identity
-                             (subseq (split-string
-                                      (downcase str) " ")
-                                     0 6))
+              (split-string
+               (downcase str) " ")
               "-")))
 
 (defun new-post (title)
   (interactive "MTitle: ")
-  (let ((slug title)
+  (let ((slug (sluggify title))
         (date (current-time)))
     (find-file (concat website-dir "source/_posts/"
                        (format-time-string "%Y-%m-%d") "-" slug
@@ -64,8 +46,9 @@
     (insert (format-time-string "%Y-%m-%d %H:%M")) (insert "\n")
     (insert "image: \n")
     (insert "tags:\n")
-    (insert "- \n")
+    (insert "  - \n")
     (insert "---\n\n")))
+;; End Jekyll functions
 
 (setq inhibit-splash-screen t
       inhbit-startup-message t
@@ -83,28 +66,19 @@
       vc-follow-symlinks t
       echo-keystrokes 0.1)
 
-(when window-system
-  (set-frame-size (selected-frame) 140 40)
-  (set-default-font "Fira Code 14" nil t))
-
-(when (display-graphic-p)
-  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
-(setq-default buffer-file-coding-system 'utf-8-unix)
-
 (when (eq system-type 'darwin) ;; mac specific settings
   (exec-path-from-shell-initialize)
-  (exec-path-from-shell-copy-env "GOPATH")
-  ;; (setq mac-option-modifier 'alt)
-  ;; (setq mac-command-modifier 'control)
-  )
-
-(setq-default indent-tabs-mode nil
-              tab-width 2)
+  (setq mac-option-modifier 'control)
+  (setq mac-command-modifier 'meta))
 
 (auto-compression-mode t)
 (global-font-lock-mode t)
 (blink-cursor-mode -1)
 (fset 'yes-or-no-p 'y-or-n-p)
+
+(when (display-graphic-p)
+  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
+(setq-default buffer-file-coding-system 'utf-8-unix)
 
 (setq locale-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
@@ -122,7 +96,11 @@
   (global-whitespace-mode +1)
   (set-face-attribute 'whitespace-space nil :background nil :foreground "gray80")
   (set-face-attribute 'whitespace-trailing nil :background "plum1" :foreground "gray80")
-  (setq whitespace-style '(face tabs spaces tabs-mark space-mark trailing)))
+  (setq whitespace-style '(face tabs spaces tabs-mark space-mark trailing))
+  (set-frame-size (selected-frame) 140 40)
+  (set-default-font "Fira Code 14" nil t))
+
+(set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2")
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
@@ -195,13 +173,6 @@
     (set-face-foreground 'magit-diff-add "green3")
     (set-face-foreground 'magit-diff-del "red3")))
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(mode-line ((default (:foreground "ivory" :background "DarkOrange2")))))
-
 (use-package markdown-mode
   :ensure t
   :mode (("\.markdown$" . markdown-mode)
@@ -230,83 +201,29 @@
         :back "^---")))
     (mmm-add-mode-ext-class 'markdown-mode nil 'yaml-header-matters)))
 
-(use-package anaconda-mode
-  :ensure t
-  :init
-  (progn
-    (use-package ac-anaconda
-      :ensure t)
-    (add-hook 'python-mode-hook 'anaconda-mode)
-    (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
-    (add-hook 'python-mode-hook 'ac-anaconda-setup)
-    (setq py-isort-options '("-sl"))))
-
 (use-package auto-complete
   :ensure t
   :init
-  (ac-config-default))
-
-;; (use-package evil
-;;   :ensure t
-;;   :init
-;;   (progn
-;;     (evil-mode t)
-;;     (setq evil-want-fine-undo t)
-;;     (define-key evil-normal-state-map [escape] 'keyboard-quit)
-;;     (define-key evil-visual-state-map [escape] 'keyboard-quit)
-;;     (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-;;     (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
-;;     (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-;;     (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-;;     (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
-;;     (define-key evil-motion-state-map (kbd "SPC") 'evil-ex)))
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
-'(package-selected-packages
-   (quote
-    (go-rename go-autocomplete go-eldoc flycheck flycheck-gometalinter go-mode ledger ledger-mode ac-anaconda evil anaconda-mode mmm-mode yaml-mode markdown-mode magit projectile rainbow-delimiters paredit ido-vertical-mode better-defaults use-package))))
-
-;;gometalinter
-(use-package flycheck-gometalinter
-  :ensure t
-  :config
   (progn
-    (flycheck-gometalinter-setup))
+    (ac-config-default)
+    (global-auto-complete-mode t)
+    (setq-default ac-auto-start t)
+    (setq-default ac-auto-show-menu t)))
 
-  ;; gometalinter: skips 'vendor' directories and sets GO15VENDOREXPERIMENT=1
-  (setq flycheck-gometalinter-vendor t)
-  ;; gometalinter: only enable selected linters
-  (setq flycheck-gometalinter-disable-all t)
-  (setq flycheck-gometalinter-enable-linters
-        '("golint" "vet" "vetshadow" "golint" "ineffassign" "goconst" "gocyclo" "errcheck" "deadcode")))
-
-;; go-mode
-(use-package go-mode
+(use-package slime
   :ensure t
-  :config
+  :init
   (progn
-    (add-hook 'before-save-hook 'gofmt-before-save)
-    (setq-default gofmt-command "goimports")
-    (add-hook 'go-mode-hook 'go-eldoc-setup)
-   ; (add-hook 'go-mode-hook 'yas-minor-mode)
-    (add-hook 'go-mode-hook 'flycheck-mode)))
+    (setq inferior-lisp-program "sbcl")
+    (slime-setup '(slime-asdf
+                   slime-fancy
+                   slime-indentation))
+    (setq-default slime-net-coding-system 'utf-8-unix)))
 
-;; go-eldoc
-(use-package go-eldoc
+(use-package which-key
   :ensure t
-  :config
+  :diminish which-key-mode
+  :init
   (progn
-    (add-hook 'go-mode-hook 'go-eldoc-setup)))
-
-;; go-autocomlete
-(use-package go-autocomplete
-  :ensure t)
-
-(use-package go-rename
-  :ensure t)
-
-;; (global-set-key (kbd "C-c C-n") (find-file "~/Documents/notes.org"))
+    (which-key-setup-side-window-right)
+    (which-key-mode)))
