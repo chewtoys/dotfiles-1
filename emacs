@@ -53,7 +53,7 @@
 ;; Open notes file
 (defun open-my-notes ()
   (interactive)
-  (find-file "~/notes.org"))
+  (find-file "~/Documents/notes.org"))
 
 (global-set-key (kbd "C-~") 'open-my-notes)
 ;; End Open notes file
@@ -129,7 +129,8 @@
         try-expand-line
         try-complete-lisp-symbol-partially
         try-complete-lisp-symbol) t))
-    (menu-bar-mode)))
+    (when window-system
+      (menu-bar-mode))))
 
 (use-package ido-vertical-mode
   :ensure t
