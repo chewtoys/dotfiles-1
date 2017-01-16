@@ -50,6 +50,14 @@
     (insert "---\n\n")))
 ;; End Jekyll functions
 
+;; Open notes file
+(defun open-my-notes ()
+  (interactive)
+  (find-file "~/notes.org"))
+
+(global-set-key (kbd "C-~") 'open-my-notes)
+;; End Open notes file
+
 (setq inhibit-splash-screen t
       inhbit-startup-message t
       initial-scratch-message ""
