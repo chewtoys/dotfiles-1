@@ -75,9 +75,9 @@
       echo-keystrokes 0.1)
 
 (when (eq system-type 'darwin) ;; mac specific settings
-  (exec-path-from-shell-initialize)
-  (setq mac-option-modifier 'control)
-  (setq mac-command-modifier 'meta))
+  (exec-path-from-shell-initialize))
+  ;; (setq mac-option-modifier 'control)
+  ;; (setq mac-command-modifier 'meta))
 
 (auto-compression-mode t)
 (global-font-lock-mode t)
@@ -178,11 +178,7 @@
   :bind (("C-x v s" . magit-status)
          ("C-x v p" . magit-push))
   :init
-  (setq magit-last-seen-setup-instructions "1.4.0")
-  :config
-  (progn
-    (set-face-foreground 'magit-diff-add "green3")
-    (set-face-foreground 'magit-diff-del "red3")))
+  (setq magit-last-seen-setup-instructions "1.4.0"))
 
 (use-package markdown-mode
   :ensure t
@@ -225,7 +221,9 @@
   :ensure t
   :init
   (progn
-    (setq inferior-lisp-program "sbcl")
+    ;; (setq inferior-lisp-program "sbcl")
+    (setq inferior-lisp-program "sbcl --noinform --no-linedit")
+    ;; (setq inferior-lisp-program "ros -Q run")
     (slime-setup '(slime-asdf
                    slime-fancy
                    slime-indentation))
@@ -238,3 +236,14 @@
   (progn
     (which-key-setup-side-window-right)
     (which-key-mode)))
+
+(use-package rust-mode
+  :ensure t)
+
+(use-package ghc
+  :ensure t
+  :config
+  (progn
+    (autoload 'ghc-init "ghc" nil t)
+    (autoload 'ghc-debug "ghc" nil t)
+    (add-hook 'haskell-mode-hook (lambda () (ghc-init)))))
