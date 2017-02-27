@@ -3,4 +3,4 @@
 
 export GOPATH=$HOME/.go
 export PATH=$GOPATH/bin:$PATH:/usr/local/opt/go/libexec/bin
-export PATH="/usr/local/sbin:$PATH"
+export PATH="$HOME/.roswell/bin:$HOME/.local/bin:/usr/local/sbin:$PATH"
