@@ -65,6 +65,7 @@
       visible-bell nil
       ring-bell-function 'ignore
       make-backup-files nil
+      auto-save-default nil
       sentence-end-double-space nil
       scroll-preserve-screen-position 'always
       default-input-method "russian-computer"
