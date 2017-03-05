@@ -65,6 +65,9 @@
   (interactive)
   (kill-buffer (current-buffer)))
 
+(add-hook 'kill-buffer-query-functions
+          (lambda() (not (equal (buffer-name) "*scratch*"))))
+
 (global-set-key (kbd "C-x k") 'juev/kill-current-buffer)
 
 (defun juev/find-file-as-sudo ()
@@ -84,7 +87,6 @@
   "Insert a good alphanumeric password of length 30."
   (interactive)
   (juev/insert-random-string 30))
-
 
 (setq inhibit-splash-screen t
       inhbit-startup-message t
@@ -295,7 +297,7 @@
   :ensure t
   :defer t
   :diminish centered-cursor-mode
-  :init (global-centered-cursor-mode +1)
+  ;; :init (global-centered-cursor-mode +1)
   :config
   (progn
     (setq ccm-recenter-at-end-of-file t
