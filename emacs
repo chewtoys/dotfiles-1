@@ -1,3 +1,5 @@
+;; TODO Move config to ORG
+
 (eval-when-compile
   (require 'cl))
 (require 'package)
@@ -24,7 +26,7 @@
 ;; Jekyll new post
 (setq website-dir "~/Projects/juev.org/")
 
-(defun sluggify (str)
+(defun juev/sluggify (str)
   (replace-regexp-in-string
    "[^a-z0-9-]" ""
    (mapconcat 'identity
@@ -32,9 +34,9 @@
                (downcase str) " ")
               "-")))
 
-(defun new-post (title)
+(defun juev/new-post (title)
   (interactive "MTitle: ")
-  (let ((slug (sluggify title))
+  (let ((slug (juev/sluggify title))
         (date (current-time)))
     (find-file (concat website-dir "source/_posts/"
                        (format-time-string "%Y-%m-%d") "-" slug
@@ -51,12 +53,38 @@
 ;; End Jekyll functions
 
 ;; Open notes file
-(defun open-my-notes ()
+(defun juev/open-my-notes ()
   (interactive)
   (find-file "~/Documents/notes.org"))
 
-(global-set-key (kbd "C-~") 'open-my-notes)
+(global-set-key (kbd "C-~") 'juev/open-my-notes)
 ;; End Open notes file
+
+(defun juev/kill-current-buffer ()
+  "Kill the current buffer without prompting."
+  (interactive)
+  (kill-buffer (current-buffer)))
+
+(global-set-key (kbd "C-x k") 'juev/kill-current-buffer)
+
+(defun juev/find-file-as-sudo ()
+  (interactive)
+  (let ((file-name (buffer-file-name)))
+    (when file-name
+      (find-alternate-file (concat "/sudo::" file-name)))))
+
+(defun juev/insert-random-string (len)
+  "Insert a random alphanumeric string of length len."
+  (interactive)
+  (let ((mycharset "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstyvwxyz"))
+    (dotimes (i len)
+      (insert (elt mycharset (random (length mycharset)))))))
+
+(defun juev/generate-password ()
+  "Insert a good alphanumeric password of length 30."
+  (interactive)
+  (juev/insert-random-string 30))
+
 
 (setq inhibit-splash-screen t
       inhbit-startup-message t
@@ -73,6 +101,7 @@
       ido-create-new-buffer 'always
       vc-follow-link t
       vc-follow-symlinks t
+      compilation-scroll-output t
       echo-keystrokes 0.1)
 
 (when (eq system-type 'darwin) ;; mac specific settings
@@ -84,6 +113,7 @@
 (global-font-lock-mode t)
 (blink-cursor-mode -1)
 (fset 'yes-or-no-p 'y-or-n-p)
+(global-prettify-symbols-mode t)
 
 (when (display-graphic-p)
   (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
@@ -132,6 +162,14 @@
         try-complete-lisp-symbol) t))
     (when window-system
       (menu-bar-mode))))
+
+;; https://github.com/hrs/sensible-defaults.el
+(use-package sensible-defaults
+  :init
+  (progn
+    (load-file "~/.emacs.d/sensible-defaults.el")
+    (sensible-defaults/use-all-settings)
+    (sensible-defaults/use-all-keybindings)))
 
 (use-package ido-vertical-mode
   :ensure t
@@ -241,10 +279,50 @@
 (use-package rust-mode
   :ensure t)
 
-(use-package ghc
+;; (use-package ghc
+;;   :ensure t
+;;   :config
+;;   (progn
+;;     (autoload 'ghc-init "ghc" nil t)
+;;     (autoload 'ghc-debug "ghc" nil t)
+;;     (add-hook 'haskell-mode-hook (lambda () (ghc-init)))))
+
+(use-package haskell-mode
   :ensure t
+  :commands haskell-mode)
+
+(use-package centered-cursor-mode
+  :ensure t
+  :defer t
+  :diminish centered-cursor-mode
+  :init (global-centered-cursor-mode +1)
   :config
   (progn
-    (autoload 'ghc-init "ghc" nil t)
-    (autoload 'ghc-debug "ghc" nil t)
-    (add-hook 'haskell-mode-hook (lambda () (ghc-init)))))
+    (setq ccm-recenter-at-end-of-file t
+          ccm-ignored-commands '(mouse-drag-region
+                                 mouse-set-point
+                                 widget-button-click
+                                 scroll-bar-toolkit-scroll
+                                 evil-mouse-drag-region))))
+
+(use-package crux :defer 2)
+
+;; Remove completion buffer when done
+(add-hook 'minibuffer-exit-hook
+      '(lambda ()
+         (let ((buffer "*Completions*"))
+           (and (get-buffer buffer)
+            (kill-buffer buffer)))))
+
+(use-package guess-language         ; Automatically detect language for Flyspell
+  :ensure t
+  :commands guess-language-mode
+  :init (add-hook 'text-mode-hook #'guess-language-mode)
+  :config
+  (setq guess-language-languages '(en ru)
+        guess-language-min-paragraph-length 35)
+  :diminish guess-language-mode)
+
+(use-package restart-emacs
+  :ensure t
+  :commands restart-emacs)
