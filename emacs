@@ -380,6 +380,7 @@ This means GC runs less often, which speeds up some operations."
     (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
     (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
     (add-hook 'ielm-mode-hook #'enable-paredit-mode)
+    (add-hook 'scheme-mode-hook #'enable-paredit-mode)
     (add-hook 'json-mode-hook #'enable-paredit-mode)))
 
 (use-package rainbow-delimiters
@@ -502,17 +503,16 @@ This means GC runs less often, which speeds up some operations."
 (use-package restart-emacs
   :ensure t
   :commands restart-emacs)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (yaml-mode which-key use-package slime rust-mode restart-emacs rainbow-delimiters projectile paredit mmm-mode markdown-mode magit ledger-mode ido-vertical-mode guess-language go-rename go-eldoc go-autocomplete ghc flycheck-gometalinter exec-path-from-shell evil centered-cursor-mode better-defaults ac-anaconda))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+
+(use-package geiser
+  :ensure t)
+
+(use-package ac-geiser
+  :ensure t
+  :config
+  (progn
+    (require 'ac-geiser)
+    (add-hook 'geiser-mode-hook 'ac-geiser-setup)
+    (add-hook 'geiser-repl-mode-hook 'ac-geiser-setup)
+    (eval-after-load "auto-complete"
+      '(add-to-list 'ac-modes 'geiser-repl-mode))))
