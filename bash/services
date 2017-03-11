@@ -10,3 +10,4 @@ export NVM_DIR="$HOME/.nvm"
 
 eval "$(stack --bash-completion-script stack)"
 source /usr/local/etc/bash_completion.d/git-completion.bash
+source $(brew --prefix autoenv)/activate.sh
