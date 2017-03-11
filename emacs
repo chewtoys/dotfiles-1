@@ -170,7 +170,27 @@
   :init
   (progn
     (load-file "~/.emacs.d/sensible-defaults.el")
-    (sensible-defaults/use-all-settings)
+    (sensible-defaults/open-files-from-home-directory)
+    (sensible-defaults/increase-gc-threshold)
+    (sensible-defaults/delete-trailing-whitespace)
+    (sensible-defaults/treat-camelcase-as-separate-words)
+    (sensible-defaults/automatically-follow-symlinks)
+    (sensible-defaults/make-scripts-executable)
+    (sensible-defaults/single-space-after-periods)
+    (sensible-defaults/offer-to-create-parent-directories-on-save)
+    (sensible-defaults/apply-changes-to-highlighted-region)
+    (sensible-defaults/overwrite-selected-text)
+    (sensible-defaults/ensure-that-files-end-with-newline)
+    (sensible-defaults/quiet-startup)
+    (sensible-defaults/make-dired-file-sizes-human-readable)
+    (sensible-defaults/shorten-yes-or-no)
+    (sensible-defaults/always-highlight-code)
+    (sensible-defaults/refresh-buffers-when-files-change)
+    (sensible-defaults/show-matching-parens)
+    (sensible-defaults/flash-screen-instead-of-ringing-bell)
+    (sensible-defaults/set-default-line-length-to 80)
+    (sensible-defaults/open-clicked-files-in-same-frame-on-mac)
+    (sensible-defaults/yank-to-point-on-mouse-click)
     (sensible-defaults/use-all-keybindings)))
 
 (use-package ido-vertical-mode
@@ -281,14 +301,6 @@
 (use-package rust-mode
   :ensure t)
 
-;; (use-package ghc
-;;   :ensure t
-;;   :config
-;;   (progn
-;;     (autoload 'ghc-init "ghc" nil t)
-;;     (autoload 'ghc-debug "ghc" nil t)
-;;     (add-hook 'haskell-mode-hook (lambda () (ghc-init)))))
-
 (use-package haskell-mode
   :ensure t
   :commands haskell-mode)
@@ -328,3 +340,17 @@
 (use-package restart-emacs
   :ensure t
   :commands restart-emacs)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (yaml-mode which-key use-package slime rust-mode restart-emacs rainbow-delimiters projectile paredit mmm-mode markdown-mode magit ledger-mode ido-vertical-mode guess-language go-rename go-eldoc go-autocomplete ghc flycheck-gometalinter exec-path-from-shell evil centered-cursor-mode better-defaults ac-anaconda))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
