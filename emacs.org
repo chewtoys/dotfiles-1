@@ -2,374 +2,693 @@
 #+AUTHOR: Denis Evsyukov
 #+EMAIL:  denis@evsyukov.org
 #+PROPERTY:    results silent
-#+PROPERTY:    header-args:sh  :tangle no
+#+PROPERTY:    header-args:emacs-lisp  :tangle yes
 #+PROPERTY:    eval no-export
-#+PROPERTY:    comments org
 
+This is my configuration file, what I use in Emacs.
+
+* Initialization
+
+Load this file in Emacs. Then use `org-babel-tangle' command for generate `.emacs.el' file, this file should used as default configuration.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-(setq user-full-name "Denis Evsyukov"
-      user-mail-address "denis@evsyukov.org")
+  (eval-when-compile
+    (require 'cl))
+  (require 'package)
+  (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+  (package-initialize nil)
 
-;;(load "~/.emacs.secrets" t)
+  ;; Bootstrap `use-package'
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
 
+  (setq package-enable-at-startup nil)
+#+END_SRC
 
-(setq inhibit-splash-screen t
-      inhbit-startup-message t
-      initial-scratch-message ""
-      inhibit-startup-echo-area-message t
-      visible-bell nil
-      ring-bell-function 'ignore
-      make-backup-files nil
-      auto-save-default nil
-      sentence-end-double-space nil
-      scroll-preserve-screen-position 'always
-      default-input-method "russian-computer"
-      confirm-nonexistent-file-or-buffer nil
-      ido-create-new-buffer 'always
-      vc-follow-link t
-      vc-follow-symlinks t
-      compilation-scroll-output t
-      echo-keystrokes 0.1
-      ;;
-      default-directory "~/"
-      gc-cons-threshold 20000000
-      require-final-newline t
-      confirm-kill-emacs 'y-or-n-p
-      ns-pop-up-frames nil)
+* Configuration
+** Personal information
+*** My name and email.
 
-;; smart tab behavior - indent or complete
-(setq tab-always-indent 'complete)
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq user-full-name "Denis Evsyukov"
+        user-mail-address "denis@evsyukov.org")
+#+END_SRC
 
-;; hippie expand is dabbrev expand on steroids
-(setq hippie-expand-try-functions-list '(try-expand-dabbrev
-                                         try-expand-dabbrev-all-buffers
-                                         try-expand-dabbrev-from-kill
-                                         try-complete-file-name-partially
-                                         try-complete-file-name
-                                         try-expand-all-abbrevs
-                                         try-expand-list
-                                         try-expand-line
-                                         try-complete-lisp-symbol-partially
-                                         try-complete-lisp-symbol))
+*** Load my secret file
 
-(setq-default dired-listing-switches "-alh")
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;;(load "~/.emacs.secrets" t)
+#+END_SRC
 
-(auto-compression-mode t)
-(global-font-lock-mode t)
-(blink-cursor-mode -1)
-(fset 'yes-or-no-p 'y-or-n-p)
-(global-prettify-symbols-mode t)
-;;
-(transient-mark-mode t)
-(delete-selection-mode t)
+** Emacs Initialization
+*** Run clean emacs
 
-(show-paren-mode t)
-(setq show-paren-delay 0.0)
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq inhibit-splash-screen t)
+  (setq inhbit-startup-message t)
+  (setq initial-scratch-message "")
+  (setq inhibit-startup-echo-area-message t)
+#+END_SRC
 
-(when (display-graphic-p)
-  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
-(setq-default buffer-file-coding-system 'utf-8-unix)
+*** Dont use bell.
 
-(setq locale-coding-system 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(unless (eq system-type 'windows-nt)
-   (set-selection-coding-system 'utf-8))
-(prefer-coding-system 'utf-8)
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq visible-bell nil)
+  (setq ring-bell-function 'ignore)
+#+END_SRC
 
-(column-number-mode 1)
-(windmove-default-keybindings)
-(delete-selection-mode 1)
-(setq-default truncate-lines t)
+*** Dont use backup files and dont use auto-save (I realy dont like #files#)
 
-(global-auto-revert-mode t)
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq make-backup-files nil)
+  (setq auto-save-default nil)
+#+END_SRC
 
-;; My theme
-(when window-system
-  (require 'whitespace)
-  (global-whitespace-mode +1)
-  (set-face-attribute 'whitespace-space nil :background nil :foreground "gray80")
-  (set-face-attribute 'whitespace-trailing nil :background "plum1" :foreground "gray80")
-  (setq whitespace-style '(face tabs spaces tabs-mark space-mark trailing))
-  (set-frame-size (selected-frame) 140 40)
-  (set-default-font "Fira Code 14" nil t))
+*** Dont use double space on the sentence end.
 
-(set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2")
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq sentence-end-double-space nil)
+#+END_SRC
 
-;; Hooks
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-(add-hook 'prog-mode-hook 'subword-mode)
-(add-hook 'after-save-hook
-          'executable-make-buffer-file-executable-if-script-p)
-(add-hook 'before-save-hook
-          (lambda ()
-            (when buffer-file-name
-              (let ((dir (file-name-directory buffer-file-name)))
-                (when (and (not (file-exists-p dir))
-                           (y-or-n-p (format "Directory %s does not exist. Create it?" dir)))
-                  (make-directory dir t))))))
-;; Remove completion buffer when done
-(add-hook 'minibuffer-exit-hook
-      '(lambda ()
-         (let ((buffer "*Completions*"))
-           (and (get-buffer buffer)
-            (kill-buffer buffer)))))
+*** Scroll settings
 
-;; Functions
-;; Jekyll new post
-(setq website-dir "~/Projects/juev.org/")
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq scroll-preserve-screen-position 'always)
+  (setq scroll-margin 4)
+#+END_SRC
 
-(defun juev/sluggify (str)
-  (replace-regexp-in-string
-   "[^a-z0-9-]" ""
-   (mapconcat 'identity
-              (split-string
-               (downcase str) " ")
-              "-")))
+*** Use russian keyboard
 
-(defun juev/new-post (title)
-  (interactive "MTitle: ")
-  (let ((slug (juev/sluggify title))
-        (date (current-time)))
-    (find-file (concat website-dir "source/_posts/"
-                       (format-time-string "%Y-%m-%d") "-" slug
-                       ".markdown"))
-    (insert "---\n")
-    (insert "layout: post\n")
-    (insert "title: \"") (insert title) (insert "\"\n")
-    (insert "date: ")
-    (insert (format-time-string "%Y-%m-%d %H:%M")) (insert "\n")
-    (insert "image: \n")
-    (insert "tags:\n")
-    (insert "  - \n")
-    (insert "---\n\n")))
-;; End Jekyll functions
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq default-input-method "russian-computer")
+#+END_SRC
 
-;; Open notes file
-(defun juev/open-my-notes ()
-  (interactive)
-  (find-file "~/Documents/notes.org"))
+*** Dont ask to create new file or buffer
 
-(global-set-key (kbd "C-~") 'juev/open-my-notes)
-;; End Open notes file
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq confirm-nonexistent-file-or-buffer nil)
+  (setq ido-create-new-buffer 'always)
+#+END_SRC
 
-(defun juev/kill-current-buffer ()
-  "Kill the current buffer without prompting."
-  (interactive)
-  (kill-buffer (current-buffer)))
+*** Dont Follow links and symlinks
 
-(add-hook 'kill-buffer-query-functions
-          (lambda() (not (equal (buffer-name) "*scratch*"))))
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq vc-follow-link nil)
+  (setq vc-follow-symlinks nil)
+#+END_SRC
 
-(global-set-key (kbd "C-x k") 'juev/kill-current-buffer)
+*** Compilation Scroll
 
-(defun juev/find-file-as-sudo ()
-  (interactive)
-  (let ((file-name (buffer-file-name)))
-    (when file-name
-      (find-alternate-file (concat "/sudo::" file-name)))))
+#+BEGIN_QUOTE
+If you change the variable compilation-scroll-output to a non-nil value, the *compilation* buffer scrolls automatically to follow the output
+#+END_QUOTE
 
-(defun juev/insert-random-string (len)
-  "Insert a random alphanumeric string of length len."
-  (interactive)
-  (let ((mycharset "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstyvwxyz"))
-    (dotimes (i len)
-      (insert (elt mycharset (random (length mycharset)))))))
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq compilation-scroll-output t)
+#+END_SRC
 
-(defun juev/generate-password ()
-  "Insert a good alphanumeric password of length 30."
-  (interactive)
-  (juev/insert-random-string 30))
+*** Minimize waiting time before echo
 
-(defun juev/comment-or-uncomment-region-or-line ()
-  "Comments or uncomments the region or the current line if there's no active region."
-  (interactive)
-  (let (beg end)
-    (if (region-active-p)
-        (setq beg (region-beginning) end (region-end))
-      (setq beg (line-beginning-position) end (line-end-position)))
-    (comment-or-uncomment-region beg end)))
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq echo-keystrokes 0.1)
+#+END_SRC
 
-(global-set-key (kbd "M-;")
-                'juev/comment-or-uncomment-region-or-line)
+*** Always use HOME directory as default
 
-(defun juev/reset-text-size ()
-  (interactive)
-  (text-scale-set 0))
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq default-directory "~/")
+#+END_SRC
 
-(define-key global-map (kbd "C-)") 'juev/reset-text-size)
-(define-key global-map (kbd "C-+") 'text-scale-increase)
-(define-key global-map (kbd "C-=") 'text-scale-increase)
-(define-key global-map (kbd "C-_") 'text-scale-decrease)
-(define-key global-map (kbd "C--") 'text-scale-decrease)
+*** Configure garbage collector
 
-;; misc useful keybindings
-(global-set-key (kbd "s-<") #'beginning-of-buffer)
-(global-set-key (kbd "s->") #'end-of-buffer)
-(global-set-key (kbd "s-q") #'fill-paragraph)
-(global-set-key (kbd "s-x") #'execute-extended-command)
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq gc-cons-threshold 20000000)
+#+END_SRC
 
-(use-package better-defaults
-  :ensure t
-  :config
+*** Use new-line on the enf of file
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq require-final-newline t)
+#+END_SRC
+
+*** Use comfiration for exit
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq confirm-kill-emacs 'y-or-n-p)
+#+END_SRC
+
+*** Open all new files on the same frame
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq ns-pop-up-frames nil)
+#+END_SRC
+
+*** Smart tab behavior - indent or complete
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq tab-always-indent 'complete)
+#+END_SRC
+
+*** Hippie expand is dabbrev expand on steroids
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq hippie-expand-try-functions-list
+        '(try-expand-dabbrev
+          try-expand-dabbrev-all-buffers
+          try-expand-dabbrev-from-kill
+          try-complete-file-name-partially
+          try-complete-file-name
+          try-expand-all-abbrevs
+          try-expand-list
+          try-expand-line
+          try-complete-lisp-symbol-partially
+          try-complete-lisp-symbol))
+#+END_SRC
+
+*** Settings for dired
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq-default dired-listing-switches "-alh")
+#+END_SRC
+
+*** Allow to edit compression files
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (auto-compression-mode t)
+#+END_SRC
+
+*** Use font-lock for all buffers
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (global-font-lock-mode t)
+#+END_SRC
+
+*** Dont blink cursor
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (blink-cursor-mode -1)
+#+END_SRC
+
+*** Use short version for confirmation
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+
+*** Use lambda symdols by default
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (global-prettify-symbols-mode t)
+#+END_SRC
+
+*** Transient Mark mode
+
+#+BEGIN_QUOTE
+In Transient Mark mode, every buffer-modifying primitive sets deactivate-mark
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (transient-mark-mode t)
+#+END_SRC
+
+*** Replace the active region
+
+#+BEGIN_QUOTE
+You can replace the active region just by typing text, and you can delete the selected text just by hitting the Backspace key (‘DEL’).
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (delete-selection-mode t)
+#+END_SRC
+
+*** ShowParenMode
+
+#+BEGIN_QUOTE
+show-paren-mode allows one to see matching pairs of parentheses and other characters. When point is on one of the paired characters, the other is highlighted.
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (show-paren-mode t)
+  (setq show-paren-delay 0.0)
+#+END_SRC
+
+*** Always show current column number
+
+#+BEGIN_SRC emacs-lisp :tange yes
+  (column-number-mode 1)
+#+END_SRC
+
+*** Use Shift for moving behaind open buffers
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (windmove-default-keybindings)
+#+END_SRC
+
+*** Trancate long line by default
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq-default truncate-lines t)
+  (setq-default global-visual-line-mode t)
+#+END_SRC
+
+*** Update changed files
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (global-auto-revert-mode t)
+#+END_SRC
+** My theme
+
+#+BEGIN_SRC emacs-lisp :tangle yes
   (when window-system
-    (menu-bar-mode)))
+    (require 'whitespace)
+    (global-whitespace-mode +1)
+    (set-face-attribute 'whitespace-space nil :background nil :foreground "gray80")
+    (set-face-attribute 'whitespace-trailing nil :background "plum1" :foreground "gray80")
+    (setq whitespace-style '(face tabs spaces tabs-mark space-mark trailing))
+    (set-frame-size (selected-frame) 140 40)
+    (set-default-font "Fira Code 14" nil t))
 
-(use-package ido-vertical-mode
-  :ensure t
-  :defer t
-  :init
-  (progn
-    (ido-mode t)
-    (ido-vertical-mode t))
-  :config
-  (progn
-    (setq ido-ignore-buffers '("^ " "*Completions*" "*Shell Command Output*" "Async Shell Command"))
-    (setq ido-enable-flex-matching t
-          ido-use-virtual-buffers t
-          ido-everywhere t)))
+  (set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2")
+#+END_SRC
+** Hooks
+*** Delete trailing whitespace
 
-(use-package paredit
-  :ensure t
-  :diminish paredit-mode
-  :init
-  (progn
-    (add-hook 'clojure-mode-hook #'enable-paredit-mode)
-    (add-hook 'cider-repl-mode-hook #'enable-paredit-mode)
-    (add-hook 'lisp-mode-hook #'enable-paredit-mode)
-    (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
-    (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-    (add-hook 'ielm-mode-hook #'enable-paredit-mode)
-    (add-hook 'scheme-mode-hook #'enable-paredit-mode)
-    (add-hook 'json-mode-hook #'enable-paredit-mode)))
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+END_SRC
 
-(use-package rainbow-delimiters
-  :ensure t
-  :config
-  (progn
-    (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
-    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)))
+*** Use subword mode for prog-mode files
 
-(use-package projectile
-  :ensure t
-  :diminish projectile-mode
-  :config
-  (projectile-global-mode))
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (add-hook 'prog-mode-hook 'subword-mode)
+#+END_SRC
 
-(use-package magit
-  :ensure t
-  :defer t
-  :bind (("C-x v s" . magit-status)
-         ("C-x v p" . magit-push))
-  :init
-  (setq magit-last-seen-setup-instructions "1.4.0"))
+*** Make executable file for scripts
 
-(use-package markdown-mode
-  :ensure t
-  :mode (("\.markdown$" . markdown-mode)
-         ("\.md$"       . markdown-mode))
-  :config
-  (progn
-    (add-hook 'markdown-mode-hook #'visual-line-mode)))
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (add-hook 'after-save-hook
+            'executable-make-buffer-file-executable-if-script-p)
+#+END_SRC
 
-(use-package yaml-mode
-  :ensure t
-  :mode (("\\.yml$" . yaml-mode))
-  :config
-  (add-hook 'yaml-mode-hook (lambda () (electric-indent-local-mode -1))))
+*** Create not exist directories
 
-(use-package mmm-mode
-  :ensure t
-  :diminish mmm-mode
-  :config
-  (progn
-    (setq mmm-global-mode 'maybe)
-    (mmm-add-classes
-     '((yaml-header-matters
-        :submode yaml-mode
-        :face mmm-code-submode-face
-        :front "\\`---"
-        :back "^---")))
-    (mmm-add-mode-ext-class 'markdown-mode nil 'yaml-header-matters)))
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (add-hook 'before-save-hook
+            (lambda ()
+              (when buffer-file-name
+                (let ((dir (file-name-directory buffer-file-name)))
+                  (when (and (not (file-exists-p dir))
+                             (y-or-n-p (format "Directory %s does not exist. Create it?" dir)))
+                    (make-directory dir t))))))
+#+END_SRC
 
-(use-package auto-complete
-  :ensure t
-  :init
-  (progn
-    (ac-config-default)
-    (global-auto-complete-mode t)
-    (setq-default ac-auto-start t)
-    (setq-default ac-auto-show-menu t)))
+*** Remove *Comletions* buffer when done
 
-(use-package slime
-  :ensure t
-  :init
-  (progn
-    ;; (setq inferior-lisp-program "sbcl")
-    (setq inferior-lisp-program "sbcl --noinform --no-linedit")
-    ;; (setq inferior-lisp-program "ros -Q run")
-    (slime-setup '(slime-asdf
-                   slime-fancy
-                   slime-indentation))
-    (setq-default slime-net-coding-system 'utf-8-unix)))
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; Remove completion buffer when done
+  (add-hook 'minibuffer-exit-hook
+            '(lambda ()
+               (let ((buffer "*Completions*"))
+                 (and (get-buffer buffer)
+                      (kill-buffer buffer)))))
+#+END_SRC
 
-(use-package which-key
-  :ensure t
-  :diminish which-key-mode
-  :init
-  (progn
-    (which-key-setup-side-window-right)
-    (which-key-mode)))
+*** Keep *scratch* buffer
 
-(use-package rust-mode
-  :ensure t)
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (add-hook 'kill-buffer-query-functions
+            (lambda() (not (equal (buffer-name) "*scratch*"))))
+#+END_SRC
 
-(use-package haskell-mode
-  :ensure t
-  :commands haskell-mode)
+** Functions and key-bindings
+*** Jekyll
 
-(use-package crux
-  :ensure t
-  :bind (("C-c o" . crux-open-with)
-         ("M-o" . crux-smart-open-line)
-         ("C-c n" . crux-cleanup-buffer-or-region)
-         ("C-c f" . crux-recentf-ido-find-file)
-         ("C-M-z" . crux-indent-defun)
-         ("C-c u" . crux-view-url)
-         ("C-c e" . crux-eval-and-replace)
-         ("C-c w" . crux-swap-windows)
-         ("C-c D" . crux-delete-file-and-buffer)
-         ("C-c r" . crux-rename-buffer-and-file)
-         ("C-c t" . crux-visit-term-buffer)
-         ("C-c k" . crux-kill-other-buffers)
-         ("C-c TAB" . crux-indent-rigidly-and-copy-to-clipboard)
-         ("C-c I" . crux-find-user-init-file)
-         ("C-c S" . crux-find-shell-init-file)
-         ("s-r" . crux-recentf-ido-find-file)
-         ("s-j" . crux-top-join-line)
-         ("C-^" . crux-top-join-line)
-         ("s-k" . crux-kill-whole-line)
-         ("C-<backspace>" . crux-kill-line-backwards)
-         ("s-o" . crux-smart-open-line-above)
-         ([remap move-beginning-of-line] . crux-move-beginning-of-line)
-         ([(shift return)] . crux-smart-open-line)
-         ([(control shift return)] . crux-smart-open-line-above)
-         ([remap kill-whole-line] . crux-kill-whole-line)
-         ("C-c s" . crux-ispell-word-then-abbrev)))
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq website-dir "~/Projects/juev.org/")
 
-(use-package guess-language         ; Automatically detect language for Flyspell
-  :ensure t
-  :commands guess-language-mode
-  :init (add-hook 'text-mode-hook #'guess-language-mode)
-  :config
-  (setq guess-language-languages '(en ru)
-        guess-language-min-paragraph-length 35)
-  :diminish guess-language-mode)
+  (defun juev/sluggify (str)
+    (replace-regexp-in-string
+     "[^a-z0-9-]" ""
+     (mapconcat 'identity
+                (split-string
+                 (downcase str) " ")
+                "-")))
 
-(use-package exec-path-from-shell
-  :ensure t
-  :config
-  (when (memq window-system '(mac ns))
-    (exec-path-from-shell-initialize)))
+  (defun juev/new-post (title)
+    (interactive "MTitle: ")
+    (let ((slug (juev/sluggify title))
+          (date (current-time)))
+      (find-file (concat website-dir "source/_posts/"
+                         (format-time-string "%Y-%m-%d") "-" slug
+                         ".markdown"))
+      (insert "---\n")
+      (insert "layout: post\n")
+      (insert "title: \"") (insert title) (insert "\"\n")
+      (insert "date: ")
+      (insert (format-time-string "%Y-%m-%d %H:%M")) (insert "\n")
+      (insert "image: \n")
+      (insert "tags:\n")
+      (insert "  - \n")
+      (insert "---\n\n")))
+#+END_SRC
+
+*** Open Notes
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun juev/open-my-notes ()
+    (interactive)
+    (find-file "~/Documents/notes.org"))
+
+  (global-set-key (kbd "C-~") 'juev/open-my-notes)
+#+END_SRC
+
+*** Kill buffer without confirmation
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun juev/kill-current-buffer ()
+    "Kill the current buffer without prompting."
+    (interactive)
+    (kill-buffer (current-buffer)))
+
+  (global-set-key (kbd "C-x k") 'juev/kill-current-buffer)
+#+END_SRC
+
+*** Find-file as sudo
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun juev/find-file-as-sudo ()
+    (interactive)
+    (let ((file-name (buffer-file-name)))
+      (when file-name
+        (find-alternate-file (concat "/sudo::" file-name)))))
+#+END_SRC
+
+*** Generate password
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun juev/insert-random-string (len)
+    "Insert a random alphanumeric string of length len."
+    (interactive)
+    (let ((mycharset "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstyvwxyz"))
+      (dotimes (i len)
+        (insert (elt mycharset (random (length mycharset)))))))
+
+  (defun juev/generate-password ()
+    "Insert a good alphanumeric password of length 30."
+    (interactive)
+    (juev/insert-random-string 30))
+#+END_SRC
+
+*** Comment or uncomment region
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun juev/comment-or-uncomment-region-or-line ()
+    "Comments or uncomments the region or the current line if there's no active region."
+    (interactive)
+    (let (beg end)
+      (if (region-active-p)
+          (setq beg (region-beginning) end (region-end))
+        (setq beg (line-beginning-position) end (line-end-position)))
+      (comment-or-uncomment-region beg end)))
+
+  (global-set-key (kbd "M-;")
+                  'juev/comment-or-uncomment-region-or-line)
+#+END_SRC
+
+*** Change text-size
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun juev/reset-text-size ()
+    (interactive)
+    (text-scale-set 0))
+
+  (define-key global-map (kbd "C-)") 'juev/reset-text-size)
+  (define-key global-map (kbd "C-+") 'text-scale-increase)
+  (define-key global-map (kbd "C-=") 'text-scale-increase)
+  (define-key global-map (kbd "C-_") 'text-scale-decrease)
+  (define-key global-map (kbd "C--") 'text-scale-decrease)
+
+  ;; misc useful keybindings
+  (global-set-key (kbd "s-<") #'beginning-of-buffer)
+  (global-set-key (kbd "s->") #'end-of-buffer)
+  (global-set-key (kbd "s-q") #'fill-paragraph)
+  (global-set-key (kbd "s-x") #'execute-extended-command)
+#+END_SRC
+
+* Locale
+** Use UTF-8
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (when (display-graphic-p)
+    (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)))
+  (setq-default buffer-file-coding-system 'utf-8-unix)
+
+  (setq locale-coding-system 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  (set-keyboard-coding-system 'utf-8)
+  (prefer-coding-system 'utf-8)
+#+END_SRC
+
+** Except selection coding on Windows
+
+Because Windows used UTF-16
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (unless (eq system-type 'windows-nt)
+     (set-selection-coding-system 'utf-8))
+#+END_SRC
+
+* Packages
+** Better-Defaults
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package better-defaults
+    :ensure t
+    :config
+    (when window-system
+      (menu-bar-mode)))
+#+END_SRC
+
+** Ido vertical mode
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package ido-vertical-mode
+    :ensure t
+    :defer t
+    :init
+    (progn
+      (ido-mode t)
+      (ido-vertical-mode t))
+    :config
+    (progn
+      (setq ido-ignore-buffers '("^ " "*Completions*" "*Shell Command Output*" "Async Shell Command"))
+      (setq ido-enable-flex-matching t
+            ido-use-virtual-buffers t
+            ido-everywhere t)))
+#+END_SRC
+
+** Paredit
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package paredit
+    :ensure t
+    :diminish paredit-mode
+    :init
+    (progn
+      (add-hook 'clojure-mode-hook #'enable-paredit-mode)
+      (add-hook 'cider-repl-mode-hook #'enable-paredit-mode)
+      (add-hook 'lisp-mode-hook #'enable-paredit-mode)
+      (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
+      (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+      (add-hook 'ielm-mode-hook #'enable-paredit-mode)
+      (add-hook 'scheme-mode-hook #'enable-paredit-mode)
+      (add-hook 'json-mode-hook #'enable-paredit-mode)))
+#+END_SRC
+
+** Rainbow delimeters
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package rainbow-delimiters
+    :ensure t
+    :config
+    (progn
+      (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
+      (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)))
+#+END_SRC
+
+** Projectile
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package projectile
+    :ensure t
+    :diminish projectile-mode
+    :config
+    (projectile-global-mode))
+#+END_SRC
+
+** Magit
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package magit
+    :ensure t
+    :defer t
+    :bind (("C-x v s" . magit-status)
+           ("C-x v p" . magit-push))
+    :init
+    (setq magit-last-seen-setup-instructions "1.4.0"))
+#+END_SRC
+
+** Markdown Mode
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package markdown-mode
+    :ensure t
+    :mode (("\.markdown$" . markdown-mode)
+           ("\.md$"       . markdown-mode))
+    :config
+    (progn
+      (add-hook 'markdown-mode-hook #'visual-line-mode)))
+#+END_SRC
+
+** YAML Mode
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package yaml-mode
+    :ensure t
+    :mode (("\\.yml$" . yaml-mode))
+    :config
+    (add-hook 'yaml-mode-hook (lambda () (electric-indent-local-mode -1))))
+#+END_SRC
+
+** MultiMode
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package mmm-mode
+    :ensure t
+    :diminish mmm-mode
+    :config
+    (progn
+      (setq mmm-global-mode 'maybe)
+      (mmm-add-classes
+       '((yaml-header-matters
+          :submode yaml-mode
+          :face mmm-code-submode-face
+          :front "\\`---"
+          :back "^---")))
+      (mmm-add-mode-ext-class 'markdown-mode nil 'yaml-header-matters)))
+#+END_SRC
+
+** Auto Complete
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package auto-complete
+    :ensure t
+    :init
+    (progn
+      (ac-config-default)
+      (global-auto-complete-mode t)
+      (setq-default ac-auto-start t)
+      (setq-default ac-auto-show-menu t)))
+#+END_SRC
+
+** Slime
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package slime
+    :ensure t
+    :init
+    (progn
+      ;; (setq inferior-lisp-program "sbcl")
+      (setq inferior-lisp-program "sbcl --noinform --no-linedit")
+      ;; (setq inferior-lisp-program "ros -Q run")
+      (slime-setup '(slime-asdf
+                     slime-fancy
+                     slime-indentation))
+      (setq-default slime-net-coding-system 'utf-8-unix)))
+#+END_SRC
+
+** Which Key
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package which-key
+    :ensure t
+    :diminish which-key-mode
+    :init
+    (progn
+      (which-key-setup-side-window-right)
+      (which-key-mode)))
+#+END_SRC
+
+** Rust
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package rust-mode
+    :ensure t)
+#+END_SRC
+
+** Haskell
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package haskell-mode
+    :ensure t
+    :commands haskell-mode)
+#+END_SRC
+
+** Crux
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package crux
+    :ensure t
+    :bind (("C-c o" . crux-open-with)
+           ("M-o" . crux-smart-open-line)
+           ("C-c n" . crux-cleanup-buffer-or-region)
+           ("C-c f" . crux-recentf-ido-find-file)
+           ("C-M-z" . crux-indent-defun)
+           ("C-c u" . crux-view-url)
+           ("C-c e" . crux-eval-and-replace)
+           ("C-c w" . crux-swap-windows)
+           ("C-c D" . crux-delete-file-and-buffer)
+           ("C-c r" . crux-rename-buffer-and-file)
+           ("C-c t" . crux-visit-term-buffer)
+           ("C-c k" . crux-kill-other-buffers)
+           ("C-c TAB" . crux-indent-rigidly-and-copy-to-clipboard)
+           ("C-c I" . crux-find-user-init-file)
+           ("C-c S" . crux-find-shell-init-file)
+           ("s-r" . crux-recentf-ido-find-file)
+           ("s-j" . crux-top-join-line)
+           ("C-^" . crux-top-join-line)
+           ("s-k" . crux-kill-whole-line)
+           ("C-<backspace>" . crux-kill-line-backwards)
+           ("s-o" . crux-smart-open-line-above)
+           ([remap move-beginning-of-line] . crux-move-beginning-of-line)
+           ([(shift return)] . crux-smart-open-line)
+           ([(control shift return)] . crux-smart-open-line-above)
+           ([remap kill-whole-line] . crux-kill-whole-line)
+           ("C-c s" . crux-ispell-word-then-abbrev)))
+#+END_SRC
+
+** Guess Language
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package guess-language         ; Automatically detect language for Flyspell
+    :ensure t
+    :commands guess-language-mode
+    :init (add-hook 'text-mode-hook #'guess-language-mode)
+    :config
+    (setq guess-language-languages '(en ru)
+          guess-language-min-paragraph-length 35)
+    :diminish guess-language-mode)
+#+END_SRC
+
+** Exec Path from Shell
+
+#+BEGIN_SRC emacs-lisp
+
+  (use-package exec-path-from-shell
+    :ensure t
+    :config
+    (when (memq window-system '(mac ns))
+      (exec-path-from-shell-initialize)))
 #+END_SRC
