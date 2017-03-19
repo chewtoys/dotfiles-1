@@ -11,6 +11,12 @@ This is my configuration file, what I use in Emacs.
 
 Load this file in Emacs. Then use =org-babel-tangle= command for generate =.emacs.el= file, this file should used as default configuration.
 
+If you wish to use Haskell, don't forget install some tools:
+
+#+BEGIN_SRC sh
+  stack install stylish-haskell hlint hasktags
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp :tangle yes
   (eval-when-compile
     (require 'cl))
@@ -633,7 +639,11 @@ Because Windows used UTF-16
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package haskell-mode
     :ensure t
-    :commands haskell-mode)
+    :commands haskell-mode
+    :config
+    (progn
+      (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+      (add-to-list 'exec-path "~/.local/bin/")))
 #+END_SRC
 
 ** Crux
