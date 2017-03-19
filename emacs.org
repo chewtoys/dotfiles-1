@@ -7,15 +7,17 @@
 
 This is my configuration file, what I use in Emacs.
 
-* Initialization
-
-Load this file in Emacs. Then use =org-babel-tangle= command for generate =.emacs.el= file, this file should used as default configuration.
+* Preface
 
 If you wish to use Haskell, don't forget install some tools:
 
 #+BEGIN_SRC sh
   stack install stylish-haskell hlint hasktags
 #+END_SRC
+
+* Initialization
+
+Load this file in Emacs. Then use =org-babel-tangle= command for generate =.emacs.el= file, this file should used as default configuration.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (eval-when-compile
