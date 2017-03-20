@@ -270,19 +270,19 @@ show-paren-mode allows one to see matching pairs of parentheses and other charac
 ** My theme
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (when window-system
-    (require 'whitespace)
-    (global-whitespace-mode +1)
-    (set-face-attribute 'whitespace-space nil :background nil :foreground "gray80")
-    (set-face-attribute 'whitespace-trailing nil :background "plum1" :foreground "gray80")
-    (setq whitespace-style '(face tabs spaces tabs-mark space-mark trailing))
-    (set-frame-size (selected-frame) 140 40)
-    (set-default-font "Fira Code 14" nil t))
+    (when window-system
+      (require 'whitespace)
+      (global-whitespace-mode +1)
+      (set-face-attribute 'whitespace-space nil :background nil :foreground "gray80")
+      (set-face-attribute 'whitespace-trailing nil :background "plum1" :foreground "gray80")
+      (setq whitespace-style '(face tabs spaces tabs-mark space-mark trailing))
+      (set-frame-size (selected-frame) 140 40)
+      (set-default-font "Fira Code 14" nil t))
 
-(if (eq system-type 'windows-nt)
-         (set-default-font "Fira Code 12" nil t))
+  (if (eq system-type 'windows-nt)
+           (set-default-font "Fira Code 12" nil t))
 
-  (set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2")
+    (set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2")
 #+END_SRC
 
 ** Hooks
