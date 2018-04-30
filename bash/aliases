@@ -93,3 +93,19 @@ alias pc="rsync -hP"
 alias pg='ps aux | grep -i'
 
 alias mirror='wget -mkEpnp'
+
+# make copy a function that checks whether there's an
+# argument being passed, and if so, cat the file and pipe
+# through copy. otherwise, pipe stdin into copy, then
+# finally paste to stdout
+copy() {
+  if [ -t 0 ]; then
+    cat $@ | pbcopy
+  else
+    pbcopy < /dev/stdin
+  fi
+  pbpaste
+}
+
+# and now alias paste to pbpaste, because gosh darnit!
+alias paste=pbpaste
