@@ -723,3 +723,10 @@ Because Windows used UTF-16
   :ensure t
   :bind (("M-o" . ace-window)))
 #+END_SRC
+
+** expand-region
+#+BEGIN_SRC emacs-lisp
+(use-package expand-region
+  :ensure t
+  :bind ("C-=" . er/expand-region))
+#+END_SRC
