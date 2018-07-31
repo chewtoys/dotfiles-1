@@ -109,3 +109,7 @@ copy() {
 
 # and now alias paste to pbpaste, because gosh darnit!
 alias paste=pbpaste
+
+# hey just type less
+alias p='pushd'
+alias o='popd'
