@@ -730,3 +730,10 @@ Because Windows used UTF-16
   :ensure t
   :bind ("C-=" . er/expand-region))
 #+END_SRC
+** neotree
+#+BEGIN_SRC emacs-lisp
+(use-package neotree
+  :ensure t
+  :bind ("<f8>" . neotree-toggle))
+   (setq projectile-switch-project-action 'neotree-projectile-action)
+#+END_SRC
