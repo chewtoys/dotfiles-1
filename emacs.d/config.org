@@ -90,21 +90,34 @@ I like the light on dark because I find it to be more restful.
     :config (sml/setup))
 #+END_SRC
 
-My customization
+** No mouse
+
+#+begin_src emacs-lisp :tangle yes
+  (when window-system
+    (menu-bar-mode t)                              ; Disable the menu bar
+    (scroll-bar-mode -1)                            ; Disable the scroll bar
+    (tool-bar-mode -1)                              ; Disable the tool bar
+    (tooltip-mode -1))                              ; Disable the tooltips
+#+end_src
+
+** My theme customization
 
 #+BEGIN_SRC emacs-lisp :tangle yes
+  (set-frame-size (selected-frame) 140 50)
+
   (when window-system
     (require 'whitespace)
     (global-whitespace-mode +1)
     (set-face-attribute 'whitespace-space nil :background nil :foreground "gray80")
     (set-face-attribute 'whitespace-trailing nil :background "plum1" :foreground "gray80")
     (setq whitespace-style '(face tabs spaces tabs-mark space-mark trailing))
-    (set-frame-size (selected-frame) 140 40)
+    (set-frame-size (selected-frame) 140 50)
     (set-default-font "PT Mono 14" nil t))
 
-(if (eq system-type 'windows-nt)
-         (set-default-font "Fira Code 12" nil t))
+  (if (eq system-type 'windows-nt)
+      (set-default-font "Fira Code 12" nil t))
 #+END_SRC
+
 ** Hooks
 *** Delete trailing whitespace
 
@@ -153,6 +166,50 @@ My customization
 #+BEGIN_SRC emacs-lisp :tangle yes
   (add-hook 'kill-buffer-query-functions
             (lambda() (not (equal (buffer-name) "*scratch*"))))
+#+END_SRC
+** Auto org-babel-tangle
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+(use-package async)
+
+(defvar *config-file* (expand-file-name "config.org" user-emacs-directory)
+  "The configuration file.")
+
+(defvar *config-last-change* (nth 5 (file-attributes *config-file*))
+  "Last modification time of the configuration file.")
+
+(defvar *show-async-tangle-results* nil
+  "Keeps *emacs* async buffers around for later inspection.")
+
+(defun my/config-updated ()
+  "Checks if the configuration file has been updated since the last time."
+  (time-less-p *config-last-change*
+               (nth 5 (file-attributes *config-file*))))
+
+(defun my/config-tangle ()
+  "Tangles the org file asynchronously."
+  (when (my/config-updated)
+    (setq *config-last-change*
+          (nth 5 (file-attributes *config-file*)))
+    (my/async-babel-tangle *config-file*)))
+
+(defun my/async-babel-tangle (org-file)
+  "Tangles the org file asynchronously."
+  (let ((init-tangle-start-time (current-time))
+        (file (buffer-file-name))
+        (async-quiet-switch "-q"))
+    (async-start
+     `(lambda ()
+        (require 'org)
+        (org-babel-tangle-file ,org-file))
+     (unless *show-async-tangle-results*
+       `(lambda (result)
+          (if result
+              (message "SUCCESS: %s successfully tangled (%.2fs)."
+                       ,org-file
+                       (float-time (time-subtract (current-time)
+                                                  ',init-tangle-start-time)))
+            (message "ERROR: %s as tangle failed." ,org-file)))))))
 #+END_SRC
 
 ** Functions and key-bindings
@@ -250,19 +307,9 @@ My customization
                   'juev/comment-or-uncomment-region-or-line)
 #+END_SRC
 
-*** Change text-size
+*** Some keys
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (defun juev/reset-text-size ()
-    (interactive)
-    (text-scale-set 0))
-
-  (define-key global-map (kbd "C-)") 'juev/reset-text-size)
-  (define-key global-map (kbd "C-+") 'text-scale-increase)
-  (define-key global-map (kbd "C-=") 'text-scale-increase)
-  (define-key global-map (kbd "C-_") 'text-scale-decrease)
-  (define-key global-map (kbd "C--") 'text-scale-decrease)
-
   ;; misc useful keybindings
   (global-set-key (kbd "s-<") #'beginning-of-buffer)
   (global-set-key (kbd "s->") #'end-of-buffer)
@@ -294,34 +341,6 @@ Because Windows used UTF-16
 #+END_SRC
 
 * Packages
-** Better-Defaults
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package better-defaults
-    :ensure t
-    :config
-    (when window-system
-      (menu-bar-mode)))
-#+END_SRC
-
-** Ido vertical mode
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package ido-vertical-mode
-    :ensure t
-    :defer t
-    :init
-    (progn
-      (ido-mode t)
-      (ido-vertical-mode t))
-    :config
-    (progn
-      (setq ido-ignore-buffers '("^ " "*Completions*" "*Shell Command Output*" "Async Shell Command"))
-      (setq ido-enable-flex-matching t
-            ido-use-virtual-buffers t
-            ido-everywhere t)))
-#+END_SRC
-
 ** Paredit
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -605,14 +624,6 @@ like being able to find my way easily.
       (unless (eq ibuffer-sorting-mode 'alphabetic)
         (ibuffer-do-sort-by-alphabetic)))
     :hook (ibuffer . my/ibuffer-projectile))
-#+END_SRC
-
-** =try=
-
-Useful to temporary use a package.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package try :defer 5)
 #+END_SRC
 
 ** Ivy
