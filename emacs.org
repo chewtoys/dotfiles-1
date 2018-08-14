@@ -24,10 +24,6 @@ Load this file in Emacs. Then use =org-babel-tangle= command for generate =.emac
     (package-refresh-contents)
     (package-install 'use-package))
 
-  (use-package delight :ensure t)
-  (use-package diminish :ensure t)
-  (use-package use-package-ensure-system-package :ensure t)
-  (setq use-package-always-ensure t)
   (setq package-enable-at-startup nil)
 #+END_SRC
 
@@ -46,65 +42,243 @@ Load this file in Emacs. Then use =org-babel-tangle= command for generate =.emac
   ;;(load "~/.emacs.secrets" t)
 #+END_SRC
 
-** Better defaults
-
-For a better user experience of GNU Emacs, here are the default values I use.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (setq
-   ad-redefinition-action 'accept                   ; Silence warnings for redefinition
-   cursor-in-non-selected-windows t                 ; Hide the cursor in inactive windows
-   display-time-default-load-average nil            ; Don't display load average
-   fill-column 80                                   ; Set width for automatic line breaks
-   help-window-select t                             ; Focus new help windows when opened
-   inhibit-startup-screen t                         ; Disable start-up screen
-   initial-scratch-message ""                       ; Empty the initial *scratch* buffer
-   load-prefer-newer t                              ; Prefers the newest version of a file
-   scroll-conservatively most-positive-fixnum       ; Always scroll by one line
-   select-enable-clipboard t                        ; Merge system's and Emacs' clipboard
-   tab-width 4                                      ; Set width for tabs
-   use-package-always-ensure t                      ; Avoid the :ensure keyword for each package
-   vc-follow-symlinks nil                             ; Always follow the symlinks
-   view-read-only t)                                ; Always open read-only buffers in view-mode
-  (cd "~/")                                         ; Move to the user directory
-  (column-number-mode 1)                            ; Show the column number
-  (display-time-mode 1)                             ; Enable time in the mode-line
-  (fset 'yes-or-no-p 'y-or-n-p)                     ; Replace yes/no prompts with y/n
-  ;(global-hl-line-mode)                             ; Hightlight current line
-  (show-paren-mode 1)                               ; Show the parent
-#+END_SRC
-
-** Theme
-
-I like the light on dark because I find it to be more restful.
+** Emacs Initialization
+*** Run clean emacs
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package nord-theme
-    :config
-    (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/themes/"))
-    (load-theme 'nord t))
-
-  (use-package smart-mode-line
-    :defer 0.1
-    :custom (sml/theme 'respectful)
-    :config (sml/setup))
+  (setq inhibit-splash-screen t)
+  (setq inhbit-startup-message t)
+  (setq initial-scratch-message "")
+  (setq inhibit-startup-echo-area-message t)
 #+END_SRC
 
-My customization
+*** Dont use bell.
 
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (when window-system
-    (require 'whitespace)
-    (global-whitespace-mode +1)
-    (set-face-attribute 'whitespace-space nil :background nil :foreground "gray80")
-    (set-face-attribute 'whitespace-trailing nil :background "plum1" :foreground "gray80")
-    (setq whitespace-style '(face tabs spaces tabs-mark space-mark trailing))
-    (set-frame-size (selected-frame) 140 40)
-    (set-default-font "PT Mono 14" nil t))
-
-(if (eq system-type 'windows-nt)
-         (set-default-font "Fira Code 12" nil t))
+  (setq visible-bell nil)
+  (setq ring-bell-function 'ignore)
 #+END_SRC
+
+*** Dont use backup files and dont use auto-save (I realy dont like #files#)
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq make-backup-files nil)
+  (setq auto-save-default nil)
+#+END_SRC
+
+*** Dont use double space on the sentence end.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq sentence-end-double-space nil)
+#+END_SRC
+
+*** Scroll settings
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq scroll-preserve-screen-position 'always)
+  (setq scroll-margin 4)
+#+END_SRC
+
+*** Use russian keyboard
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq default-input-method "russian-computer")
+#+END_SRC
+
+*** Dont ask to create new file or buffer
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq confirm-nonexistent-file-or-buffer nil)
+  (setq ido-create-new-buffer 'always)
+#+END_SRC
+
+*** Dont Follow links and symlinks
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq vc-follow-link nil)
+  (setq vc-follow-symlinks nil)
+#+END_SRC
+
+*** Compilation Scroll
+
+#+BEGIN_QUOTE
+If you change the variable compilation-scroll-output to a non-nil value, the *compilation* buffer scrolls automatically to follow the output
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq compilation-scroll-output t)
+#+END_SRC
+
+*** Minimize waiting time before echo
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq echo-keystrokes 0.1)
+#+END_SRC
+
+*** Always use HOME directory as default
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq default-directory "~/")
+#+END_SRC
+
+*** Configure garbage collector
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq gc-cons-threshold 20000000)
+#+END_SRC
+
+*** Use new-line on the enf of file
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq require-final-newline t)
+#+END_SRC
+
+*** Open all new files on the same frame
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq ns-pop-up-frames nil)
+#+END_SRC
+
+*** Smart tab behavior - indent or complete
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq tab-always-indent 'complete)
+#+END_SRC
+
+*** Hippie expand is dabbrev expand on steroids
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq hippie-expand-try-functions-list
+        '(try-expand-dabbrev
+          try-expand-dabbrev-all-buffers
+          try-expand-dabbrev-from-kill
+          try-complete-file-name-partially
+          try-complete-file-name
+          try-expand-all-abbrevs
+          try-expand-list
+          try-expand-line
+          try-complete-lisp-symbol-partially
+          try-complete-lisp-symbol))
+#+END_SRC
+
+*** Settings for dired
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (setq-default dired-listing-switches "-alh")
+#+END_SRC
+
+*** Allow to edit compression files
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (auto-compression-mode t)
+#+END_SRC
+
+*** Use font-lock for all buffers
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (global-font-lock-mode t)
+#+END_SRC
+
+*** Dont blink cursor
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (blink-cursor-mode -1)
+#+END_SRC
+
+*** Use short version for confirmation
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+
+*** Use lambda symdols by default
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  ;; (global-prettify-symbols-mode t)
+#+END_SRC
+
+*** fontify
+This is all written in org-mode. It would be good if the source code examples were fonitfies according to their major mode.
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-src-fontify-natively t)
+#+END_SRC
+
+*** Transient Mark mode
+
+#+BEGIN_QUOTE
+In Transient Mark mode, every buffer-modifying primitive sets deactivate-mark
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (transient-mark-mode t)
+#+END_SRC
+
+*** Replace the active region
+
+#+BEGIN_QUOTE
+You can replace the active region just by typing text, and you can delete the selected text just by hitting the Backspace key (‘DEL’).
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (delete-selection-mode t)
+#+END_SRC
+
+*** ShowParenMode
+
+#+BEGIN_QUOTE
+show-paren-mode allows one to see matching pairs of parentheses and other characters. When point is on one of the paired characters, the other is highlighted.
+#+END_QUOTE
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (show-paren-mode t)
+  (setq show-paren-delay 0.0)
+#+END_SRC
+
+*** Always show current column number
+
+#+BEGIN_SRC emacs-lisp :tange yes
+  (column-number-mode 1)
+#+END_SRC
+
+*** Trancate long line by default
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+;;  (setq-default truncate-lines t)
+  (setq-default global-visual-line-mode t)
+#+END_SRC
+
+*** Update changed files
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (global-auto-revert-mode t)
+#+END_SRC
+
+*** Dont use dialog-box
+https://twitter.com/ErgoEmacs/status/850896029893263360
+
+#+BEGIN_SRC emacs-lisp
+  (setq use-dialog-box nil)
+#+END_SRC
+
+** My theme
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+    (when window-system
+      (require 'whitespace)
+      (global-whitespace-mode +1)
+      (set-face-attribute 'whitespace-space nil :background nil :foreground "gray80")
+      (set-face-attribute 'whitespace-trailing nil :background "plum1" :foreground "gray80")
+      (setq whitespace-style '(face tabs spaces tabs-mark space-mark trailing))
+      (set-frame-size (selected-frame) 140 40)
+      (set-default-font "PT Mono 14" nil t))
+
+  (if (eq system-type 'windows-nt)
+           (set-default-font "Fira Code 12" nil t))
+
+    (set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2")
+#+END_SRC
+
 ** Hooks
 *** Delete trailing whitespace
 
@@ -413,6 +587,19 @@ Because Windows used UTF-16
       (mmm-add-mode-ext-class 'markdown-mode nil 'yaml-header-matters)))
 #+END_SRC
 
+** Auto Complete
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package auto-complete
+    :ensure t
+    :init
+    (progn
+      (ac-config-default)
+      (global-auto-complete-mode t)
+      (setq-default ac-auto-start t)
+      (setq-default ac-auto-show-menu t)))
+#+END_SRC
+
 ** Slime
 
 #+BEGIN_SRC emacs-lisp :tangle yes
@@ -549,116 +736,4 @@ Because Windows used UTF-16
   :ensure t
   :bind ("<f8>" . neotree-toggle))
    (setq projectile-switch-project-action 'neotree-projectile-action)
-#+END_SRC
-** Auto-Completion
-
-=company= provides auto-completion at point and to Displays a small pop-in
-containing the candidates.
-
-#+BEGIN_QUOTE
-Company is a text completion framework for Emacs. The name stands for "complete
-anything". It uses pluggable back-ends and front-ends to retrieve and display
-completion candidates.
-
-[[http://company-mode.github.io/][Dmitry Gutov]]
-#+END_QUOTE
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package company
-    :ensure t
-    :defer 2
-    :diminish
-    :custom
-    (company-begin-commands '(self-insert-command))
-    (company-idle-delay .1)
-    (company-minimum-prefix-length 2)
-    (company-show-numbers t)
-    (company-tooltip-align-annotations 't)
-    (global-company-mode t))
-#+END_SRC
-
-I use =company= with =company-box= that allows a company front-end with icons.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
- ;  (use-package company-box
- ;    :ensure t
- ;    :after company
- ;    :diminish
- ;    :hook (company-mode . company-box-mode))
-#+END_SRC
-
-** Buffers
-
-Buffers can quickly become a mess. For some people, it's not a problem, but I
-like being able to find my way easily.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package ibuffer
-    :defer 0.2
-    :bind ("C-x C-b" . ibuffer))
-
-  (use-package ibuffer-projectile
-    :after ibuffer
-    :preface
-    (defun my/ibuffer-projectile ()
-      (ibuffer-projectile-set-filter-groups)
-      (unless (eq ibuffer-sorting-mode 'alphabetic)
-        (ibuffer-do-sort-by-alphabetic)))
-    :hook (ibuffer . my/ibuffer-projectile))
-#+END_SRC
-
-** =try=
-
-Useful to temporary use a package.
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package try :defer 5)
-#+END_SRC
-
-** Ivy
-
-I used =helm= before, but I find =ivy= faster and lighter.
-
-#+BEGIN_QUOTE
-Ivy is a generic completion mechanism for Emacs. While it operates similarly to
-other completion schemes such as icomplete-mode, Ivy aims to be more efficient,
-smaller, simpler, and smoother to use yet highly customizable.
-
-[[https://github.com/abo-abo/ivy][Oleh Krehel]]
-#+END_QUOTE
-
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package counsel
-    :after ivy
-    :diminish
-    :config (counsel-mode))
-
-  (use-package ivy
-    :defer 0.1
-    :diminish
-    :bind (("C-c C-r" . ivy-resume)
-           ("C-x B" . ivy-switch-buffer-other-window))
-    :custom
-    (ivy-count-format "(%d/%d) ")
-    (ivy-use-virtual-buffers t)
-    :config (ivy-mode))
-
-  (use-package ivy-pass
-    :after ivy
-    :commands ivy-pass)
-
-  (use-package ivy-rich
-    :after ivy
-    :custom
-    (ivy-virtual-abbreviate 'full
-                            ivy-rich-switch-buffer-align-virtual-buffer t
-                            ivy-rich-path-style 'abbrev)
-    :config
-    (ivy-set-display-transformer 'ivy-switch-buffer
-                                 'ivy-rich-switch-buffer-transformer))
-
-  (use-package swiper
-    :after ivy
-    :bind (("C-s" . swiper)
-           ("C-r" . swiper)))
 #+END_SRC
