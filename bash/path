@@ -2,4 +2,4 @@
 #export JAVA_HOME=$HOME/.jdk/jdk8
 
 export GOPATH=$HOME/.go
-export PATH=$GOPATH/bin:~/.roswell/bin:$PATH
+export PATH=$GOPATH/bin:~/.roswell/bin:$PATH:~/.local/bin

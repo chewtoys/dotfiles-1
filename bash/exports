@@ -1,8 +1,10 @@
 #!/bin/bash
 
 # Make vim to the default editor
-export EDITOR="vim";
-export ALTERNATE_EDITOR="";
+export ALTERNATE_EDITOR=""
+export EDITOR="emacsclient -nc"                  # $EDITOR opens in terminal
+# export VISUAL="emacsclient -nc -a emacs"         # $VISUAL opens in GUI mode
+
 export TERMINAL="urxvt";
 
 # Larger bash history (allow 32³ entries; default is 500)
@@ -23,6 +25,10 @@ export LESS_TERMCAP_md="${yellow}";
 export MANPAGER="less -X";
 
 # Always enable colored `grep` output
-export GREP_OPTIONS="--color=auto";
+# export GREP_OPTIONS="--color=auto";
 
 export DBUS_SESSION_BUS_ADDRESS=unix:path=/var/run/user/$(id -u)/bus;
+
+export GTK_IM_MODULE=ibus
+export QT_IM_MODULE=ibus
+export XMODIFIERS="@im=ibus"

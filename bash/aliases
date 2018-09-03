@@ -113,3 +113,14 @@ alias paste=pbpaste
 # hey just type less
 alias p='pushd'
 alias o='popd'
+
+alias lock='gnome-screensaver-command -l'
+alias install="sudo apt install -y"
+alias update="sudo apt update -y"
+alias upgrade="sudo apt upgrade -y"
+alias user="su user"
+alias process="ps -aux"
+alias kill="sudo pkill"
+alias mem="free -h"
+alias disk="df -h"
+alias unlock="loginctl unlock-sessions"
