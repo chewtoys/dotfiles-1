@@ -134,9 +134,7 @@ fi
 
 alias ls='gls --color=auto'
 alias ll='ls -lh --sort=size'
-alias lls='ls -lh --sort=size --reverse'
-alias llt='ls -l -t -r'
-alias bear='clear && echo "Clear as a bear!"'
+alias la='ls -lah --sort=size'
 
 alias history='history 1'
 alias hs='history | grep '
@@ -157,9 +155,6 @@ alias gdc='git diff --cached'
 alias gs='gst'
 alias gp='git push'
 
-# ruby & rails
-alias be='bundle exec'
-
 # Screen
 alias screen='screen -R -D'
 
@@ -177,37 +172,9 @@ alias fazz='fzz rg -i {{}}'
 # fzz and find
 alias fizz='fzz find . -iname "*{{}}*"'
 
-# Notes
-alias n='vim +Notes' # Opens Vim and calls `:Notes`
-
-# Go
-alias got='go test ./...'
-
-alias scr='vim ~/tmp/scratch.md'
-
 ##########
 # FUNCTIONS
 ##########
-
-startpostgres() {
-  local pidfile="/usr/local/var/postgres/postmaster.pid"
-  if [ -s $pidfile ] && kill -0 $(cat $pidfile | head -n 1) > /dev/null 2>&1; then
-    echo "Already running"
-  else
-    pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
-  fi
-}
-
-stoppostgres() {
-  pg_ctl -D /usr/local/var/postgres stop
-}
-
-# Taken from here: http://timbabwe.com/2012/05/iterm_tab_and_window_titles_with_zsh
-# precmd () {
-#   tab_label=${PWD/${HOME}/\~} # use 'relative' path
-#   echo -ne "\e]2;${tab_label}\a" # set window title to full string
-#   echo -ne "\e]1;${tab_label: -24}\a" # set tab title to rightmost 24 characters
-# }
 
 mkdircd() {
   mkdir -p $1 && cd $1
@@ -218,40 +185,6 @@ serve() {
   local ip=$(ipconfig getifaddr en0)
   echo "Serving on ${ip}:${port} ..."
   python -m SimpleHTTPServer ${port}
-}
-
-beautiful() {
-  while
-  do
-    i=$((i + 1)) && echo -en "\x1b[3$(($i % 7))mo" && sleep .2
-  done
-}
-
-spinner() {
-  while
-  do
-    for i in "-" "\\" "|" "/"
-    do
-      echo -n " $i \r\r"
-      sleep .1
-    done
-  done
-}
-
-s3() {
-  local route="s3.thorstenball.com/${1}"
-  aws s3 cp ${1} s3://${route}
-  echo http://${route} | pbcopy
-}
-
-vimfzz() {
-  exec vim $(fzz ag {{}} ${1} | awk -F":" '{print $1}' | uniq)
-}
-
-cdfzz() {
-  local file=$(fzz find . -iname "*{{}}*" | head -n 1)
-  local filedir=$(dirname ${file})
-  cd ${filedir}
 }
 
 f() {
@@ -332,15 +265,9 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
 # golang
-export GOPATH="$HOME/code/go"
+export GOPATH="$HOME/go"
 export GOBIN="$GOPATH/bin"
 export PATH="$GOBIN:$PATH"
-
-# psql
-export PSQL_EDITOR='vim -c"set filetype=sql"'
-
-#heroku
-export PATH="/usr/local/heroku/bin:$PATH"
 
 # direnv
 if which direnv &> /dev/null; then
@@ -384,6 +311,3 @@ export PATH="/usr/local/opt/curl/bin:$PATH"
 if [ -e /usr/local/etc/profile.d/z.sh ]; then
   source /usr/local/etc/profile.d/z.sh
 fi
-
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-export PATH="/usr/local/opt/node@8/bin:$PATH"
