@@ -3,9 +3,14 @@ source /usr/local/share/antigen/antigen.zsh
 # Load the oh-my-zsh's library
 antigen use oh-my-zsh
 
+# from oh-my-zsh
+antigen bundle cargo
+antigen bundle colorize
 antigen bundle git
-antigen bundle z
+antigen bundle vi-mode
 antigen bundle vscode
+antigen bundle z
+
 # Syntax highlighting bundle.
 antigen bundle zsh-users/zsh-syntax-highlighting
 # Fish-like auto suggestions
