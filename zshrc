@@ -6,7 +6,14 @@ antigen use oh-my-zsh
 # from oh-my-zsh
 antigen bundle cargo
 antigen bundle colorize
+antigen bundle command-not-found
+antigen bundle extract
 antigen bundle git
+antigen bundle golang
+antigen bundle marked2
+antigen bundle rbenv
+antigen bundle rust
+antigen bundle tmux
 antigen bundle vi-mode
 antigen bundle vscode
 antigen bundle z
