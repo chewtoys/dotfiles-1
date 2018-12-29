@@ -133,8 +133,8 @@ if [ -r ${aliasfile} ]; then
 fi
 
 alias ls='gls --color=auto'
-alias ll='ls -lh --sort=size'
-alias la='ls -lah --sort=size'
+alias ll='ls -lh'
+alias la='ls -lah'
 
 alias history='history 1'
 alias hs='history | grep '
