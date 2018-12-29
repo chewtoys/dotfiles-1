@@ -1,11 +1,11 @@
 #!/bin/sh
 
-for name in *; do
-    target="$HOME/.$name"
-    if [ ! -e "$target" ]; then
-        if [ "$name" != 'install.sh' ] && [ "$name" != 'README.md' ]; then
-            echo "Creating $target"
-            ln -s "$PWD/$name" "$target"
-        fi
-    fi
-done
+ln -sf $(pwd)/bash ~/.bash
+ln -sf $(pwd)/bash_profile ~/.bash_profile
+ln -sf $(pwd)/bashrc ~/.bashrc
+ln -sf $(pwd)/dircolors ~/.dircolors
+ln -sf $(pwd)/gemrc ~/.gemrc
+ln -sf $(pwd)/gitconfig ~/.gitconfig
+ln -sf $(pwd)/gitignore ~/.gitignore
+ln -sf $(pwd)/inputrc ~/.inputrc
+ln -sf $(pwd)/tmux.conf ~/.tmux.conf
