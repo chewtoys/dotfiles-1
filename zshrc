@@ -50,3 +50,5 @@ local aliasfile="${HOME}/.dotfiles/bash/aliases"
 if [ -r ${aliasfile} ]; then
   source ${aliasfile}
 fi
+
+export PATH=~/.local/bin:~/.cargo/bin/:$PATH
