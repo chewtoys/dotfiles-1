@@ -57,3 +57,5 @@ export PATH=$GOPATH/bin:~/.local/bin:~/.cargo/bin/:$PATH
 if [ -r ~/.private ]; then
   source ~/.private
 fi
+
+export LANG="en_EN.UTF-8"
