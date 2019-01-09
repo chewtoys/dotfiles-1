@@ -52,4 +52,4 @@ if [ -r ${aliasfile} ]; then
 fi
 
 export GOPATH=$HOME/go
-export PATH=~$GOPATH/bin:/.local/bin:~/.cargo/bin/:$PATH
+export PATH=$GOPATH/bin:/.local/bin:~/.cargo/bin/:$PATH
