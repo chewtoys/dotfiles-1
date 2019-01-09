@@ -59,3 +59,4 @@ if [ -r ~/.private ]; then
 fi
 
 export LANG="en_EN.UTF-8"
+export LESSCHARSET=utf-8
