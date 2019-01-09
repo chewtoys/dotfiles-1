@@ -125,3 +125,6 @@ alias kill="sudo pkill"
 alias mem="free -h"
 alias disk="df -h"
 alias unlock="loginctl unlock-sessions"
+
+
+alias less="bat"
