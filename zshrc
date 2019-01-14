@@ -44,6 +44,7 @@ antigen apply
 #)
 #zstyle ':completion:*:hosts' hosts $hosts
 #zstyle ':completion:*' users off
+zstyle ':completion:*' rehash true
 
 local aliasfile="${HOME}/.dotfiles/bash/aliases"
 
