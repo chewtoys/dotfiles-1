@@ -128,3 +128,4 @@ alias unlock="loginctl unlock-sessions"
 
 
 alias less="bat"
+alias cat="bat"
