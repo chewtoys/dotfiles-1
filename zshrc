@@ -62,3 +62,6 @@ fi
 export LC_CTYPE=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LESSCHARSET=utf-8
+
+# added by travis gem
+[ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
