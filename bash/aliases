@@ -127,5 +127,5 @@ alias disk="df -h"
 alias unlock="loginctl unlock-sessions"
 
 
-alias less="bat"
-alias cat="bat"
+alias less="bat -p"
+alias cat="bat -p"
