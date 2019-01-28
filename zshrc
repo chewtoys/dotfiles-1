@@ -19,7 +19,7 @@ antigen bundle vscode
 antigen bundle z
 
 # Syntax highlighting bundle.
-#antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle zsh-users/zsh-syntax-highlighting
 # Fish-like auto suggestions
 #antigen bundle zsh-users/zsh-autosuggestions
 # Extra zsh completions
@@ -65,6 +65,12 @@ export LESSCHARSET=utf-8
 
 # added by travis gem
 [ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
+
+# rbenv
+export PATH="$HOME/.rbenv/bin:$PATH"
+if type "rbenv" > /dev/null; then
+  eval "$(rbenv init -)"
+fi
 
 fg() {
     if [[ $# -eq 1 && $1 = - ]]; then
