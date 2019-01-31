@@ -1,5 +1,5 @@
 [include]
-  path = ~/.gitprivate
+        path = ~/.gitprivate
 
 [alias]
 	# View abbreviated SHA, description, and history graph of the latest 20 commits
@@ -20,11 +20,6 @@
 	# Commit all changes
 	ca = !git add -A && git commit -av
 
-  # Commit with verbose
-  ci = !git commit -v
-	# Color graph log view
-	graph = log --graph --color --pretty=format:"%C(yellow)%H%C(green)%d%C(reset)%n%x20%cd%n%x20%cn%x20(%ce)%n%x20%s%n"
-
 	# Show verbose output about tags, branches or remotes
 	tags = tag -l
 	branches = branch -a
@@ -41,12 +36,10 @@
 	dm = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
 
 [apply]
-
 	# Detect whitespace errors when applying a patch
 	whitespace = fix
 
 [core]
-
 	# Use custom `.gitignore` and `.gitattributes`
 	excludesfile = ~/.gitignore
 	attributesfile = ~/.gitattributes
@@ -65,26 +58,22 @@
 	quotepath = false
 
 [color]
-
 	# Use colors in Git commands that are capable of colored output when
 	# outputting to the terminal. (This is the default setting in Git ≥ 1.8.4.)
 	ui = auto
 
 [color "branch"]
-
 	current = yellow reverse
 	local = yellow
 	remote = green
 
 [color "diff"]
-
 	meta = yellow bold
 	frag = magenta bold # line info
 	old = red # deletions
 	new = green # additions
 
 [color "status"]
-
 	added = yellow
 	changed = green
 	untracked = cyan
@@ -103,11 +92,10 @@
 
 	# Include summaries of merged commits in newly created merge commit messages
 	log = true
-  tool = vimdiff
+        tool = vimdiff
 	conflictstyle = diff3
 
 [push]
-
 	# Use the Git 1.x.x default to avoid errors on machines with old Git
 	# installations. To use `simple` instead, add this to your `~/.extra` file:
 	# `git config --global push.default simple`. See http://git.io/mMah-w.
@@ -121,8 +109,6 @@
 	rebase = true
 [branch]
 	autosetuprebase = always
-[commit]
-	template = ~/.stCommitMsg
 [mergetool]
 	prompt = false
 [difftool]

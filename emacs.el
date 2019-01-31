@@ -13,6 +13,7 @@
   (package-install 'use-package))
 
 (setq package-enable-at-startup nil)
+(setq use-package-always-ensure t)
 
 (setq user-full-name "Denis Evsyukov"
       user-mail-address "denis@evsyukov.org")
@@ -247,17 +248,14 @@
   :config
   (unless (server-running-p) (server-start)))
 
-(use-package diminish
-  :ensure t)
+(use-package diminish)
 
 (use-package better-defaults
-  :ensure t
   :config
   (when window-system
     (menu-bar-mode)))
 
 (use-package ido-vertical-mode
-  :ensure t
   :defer t
   :init
   (progn
@@ -271,20 +269,17 @@
           ido-everywhere t)))
 
 (use-package rainbow-delimiters
-  :ensure t
   :config
   (progn
     (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)))
 
 (use-package projectile
-  :ensure t
   :diminish projectile-mode
   :config
   (projectile-global-mode))
 
 (use-package magit
-  :ensure t
   :defer t
   :bind (("C-x v s" . magit-status)
          ("C-x v p" . magit-push))
@@ -292,7 +287,6 @@
   (setq magit-last-seen-setup-instructions "1.4.0"))
 
 (use-package markdown-mode
-  :ensure t
   :mode (("\.markdown$" . markdown-mode)
          ("\.md$"       . markdown-mode))
   :config
@@ -300,13 +294,11 @@
     (add-hook 'markdown-mode-hook #'visual-line-mode)))
 
 (use-package yaml-mode
-  :ensure t
   :mode (("\\.yml$" . yaml-mode))
   :config
   (add-hook 'yaml-mode-hook (lambda () (electric-indent-local-mode -1))))
 
 (use-package mmm-mode
-  :ensure t
   :diminish mmm-mode
   :config
   (progn
@@ -319,29 +311,16 @@
         :back "^---")))
     (mmm-add-mode-ext-class 'markdown-mode nil 'yaml-header-matters)))
 
-(use-package auto-complete
-  :ensure t
-  :diminish auto-complete-mode
-  :init
-  (progn
-    (ac-config-default)
-    (global-auto-complete-mode t)
-    (setq-default ac-auto-start t)
-    (setq-default ac-auto-show-menu t)))
-
 (use-package which-key
-  :ensure t
   :diminish which-key-mode
   :init
   (progn
     (which-key-setup-side-window-right)
     (which-key-mode)))
 
-(use-package rust-mode
-  :ensure t)
+(use-package rust-mode)
 
 (use-package guess-language         ; Automatically detect language for Flyspell
-  :ensure t
   :commands guess-language-mode
   :init (add-hook 'text-mode-hook #'guess-language-mode)
   :config
@@ -350,13 +329,11 @@
   :diminish guess-language-mode)
 
 (use-package exec-path-from-shell
-  :ensure t
   :config
   (when (memq window-system '(mac ns))
     (exec-path-from-shell-initialize)))
 
 (use-package helpful
-  :ensure t
   :bind
   ("C-h k" . helpful-key)
   ("C-h f" . helpful-callable)
@@ -367,31 +344,25 @@
         ("C-c C-d" . helpful-at-point)))
 
 (use-package ace-window
-  :ensure t
   :bind (("M-o" . ace-window)))
 
 (use-package expand-region
-  :ensure t
   :bind ("C-=" . er/expand-region))
 
 (use-package neotree
-  :ensure t
   :bind ("<f8>" . neotree-toggle))
    (setq projectile-switch-project-action 'neotree-projectile-action)
 
 (use-package ansible
-  :ensure t
   :config
   (add-hook 'yaml-mode-hook '(lambda () (ansible 1)))
   (setq ansible::vault-password-file "~/.vault_pass"))
 
 (use-package powerline
-  :ensure t
   :config
   (powerline-default-theme))
 
 (use-package git-gutter
-  :ensure t
   :diminish 'git-gutter-mode
   :config
   (global-git-gutter-mode +1)
@@ -402,7 +373,6 @@
    '(git-gutter:deleted-sign "☂")))
 
 (use-package clang-format
-  :ensure t
   :config
   (global-set-key (kbd "C-c i") 'clang-format-region)
   (global-set-key (kbd "C-c u") 'clang-format-buffer)
@@ -410,7 +380,6 @@
   (setq clang-format-style-option "llvm"))
 
 (use-package ivy
-  :ensure t
   :init
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t)
@@ -419,12 +388,10 @@
   (global-set-key (kbd "<f6>") 'ivy-resume))
 
 (use-package swiper
-  :ensure t
   :init
   (global-set-key "\C-s" 'swiper))
 
 (use-package counsel
-  :ensure t
   :init
   (global-set-key (kbd "M-x") 'counsel-M-x)
   (global-set-key (kbd "C-x C-f") 'counsel-find-file)
@@ -439,3 +406,67 @@
   (global-set-key (kbd "C-x l") 'counsel-locate)
   (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
   (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history))
+
+(use-package yasnippet
+  :diminish yas-minor-mode
+  :bind (:map yas-minor-mode-map
+	      ("C-x i i" . yas-insert-snippet)
+	      ("C-x i n" . yas-new-snippet)
+	      ("C-x i v" . yas-visit-snippet-file)
+	      ("C-x i g" . yas-reload-all))
+  :init
+  (use-package yasnippet-snippets)
+  :config
+  (yas-reload-all)
+  (add-to-list 'yas-snippet-dirs (locate-user-emacs-file "snippets"))
+  (yas-global-mode 1))
+
+(use-package company
+  :diminish company-mode
+  :demand t
+  :bind (("C-c /" . company-files)
+         ("C-M-i" . company-complete)
+         :map company-active-map
+         ("C-s" . company-filter-candidates)
+         ("C-n" . company-select-next)
+         ("C-p" . company-select-previous)
+         ("C-i" . company-complete-selection)
+         :map company-search-map
+         ("C-n" . company-select-next)
+         ("C-p" . company-select-previous))
+  :config
+  (global-company-mode +1)
+  (setq company-dabbrev-downcase nil)
+  (custom-set-variables
+   '(company-minimum-prefix-length 3)
+   '(company-idle-delay 0)
+   '(company-selection-wrap-around t)
+   '(company-dabbrev-downcase nil)
+   '(company-dabbrev-ignore-case 'nil))
+  ;; Add yasnippet support for all company backends
+  ;; https://github.com/syl20bnr/spacemacs/pull/179
+  (defvar company-mode/enable-yas t
+    "Enable yasnippet for all backends.")
+  (defun company-mode/backend-with-yas (backend)
+    (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+	backend
+      (append (if (consp backend) backend (list backend))
+	      '(:with company-yasnippet)))))
+
+;; backends for company
+(use-package company-shell
+  :config
+  (add-to-list 'company-backends 'company-shell))
+(use-package company-web
+  :config
+  (add-to-list 'company-backends 'company-web-html))
+(use-package company-quickhelp
+  :bind
+  (:map company-active-map
+        ("C-c h" . company-quickhelp-manual-begin))
+  :config
+  (company-quickhelp-mode))
+
+(use-package hippie-exp
+  :config
+  (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand))
