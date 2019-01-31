@@ -98,12 +98,12 @@
 (setq use-dialog-box nil)
 
 (when window-system
-    (require 'whitespace)
-    (global-whitespace-mode +1)
-    (set-face-attribute 'whitespace-space nil :background nil :foreground "gray80")
-    (set-face-attribute 'whitespace-trailing nil :background "plum1" :foreground "gray80")
-    (setq whitespace-style '(face tabs spaces tabs-mark space-mark trailing))
-    (set-frame-size (selected-frame) 170 50)
+    ;; (require 'whitespace)
+    ;; (global-whitespace-mode +1)
+    ;; (set-face-attribute 'whitespace-space nil :background nil :foreground "gray80")
+    ;; (set-face-attribute 'whitespace-trailing nil :background "plum1" :foreground "gray80")
+    ;; (setq whitespace-style '(face tabs spaces tabs-mark space-mark trailing))
+    (set-frame-size (selected-frame) 190 60)
     (set-default-font "Fira Code 14" nil t))
 
 (if (eq system-type 'windows-nt)
@@ -239,9 +239,12 @@
 (unless (eq system-type 'windows-nt)
    (set-selection-coding-system 'utf-8))
 
-(require 'server)
-(unless (server-running-p) (server-start))
-;; (setq server-socket-dir (format "/tmp/emacs%d" (user-uid)))
+(use-package server
+  :config
+  (unless (server-running-p) (server-start)))
+
+(use-package diminish
+  :ensure t)
 
 (use-package better-defaults
   :ensure t
@@ -314,6 +317,7 @@
 
 (use-package auto-complete
   :ensure t
+  :diminish auto-complete-mode
   :init
   (progn
     (ac-config-default)
@@ -383,6 +387,7 @@
 
 (use-package git-gutter
   :ensure t
+  :diminish 'git-gutter-mode
   :config
   (global-git-gutter-mode +1)
   (custom-set-variables
@@ -390,3 +395,11 @@
    '(git-gutter:modified-sign "☁")
    '(git-gutter:added-sign "☀")
    '(git-gutter:deleted-sign "☂")))
+
+(use-package clang-format
+  :ensure t
+  :config
+  (global-set-key (kbd "C-c i") 'clang-format-region)
+  (global-set-key (kbd "C-c u") 'clang-format-buffer)
+
+  (setq clang-format-style-option "llvm"))
