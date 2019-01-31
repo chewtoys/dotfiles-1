@@ -378,7 +378,8 @@
 (use-package ansible
   :ensure t
   :config
-  (add-hook 'yaml-mode-hook '(lambda () (ansible 1))))
+  (add-hook 'yaml-mode-hook '(lambda () (ansible 1)))
+  (setq ansible::vault-password-file "~/.vault_pass"))
 
 (use-package powerline
   :ensure t
