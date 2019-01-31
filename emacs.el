@@ -69,8 +69,6 @@
         try-complete-lisp-symbol-partially
         try-complete-lisp-symbol))
 
-(setq-default dired-listing-switches "-alh")
-
 (auto-compression-mode t)
 
 (global-font-lock-mode t)
@@ -93,7 +91,7 @@
 (column-number-mode 1)
 
 ;;  (setq-default truncate-lines t)
-  (setq-default global-visual-line-mode t)
+(setq-default global-visual-line-mode t)
 
 (global-auto-revert-mode t)
 
@@ -105,13 +103,13 @@
     (set-face-attribute 'whitespace-space nil :background nil :foreground "gray80")
     (set-face-attribute 'whitespace-trailing nil :background "plum1" :foreground "gray80")
     (setq whitespace-style '(face tabs spaces tabs-mark space-mark trailing))
-    (set-frame-size (selected-frame) 140 40)
+    (set-frame-size (selected-frame) 170 50)
     (set-default-font "Fira Code 14" nil t))
 
 (if (eq system-type 'windows-nt)
          (set-default-font "Fira Code 12" nil t))
 
-  (set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2")
+;; (set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2")
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
@@ -223,6 +221,10 @@
 (global-set-key (kbd "s->") #'end-of-buffer)
 (global-set-key (kbd "s-q") #'fill-paragraph)
 (global-set-key (kbd "s-x") #'execute-extended-command)
+(global-set-key (kbd "s-<left>") #'beginning-of-line)
+(global-set-key (kbd "s-<right>") #'end-of-line)
+(global-set-key (kbd "s-<up>") #'backward-paragraph)
+(global-set-key (kbd "s-<down>") #'forward-paragraph)
 
 (prefer-coding-system 'windows-1251)
 (prefer-coding-system 'utf-16)
@@ -371,5 +373,20 @@
 
 (use-package ansible
   :ensure t
-  :custom
+  :config
   (add-hook 'yaml-mode-hook '(lambda () (ansible 1))))
+
+(use-package powerline
+  :ensure t
+  :config
+  (powerline-default-theme))
+
+(use-package git-gutter
+  :ensure t
+  :config
+  (global-git-gutter-mode +1)
+  (custom-set-variables
+   '(git-gutter:window-width 2)
+   '(git-gutter:modified-sign "☁")
+   '(git-gutter:added-sign "☀")
+   '(git-gutter:deleted-sign "☂")))
