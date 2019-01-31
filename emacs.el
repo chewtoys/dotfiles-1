@@ -225,6 +225,8 @@
 (global-set-key (kbd "s-<right>") #'end-of-line)
 (global-set-key (kbd "s-<up>") #'backward-paragraph)
 (global-set-key (kbd "s-<down>") #'forward-paragraph)
+(global-set-key (kbd "s-}") #'next-buffer)
+(global-set-key (kbd "s-{") #'previous-buffer)
 
 (prefer-coding-system 'windows-1251)
 (prefer-coding-system 'utf-16)
