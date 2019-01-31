@@ -41,8 +41,8 @@
 (setq confirm-nonexistent-file-or-buffer nil)
 (setq ido-create-new-buffer 'always)
 
-(setq vc-follow-link nil)
-(setq vc-follow-symlinks nil)
+;; (setq vc-follow-link nil)
+;; (setq vc-follow-symlinks nil)
 
 (setq compilation-scroll-output t)
 
@@ -101,11 +101,11 @@
 (setq use-dialog-box nil)
 
 (when window-system
-    ;; (require 'whitespace)
-    ;; (global-whitespace-mode +1)
-    ;; (set-face-attribute 'whitespace-space nil :background nil :foreground "gray80")
-    ;; (set-face-attribute 'whitespace-trailing nil :background "plum1" :foreground "gray80")
-    ;; (setq whitespace-style '(face tabs spaces tabs-mark space-mark trailing))
+    (require 'whitespace)
+    (global-whitespace-mode +1)
+    (set-face-attribute 'whitespace-space nil :background nil :foreground "gray80")
+    (set-face-attribute 'whitespace-trailing nil :background "plum1" :foreground "gray80")
+    (setq whitespace-style '(face tabs spaces tabs-mark space-mark trailing))
     (set-frame-size (selected-frame) 190 60)
     (set-default-font "Fira Code 14" nil t))
 
@@ -244,6 +244,13 @@
 (unless (eq system-type 'windows-nt)
    (set-selection-coding-system 'utf-8))
 
+;; init PATH & exec-path from current shell
+(defun set-exec-path-from-shell-PATH ()
+  (let ((path-from-shell (shell-command-to-string "$SHELL -c 'echo $PATH'")))
+    (setenv "PATH" path-from-shell)
+    (setq exec-path (split-string path-from-shell path-separator))))
+(when window-system (set-exec-path-from-shell-PATH))
+
 (use-package server
   :config
   (unless (server-running-p) (server-start)))
@@ -328,11 +335,6 @@
         guess-language-min-paragraph-length 35)
   :diminish guess-language-mode)
 
-(use-package exec-path-from-shell
-  :config
-  (when (memq window-system '(mac ns))
-    (exec-path-from-shell-initialize)))
-
 (use-package helpful
   :bind
   ("C-h k" . helpful-key)
@@ -410,10 +412,10 @@
 (use-package yasnippet
   :diminish yas-minor-mode
   :bind (:map yas-minor-mode-map
-	      ("C-x i i" . yas-insert-snippet)
-	      ("C-x i n" . yas-new-snippet)
-	      ("C-x i v" . yas-visit-snippet-file)
-	      ("C-x i g" . yas-reload-all))
+              ("C-x i i" . yas-insert-snippet)
+              ("C-x i n" . yas-new-snippet)
+              ("C-x i v" . yas-visit-snippet-file)
+              ("C-x i g" . yas-reload-all))
   :init
   (use-package yasnippet-snippets)
   :config
@@ -449,9 +451,9 @@
     "Enable yasnippet for all backends.")
   (defun company-mode/backend-with-yas (backend)
     (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-	backend
+        backend
       (append (if (consp backend) backend (list backend))
-	      '(:with company-yasnippet)))))
+              '(:with company-yasnippet)))))
 
 ;; backends for company
 (use-package company-shell
