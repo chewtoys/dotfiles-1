@@ -13,7 +13,6 @@
   (package-install 'use-package))
 
 (setq package-enable-at-startup nil)
-(setq use-package-always-ensure t)
 
 (setq user-full-name "Denis Evsyukov"
       user-mail-address "denis@evsyukov.org")
@@ -41,8 +40,8 @@
 (setq confirm-nonexistent-file-or-buffer nil)
 (setq ido-create-new-buffer 'always)
 
-;; (setq vc-follow-link nil)
-;; (setq vc-follow-symlinks nil)
+(setq vc-follow-link t)
+(setq vc-follow-symlinks t)
 
 (setq compilation-scroll-output t)
 
@@ -255,14 +254,16 @@
   :config
   (unless (server-running-p) (server-start)))
 
-(use-package diminish)
+(use-package diminish :ensure t)
 
 (use-package better-defaults
+  :ensure t
   :config
   (when window-system
     (menu-bar-mode)))
 
 (use-package ido-vertical-mode
+  :ensure t
   :defer t
   :init
   (progn
@@ -276,17 +277,20 @@
           ido-everywhere t)))
 
 (use-package rainbow-delimiters
+  :ensure t
   :config
   (progn
     (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)))
 
 (use-package projectile
+  :ensure t
   :diminish projectile-mode
   :config
   (projectile-global-mode))
 
 (use-package magit
+  :ensure t
   :defer t
   :bind (("C-x v s" . magit-status)
          ("C-x v p" . magit-push))
@@ -294,6 +298,7 @@
   (setq magit-last-seen-setup-instructions "1.4.0"))
 
 (use-package markdown-mode
+  :ensure t
   :mode (("\.markdown$" . markdown-mode)
          ("\.md$"       . markdown-mode))
   :config
@@ -301,11 +306,13 @@
     (add-hook 'markdown-mode-hook #'visual-line-mode)))
 
 (use-package yaml-mode
+  :ensure t
   :mode (("\\.yml$" . yaml-mode))
   :config
   (add-hook 'yaml-mode-hook (lambda () (electric-indent-local-mode -1))))
 
 (use-package mmm-mode
+  :ensure t
   :diminish mmm-mode
   :config
   (progn
@@ -319,15 +326,17 @@
     (mmm-add-mode-ext-class 'markdown-mode nil 'yaml-header-matters)))
 
 (use-package which-key
+  :ensure t
   :diminish which-key-mode
   :init
   (progn
     (which-key-setup-side-window-right)
     (which-key-mode)))
 
-(use-package rust-mode)
+(use-package rust-mode :ensure t)
 
 (use-package guess-language         ; Automatically detect language for Flyspell
+  :ensure t
   :commands guess-language-mode
   :init (add-hook 'text-mode-hook #'guess-language-mode)
   :config
@@ -336,6 +345,7 @@
   :diminish guess-language-mode)
 
 (use-package helpful
+  :ensure t
   :bind
   ("C-h k" . helpful-key)
   ("C-h f" . helpful-callable)
@@ -346,35 +356,43 @@
         ("C-c C-d" . helpful-at-point)))
 
 (use-package ace-window
+  :ensure t
   :bind (("M-o" . ace-window)))
 
 (use-package expand-region
+  :ensure t
   :bind ("C-=" . er/expand-region))
 
 (use-package neotree
+  :ensure t
   :bind ("<f8>" . neotree-toggle))
    (setq projectile-switch-project-action 'neotree-projectile-action)
 
 (use-package ansible
+  :ensure t
   :config
   (add-hook 'yaml-mode-hook '(lambda () (ansible 1)))
   (setq ansible::vault-password-file "~/.vault_pass"))
 
-(use-package powerline
-  :config
-  (powerline-default-theme))
+;; (use-package powerline
+;;   :ensure t
+;;   :config
+;;   (powerline-default-theme))
 
 (use-package git-gutter
+  :ensure t
   :diminish 'git-gutter-mode
   :config
   (global-git-gutter-mode +1)
-  (custom-set-variables
-   '(git-gutter:window-width 2)
-   '(git-gutter:modified-sign "☁")
-   '(git-gutter:added-sign "☀")
-   '(git-gutter:deleted-sign "☂")))
+  ;; (custom-set-variables
+  ;;  '(git-gutter:window-width 2)
+  ;;  '(git-gutter:modified-sign "☁")
+  ;;  '(git-gutter:added-sign "☀")
+  ;;  '(git-gutter:deleted-sign "☂"))
+)
 
 (use-package clang-format
+  :ensure t
   :config
   (global-set-key (kbd "C-c i") 'clang-format-region)
   (global-set-key (kbd "C-c u") 'clang-format-buffer)
@@ -382,6 +400,7 @@
   (setq clang-format-style-option "llvm"))
 
 (use-package ivy
+  :ensure t
   :init
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t)
@@ -390,10 +409,12 @@
   (global-set-key (kbd "<f6>") 'ivy-resume))
 
 (use-package swiper
+  :ensure t
   :init
   (global-set-key "\C-s" 'swiper))
 
 (use-package counsel
+  :ensure t
   :init
   (global-set-key (kbd "M-x") 'counsel-M-x)
   (global-set-key (kbd "C-x C-f") 'counsel-find-file)
@@ -410,6 +431,7 @@
   (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history))
 
 (use-package yasnippet
+  :ensure t
   :diminish yas-minor-mode
   :bind (:map yas-minor-mode-map
               ("C-x i i" . yas-insert-snippet)
@@ -417,13 +439,14 @@
               ("C-x i v" . yas-visit-snippet-file)
               ("C-x i g" . yas-reload-all))
   :init
-  (use-package yasnippet-snippets)
+  (use-package yasnippet-snippets :ensure t)
   :config
   (yas-reload-all)
   (add-to-list 'yas-snippet-dirs (locate-user-emacs-file "snippets"))
   (yas-global-mode 1))
 
 (use-package company
+  :ensure t
   :diminish company-mode
   :demand t
   :bind (("C-c /" . company-files)
@@ -457,12 +480,15 @@
 
 ;; backends for company
 (use-package company-shell
+  :ensure t
   :config
   (add-to-list 'company-backends 'company-shell))
 (use-package company-web
+  :ensure t
   :config
   (add-to-list 'company-backends 'company-web-html))
 (use-package company-quickhelp
+  :ensure t
   :bind
   (:map company-active-map
         ("C-c h" . company-quickhelp-manual-begin))
@@ -470,5 +496,99 @@
   (company-quickhelp-mode))
 
 (use-package hippie-exp
+  :ensure t
   :config
   (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand))
+
+(use-package material-theme
+  :ensure t
+  :init
+  (load-theme 'material-light t))
+
+(use-package go-mode
+  :ensure t
+  :mode ("\\.go\\'" . go-mode)
+  :preface
+  (defun go/init-company ()
+    (set (make-local-variable 'company-backends)
+         '(company-capf
+           company-yasnippet))
+    (company-mode)
+
+    (use-package company-go
+      :ensure t
+      :after company
+      :init
+      (push 'company-go company-backends)
+      )
+    )
+
+  (defun go/setup-env-var (&optional gopath)
+    (unless gopath (setq gopath (concat (getenv "HOME") "/go")))
+    (setenv "GOPATH" gopath)
+    (setenv "PATH" (concat (getenv "PATH") ":" (concat gopath "/bin")))
+    (setq exec-path (append exec-path (list (concat gopath "/bin"))))
+    )
+  :commands (gofmt-before-save)
+  :hook
+  ((go-mode . hs-minor-mode)
+   (go-mode . flycheck-mode)
+   (go-mode . go/init-company)
+   (go-mode . go/setup-env-var)
+   (go-mode . (lambda ()
+                (add-hook 'before-save-hook 'gofmt-before-save)))
+   )
+  :bind
+  (:map go-mode-map
+        ("C-c g a" . go-imports-insert-import)
+        ("C-c g p" . go-direx-pop-to-buffer)
+        ("C-c g b" . go-direx-switch-to-buffer)
+        ("C-c g i" . go-impl)
+        ("C-c g f" . go-fill-struct)
+        ("C-c g r" . go-rename)
+        ("C-c g l" . go-imports-reload-packages-list)
+        ("C-c g t" . go-tag-add)
+        ("C-c g v" . go-tag-remove)
+        ("C-c t g" . go-gen-test-dwim)
+        ("C-c t a" . go-gen-test-all)
+        ("C-c t e" . go-gen-test-exported)
+        ("C-c t f" . go-test-current-file)
+        ("C-c t t" . go-test-current-test)
+        ("C-c t p" . go-test-current-project)
+        ("C-c t b" . go-test-current-benchmark)
+        ("C-c t x" . go-run))
+  )
+
+(use-package go-snippets
+  :ensure t
+  :after yasnippets
+  :config
+  (go-snippets-initialize)
+  )
+
+(use-package go-dlv :ensure t)
+
+(use-package go-gen-test :ensure t)
+
+(use-package go-eldoc
+  :ensure t
+  :hook
+  (go-mode . go-eldoc-setup)
+  )
+
+(use-package go-guru
+  :ensure t
+  :hook
+  (go-mode . go-guru-hl-identifier-mode)
+  )
+
+(use-package go-playground :ensure t)
+
+(use-package gorepl-mode
+  :ensure t
+  :hook
+  (go-mode . gorepl-mode))
+
+(use-package protobuf-mode
+  :ensure t
+  :mode ("\\.proto\\'" . protobuf-mode))
