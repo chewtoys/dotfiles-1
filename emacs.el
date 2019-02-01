@@ -19,6 +19,8 @@
 
 (load "~/.emacs.secrets" t)
 
+(setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH") ))
+
 (setq inhibit-splash-screen t)
 (setq inhbit-startup-message t)
 (setq initial-scratch-message "")
@@ -110,8 +112,6 @@
 
 (if (eq system-type 'windows-nt)
          (set-default-font "Fira Code 12" nil t))
-
-;; (set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2")
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
@@ -502,8 +502,9 @@
 
 (use-package material-theme
   :ensure t
-  :init
-  (load-theme 'material-light t))
+  :config
+  (load-theme 'material-light t)
+  (set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2"))
 
 (use-package go-mode
   :ensure t
