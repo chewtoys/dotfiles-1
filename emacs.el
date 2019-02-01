@@ -363,10 +363,28 @@
   :ensure t
   :bind ("C-=" . er/expand-region))
 
-(use-package neotree
+(use-package dired-sidebar
+  :bind (("C-x C-n" . dired-sidebar-toggle-sidebar))
   :ensure t
-  :bind ("<f8>" . neotree-toggle))
-   (setq projectile-switch-project-action 'neotree-projectile-action)
+  :commands (dired-sidebar-toggle-sidebar)
+  :init
+  (add-hook 'dired-sidebar-mode-hook
+            (lambda ()
+              (unless (file-remote-p default-directory)
+                (auto-revert-mode))))
+  :config
+  (push 'toggle-window-split dired-sidebar-toggle-hidden-commands)
+  (push 'rotate-windows dired-sidebar-toggle-hidden-commands)
+
+  (setq dired-sidebar-subtree-line-prefix "__")
+  (setq dired-sidebar-theme 'vscode)
+  (setq dired-sidebar-use-term-integration t)
+  (setq dired-sidebar-use-custom-font t))
+
+;; (use-package neotree
+;;   :ensure t
+;;   :bind ("<f8>" . neotree-toggle))
+;;    (setq projectile-switch-project-action 'neotree-projectile-action)
 
 (use-package ansible
   :ensure t
@@ -500,11 +518,11 @@
   :config
   (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand))
 
-(use-package material-theme
+(use-package solarized-theme
   :ensure t
   :config
-  (load-theme 'material-light t)
-  (set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2"))
+  (load-theme 'solarized-light t))
+  ;; (set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2"))
 
 (use-package go-mode
   :ensure t
@@ -593,3 +611,20 @@
 (use-package protobuf-mode
   :ensure t
   :mode ("\\.proto\\'" . protobuf-mode))
+
+(use-package all-the-icons
+  ;; DO not forget run in first:
+  ;; M-x all-the-icons-install-fonts
+  :ensure t)
+
+(use-package all-the-icons-dired
+  :ensure t
+  :after all-the-icons
+  :hook
+  (dired-mode . all-the-icons-dired-mode))
+
+(use-package dired-subtree
+  :config
+  (bind-keys :map dired-mode-map
+             ("i" . dired-subtree-insert)
+             (";" . dired-subtree-remove)))
