@@ -313,14 +313,11 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   :bind (("C-x v s" . magit-status)
          ("C-x v p" . magit-push))
   :init
-  (set-default 'magit-push-always-verify nil)
-  (set-default 'magit-revert-buffers 'silent)
-  (set-default 'magit-no-confirm '(stage-all-changes
-                                   unstage-all-changes))
   (setq magit-last-seen-setup-instructions "1.4.0")
   (setq magit-bury-buffer-function (lambda(&optional kill-buffer) (interactive) (magit-restore-window-configuration t)))
   (setq magit-commit-show-diff nil
         magit-revert-buffers 1)
+  :config
   (bind-key "q" #'juev/magit-kill-buffers magit-status-mode-map))
 
 (use-package markdown-mode
