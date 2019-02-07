@@ -313,12 +313,15 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   :bind (("C-x v s" . magit-status)
          ("C-x v p" . magit-push))
   :init
-  (setq magit-last-seen-setup-instructions "1.4.0")
-  (setq magit-bury-buffer-function (lambda(&optional kill-buffer) (interactive) (magit-restore-window-configuration t)))
-  (setq magit-commit-show-diff nil
-        magit-revert-buffers 1)
+  (progn
+    (setq magit-last-seen-setup-instructions "1.4.0")
+    (setq magit-bury-buffer-function (lambda(&optional kill-buffer) (interactive) (magit-restore-window-configuration t)))
+    (setq magit-commit-show-diff nil
+          magit-revert-buffers 1))
   :config
-  (bind-key "q" #'juev/magit-kill-buffers magit-status-mode-map))
+  (progn
+    (bind-key "q" #'juev/magit-kill-buffers magit-status-mode-map)
+    (add-to-list 'magit-no-confirm 'stage-all-changes)))
 
 (use-package markdown-mode
   :ensure t
@@ -600,3 +603,27 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   :config
   (require 'spaceline-config)
 (spaceline-emacs-theme))
+
+(use-package evil-surround
+  :ensure t
+  :config
+  (global-evil-surround-mode 1))
+
+(use-package evil-leader
+  :ensure t
+  :init
+  (global-evil-leader-mode)
+  :config
+  (progn
+    (evil-leader/set-leader "<SPC>")
+    (evil-leader/set-key
+     "f" 'find-file
+     "b" 'switch-to-buffer
+     "k" 'kill-buffer)))
+
+(use-package evil-mark-replace :ensure t)
+(use-package evil-matchit
+  :ensure t
+  :config (global-evil-matchit-mode 1))
+
+(use-package org-evil :ensure t)
