@@ -1,5 +1,8 @@
 (load "~/.emacs-proxy.el" t)
 
+(setq custom-file "~/.emacs-custom.el")
+(load custom-file)
+
 (eval-when-compile
   (require 'cl))
 (require 'package)
@@ -249,6 +252,12 @@
     (setenv "PATH" path-from-shell)
     (setq exec-path (split-string path-from-shell path-separator))))
 (when window-system (set-exec-path-from-shell-PATH))
+
+(use-package quelpa :ensure t)
+
+(use-package quelpa-use-package :ensure t)
+(setq use-package-ensure-function 'quelpa)
+(setq use-package-always-ensure t)
 
 (use-package server
   :config
@@ -518,10 +527,10 @@
   :config
   (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand))
 
-(use-package solarized-theme
+(use-package material-theme
   :ensure t
   :config
-  (load-theme 'solarized-light t))
+  (load-theme 'material-light t))
   ;; (set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2"))
 
 (use-package go-mode
@@ -612,19 +621,7 @@
   :ensure t
   :mode ("\\.proto\\'" . protobuf-mode))
 
-(use-package all-the-icons
-  ;; DO not forget run in first:
-  ;; M-x all-the-icons-install-fonts
-  :ensure t)
-
-(use-package all-the-icons-dired
-  :ensure t
-  :after all-the-icons
-  :hook
-  (dired-mode . all-the-icons-dired-mode))
-
-(use-package dired-subtree
+(use-package dired+
+  :quelpa (dired+ :fetcher github :repo "emacsmirror/dired-plus")
   :config
-  (bind-keys :map dired-mode-map
-             ("i" . dired-subtree-insert)
-             (";" . dired-subtree-remove)))
+  (diredp-toggle-find-file-reuse-dir 1))
