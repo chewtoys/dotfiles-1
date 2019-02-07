@@ -304,7 +304,9 @@
          ("C-x v p" . magit-push))
   :init
   (setq magit-last-seen-setup-instructions "1.4.0")
-  (setq magit-bury-buffer-function (lambda(&optional kill-buffer) (interactive) (magit-restore-window-configuration t))))
+  (setq magit-bury-buffer-function (lambda(&optional kill-buffer) (interactive) (magit-restore-window-configuration t)))
+  (setq magit-commit-show-diff nil
+        magit-revert-buffers 1))
 
 (use-package markdown-mode
   :ensure t
@@ -382,11 +384,6 @@
   :config
   (add-hook 'yaml-mode-hook '(lambda () (ansible 1)))
   (setq ansible::vault-password-file "~/.vault_pass"))
-
-(use-package powerline
-  :ensure t
-  :config
-  (powerline-vim-theme))
 
 (use-package git-gutter
   :ensure t
@@ -572,3 +569,22 @@
   :quelpa (dired+ :fetcher github :repo "emacsmirror/dired-plus")
   :config
   (diredp-toggle-find-file-reuse-dir 1))
+
+(use-package evil
+  :ensure t
+  :config
+  (evil-mode))
+
+(use-package evil-magit
+  :ensure t
+  :after magit
+  :init
+  (setq evil-magit-want-horizontal-movement nil))
+
+(define-key evil-normal-state-map (kbd "q") 'magit-mode-bury-buffer)
+
+(use-package spaceline
+  :ensure t
+  :config
+  (require 'spaceline-config)
+(spaceline-emacs-theme))
