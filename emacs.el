@@ -246,6 +246,13 @@
 (unless (eq system-type 'windows-nt)
    (set-selection-coding-system 'utf-8))
 
+(require 'uniquify)
+(setq uniquify-buffer-name-style 'forward
+      uniquify-separator "/"
+      uniquify-after-kill-buffer-p t
+      uniquify-ignore-buffers-re "^\\*"
+      uniquify-min-dir-content 20)
+
 (setq quelpa-self-upgrade-p nil)
 (setq quelpa-update-melpa-p nil)
 (use-package quelpa :ensure t)
