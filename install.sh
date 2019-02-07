@@ -7,4 +7,5 @@ ln -sf $(pwd)/gitignore ~/.gitignore
 ln -sf $(pwd)/inputrc ~/.inputrc
 ln -sf $(pwd)/tmux.conf ~/.tmux.conf
 ln -sf $(pwd)/zshrc ~/.zshrc
+ln -sf $(pwd)/zshenv ~/.zshenv
 ln -sf $(pwd)/emacs.el ~/.emacs.el

@@ -60,7 +60,6 @@ fi
 [ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
 
 # rbenv
-
 if type "rbenv" > /dev/null; then
   eval "$(rbenv init -)"
 fi
