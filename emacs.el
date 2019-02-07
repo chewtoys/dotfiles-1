@@ -317,8 +317,7 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   (setq magit-bury-buffer-function (lambda(&optional kill-buffer) (interactive) (magit-restore-window-configuration t)))
   (setq magit-commit-show-diff nil
         magit-revert-buffers 1)
-  (bind-key "q" #'help/magit-kill-buffers magit-status-mode-map))
-
+  (bind-key "q" #'juev/magit-kill-buffers magit-status-mode-map))
 (use-package markdown-mode
   :ensure t
   :mode (("\.markdown$" . markdown-mode)
