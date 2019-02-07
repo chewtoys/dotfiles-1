@@ -230,7 +230,7 @@
 (global-set-key (kbd "s-<down>") #'forward-paragraph)
 (global-set-key (kbd "s-}") #'next-buffer)
 (global-set-key (kbd "s-{") #'previous-buffer)
-(global-set-key (kbd "s-w") #'juev/kill-current-buffer)
+(global-set-key (kbd "s-w") #'kill-ring-save)
 (global-set-key (kbd "s-g") #'magit-status)
 
 (prefer-coding-system 'windows-1251)
