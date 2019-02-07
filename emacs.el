@@ -303,7 +303,9 @@
   :bind (("C-x v s" . magit-status)
          ("C-x v p" . magit-push))
   :init
-  (setq magit-last-seen-setup-instructions "1.4.0"))
+  (setq magit-last-seen-setup-instructions "1.4.0")
+  (setq magit-bury-buffer-function (lambda(&optional kill-buffer) (interactive) (magit-restore-window-configuration t)))
+  (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1))
 
 (use-package markdown-mode
   :ensure t
