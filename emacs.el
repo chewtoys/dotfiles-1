@@ -1,7 +1,7 @@
 (load "~/.emacs-proxy.el" t)
 
 (setq custom-file "~/.emacs-custom.el")
-(load custom-file)
+;; (load custom-file t)
 
 (eval-when-compile
   (require 'cl))
@@ -21,8 +21,6 @@
       user-mail-address "denis@evsyukov.org")
 
 (load "~/.emacs.secrets" t)
-
-(setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH") ))
 
 (setq inhibit-splash-screen t)
 (setq inhbit-startup-message t)
@@ -246,13 +244,8 @@
 (unless (eq system-type 'windows-nt)
    (set-selection-coding-system 'utf-8))
 
-;; init PATH & exec-path from current shell
-(defun set-exec-path-from-shell-PATH ()
-  (let ((path-from-shell (shell-command-to-string "$SHELL -c 'echo $PATH'")))
-    (setenv "PATH" path-from-shell)
-    (setq exec-path (split-string path-from-shell path-separator))))
-(when window-system (set-exec-path-from-shell-PATH))
-
+(setq quelpa-self-upgrade-p nil)
+(setq quelpa-update-melpa-p nil)
 (use-package quelpa :ensure t)
 
 (use-package quelpa-use-package :ensure t)
@@ -264,6 +257,12 @@
   (unless (server-running-p) (server-start)))
 
 (use-package diminish :ensure t)
+
+(use-package exec-path-from-shell :ensure t
+  :config
+  (setq exec-path-from-shell-check-startup-files nil)
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
 
 (use-package better-defaults
   :ensure t
@@ -372,24 +371,6 @@
   :ensure t
   :bind ("C-=" . er/expand-region))
 
-(use-package dired-sidebar
-  :bind (("C-x C-n" . dired-sidebar-toggle-sidebar))
-  :ensure t
-  :commands (dired-sidebar-toggle-sidebar)
-  :init
-  (add-hook 'dired-sidebar-mode-hook
-            (lambda ()
-              (unless (file-remote-p default-directory)
-                (auto-revert-mode))))
-  :config
-  (push 'toggle-window-split dired-sidebar-toggle-hidden-commands)
-  (push 'rotate-windows dired-sidebar-toggle-hidden-commands)
-
-  (setq dired-sidebar-subtree-line-prefix "__")
-  (setq dired-sidebar-theme 'vscode)
-  (setq dired-sidebar-use-term-integration t)
-  (setq dired-sidebar-use-custom-font t))
-
 ;; (use-package neotree
 ;;   :ensure t
 ;;   :bind ("<f8>" . neotree-toggle))
@@ -401,22 +382,16 @@
   (add-hook 'yaml-mode-hook '(lambda () (ansible 1)))
   (setq ansible::vault-password-file "~/.vault_pass"))
 
-;; (use-package powerline
-;;   :ensure t
-;;   :config
-;;   (powerline-default-theme))
+(use-package powerline
+  :ensure t
+  :config
+  (powerline-default-theme))
 
 (use-package git-gutter
   :ensure t
   :diminish 'git-gutter-mode
   :config
-  (global-git-gutter-mode +1)
-  ;; (custom-set-variables
-  ;;  '(git-gutter:window-width 2)
-  ;;  '(git-gutter:modified-sign "☁")
-  ;;  '(git-gutter:added-sign "☀")
-  ;;  '(git-gutter:deleted-sign "☂"))
-)
+  (global-git-gutter-mode +1))
 
 (use-package clang-format
   :ensure t
@@ -532,6 +507,8 @@
   :config
   (load-theme 'material-light t))
   ;; (set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2"))
+
+(use-package flycheck :ensure t)
 
 (use-package go-mode
   :ensure t
