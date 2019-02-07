@@ -299,6 +299,14 @@
   :config
   (projectile-global-mode))
 
+(defun juev/magit-kill-buffers ()
+  "Restore window configuration and kill all Magit buffers.
+Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-buffer/'"
+  (interactive)
+  (let ((buffers (magit-mode-get-buffers)))
+    (magit-restore-window-configuration)
+    (mapc #'kill-buffer buffers)))
+
 (use-package magit
   :ensure t
   :defer t
@@ -308,7 +316,8 @@
   (setq magit-last-seen-setup-instructions "1.4.0")
   (setq magit-bury-buffer-function (lambda(&optional kill-buffer) (interactive) (magit-restore-window-configuration t)))
   (setq magit-commit-show-diff nil
-        magit-revert-buffers 1))
+        magit-revert-buffers 1)
+  (bind-key "q" #'help/magit-kill-buffers magit-status-mode-map))
 
 (use-package markdown-mode
   :ensure t
