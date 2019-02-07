@@ -281,17 +281,15 @@
     (ido-vertical-mode t))
   :config
   (progn
-    (setq ido-ignore-buffers '("^ " "*Completions*" "*Shell Command Output*" "Async Shell Command"))
+    (setq ido-ignore-buffers '("^ " "*Completions*" "*Shell Command Output*" "Async Shell Command" "*Ibuffer*"))
     (setq ido-enable-flex-matching t
-          ido-use-virtual-buffers t
           ido-everywhere t)))
 
 (use-package rainbow-delimiters
   :ensure t
-  :config
-  (progn
-    (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
-    (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)))
+  :hook
+  ((clojure-mode . rainbow-delimiters-mode)
+   (prog-mode . rainbow-delimiters-mode)))
 
 (use-package projectile
   :ensure t
