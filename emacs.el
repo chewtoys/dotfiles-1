@@ -217,7 +217,7 @@
 
 ;; get rid of `find-file-read-only' and replace it with something
 ;; more useful.
-(global-set-key (kbd "C-x C-r") 'ido-recentf-open)
+;; (global-set-key (kbd "C-x C-r") 'ido-recentf-open)
 
 ;; enable recent files mode.
 (recentf-mode t)
@@ -225,12 +225,12 @@
 ; 50 files ought to be enough.
 (setq recentf-max-saved-items 50)
 
-(defun ido-recentf-open ()
-  "Use `ido-completing-read' to \\[find-file] a recent file"
-  (interactive)
-  (if (find-file (ido-completing-read "Find recent file: " recentf-list))
-      (message "Opening file...")
-    (message "Aborting")))
+;; (defun ido-recentf-open ()
+;;   "Use `ido-completing-read' to \\[find-file] a recent file"
+;;   (interactive)
+;;   (if (find-file (ido-completing-read "Find recent file: " recentf-list))
+;;       (message "Opening file...")
+;;     (message "Aborting")))
 
 (define-key global-map (kbd "C-)") 'juev/reset-text-size)
 (define-key global-map (kbd "C-+") 'text-scale-increase)
@@ -298,18 +298,18 @@
   (when window-system
     (menu-bar-mode)))
 
-(use-package ido-vertical-mode
-  :ensure t
-  :defer t
-  :init
-  (progn
-    (ido-mode t)
-    (ido-vertical-mode t))
-  :config
-  (progn
-    (setq ido-ignore-buffers '("^ " "*Completions*" "*Shell Command Output*" "Async Shell Command" "*Ibuffer*"))
-    (setq ido-enable-flex-matching t
-          ido-everywhere t)))
+;; (use-package ido-vertical-mode
+;;   :ensure t
+;;   :defer t
+;;   :init
+;;   (progn
+;;     (ido-mode t)
+;;     (ido-vertical-mode t))
+;;   :config
+;;   (progn
+;;     (setq ido-ignore-buffers '("^ " "*Completions*" "*Shell Command Output*" "Async Shell Command" "*Ibuffer*"))
+;;     (setq ido-enable-flex-matching t
+;;           ido-everywhere t)))
 
 (use-package rainbow-delimiters
   :ensure t
@@ -628,6 +628,16 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 (use-package dired
   :config
   (progn
+    ;; brew install coreutils
+    (if (executable-find "gls")
+        (progn
+          (setq insert-directory-program "gls")
+          (setq dired-listing-switches "-lFaGh1v --group-directories-first"))
+      (setq dired-listing-switches "-ahlF"))
+    (setq ls-lisp-dirs-first t)
+    (setq dired-recursive-copies 'always)
+    (setq dired-recursive-deletes 'always)
+    (setq dired-ls-F-marks-symlinks t)
     (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
     (define-key dired-mode-map (kbd "^") (lambda () (interactive) (find-alternate-file "..")))))
 
@@ -676,3 +686,170 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 
 (use-package org-evil :ensure t)
 (put 'dired-find-alternate-file 'disabled nil)
+
+;; (use-package helm :ensure t
+;;   :config
+;;   (progn
+;;     (global-set-key (kbd "M-x") #'helm-M-x)
+;;     (global-set-key (kbd "s-x") 'helm-M-x)
+;;     (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+;;     (global-set-key (kbd "C-x C-f") #'helm-find-files)
+;;     (helm-mode 1)))
+
+;; (use-package helm-projectile :ensure t)
+;; (use-package helm-rg :ensure t)
+
+(use-package ag :ensure t)
+(use-package helm-ag
+  :ensure t
+  :after (ag helm)
+  :init (setq helm-ag-fuzzy-match t))
+(use-package helm
+    :ensure t
+    :demand t
+    :diminish helm-mode
+    :init
+      (require 'helm-config)
+      ;; (use-package helm-c-yasnippet :ensure t)
+      ;; (use-package helm-clojuredocs :ensure t)
+      ;; (use-package helm-company :ensure t)
+      ;; (use-package helm-core :ensure t) ; Is this ever needed on top of helm?
+      ;; (use-package helm-css-scss :ensure t)
+      ;; (use-package helm-dash :ensure t) ;; Offline docsets viewer. SET THIS UP!
+      (use-package helm-descbinds :ensure t
+        :config (helm-descbinds-mode))
+      ;; (use-package helm-describe-modes :ensure t)
+      ;; (use-package helm-dictionary :ensure t)
+      ;; (use-package helm-dired-history :ensure t)
+      ;; (use-package helm-dired-recent-dirs :ensure t)
+      ;; (use-package helm-filesets :ensure t)
+      ;; (use-package helm-firefox :ensure t)
+      (use-package helm-flx :ensure t
+        :defer t
+        :init (setq helm-flx-for-helm-locate t)
+        :config (helm-flx-mode))
+      (use-package helm-flycheck :ensure t)
+      ;; (use-package helm-flymake :ensure t)
+      ;; (use-package helm-flyspell :ensure t)
+      (use-package helm-fuzzier :ensure t :disabled
+        :init (helm-fuzzier-mode))
+      ;; (use-package helm-git :ensure t)
+      ;; (use-package helm-git-grep :ensure t)
+      ;; (use-package helm-gitignore :ensure t)
+      ;; (use-package helm-google :ensure t)
+      ;; (use-package helm-gtags :ensure t)
+      ;; (use-package helm-ispell :ensure t)
+      ;; (use-package helm-ls-git :ensure t)
+      ;; (use-package helm-make :ensure t)
+      (use-package helm-mode-manager :ensure t)
+      (use-package helm-org-rifle :ensure t)
+      ;; (use-package helm-project-persist :ensure t)
+      (use-package helm-swoop :ensure t
+        :bind (("C-c h M-S" . helm-multi-swoop)
+               ("C-c h S"   . helm-multi-swoop-projectile)))
+      (use-package helm-themes :ensure t)
+
+      ;;; Global Keybindings
+
+      ;; These must be set globally at startup since `helm-command-prefix-key'
+      ;; can't be changed after `helm-config' is loaded.
+      (global-set-key   (kbd "C-c h") 'helm-command-prefix)
+      (global-set-key   (kbd "C-x h") 'helm-command-prefix)
+      (global-unset-key (kbd "C-x c"))
+
+      ;;; Helm Google Suggest Settings
+      ;; Make helm-google-suggest prefer using curl
+      (when (executable-find "curl")
+        (setq helm-google-suggest-use-curl-p t))
+
+      ;;; Replace grep with ack-grep
+      (when (executable-find "ack-grep")
+        (setq helm-grep-default-command "ack-grep -Hn --no-group --no-color %e %p %f"
+              helm-grep-default-recurse-command "ack-grep -H --no-group --no-color %e %p %f"))
+
+      ;;; Other Settings
+      (setq ; open helm buffer inside cur window, don't jump to whole other window
+            helm-split-window-in-side-p           t
+            ; move to beg/end of source when end/beg is reached
+            helm-move-to-line-cycle-in-source     t
+            ; scroll 8 lines other window using M-<next>/M-<prior>
+            helm-scroll-amount                    8
+            helm-ff-file-name-history-use-recentf t
+            helm-ff-skip-boring-files             t
+            helm-ff-search-library-in-sexp        t
+            helm-echo-input-in-header-line        t
+  ;          helm-exit-idle-delay                  0
+            helm-M-x-fuzzy-match                  t
+            helm-apropos-fuzzy-match              t
+            helm-buffers-fuzzy-matching           nil
+            helm-completion-in-region-fuzzy-match t
+            helm-etags-fuzzy-match                t
+            helm-ff-fuzzy-matching                t
+            helm-file-cache-fuzzy-match           t
+            helm-imenu-fuzzy-match                t
+            helm-lisp-fuzzy-completion            t
+            helm-locate-fuzzy-match               t
+            helm-locate-library-fuzzy-match       t
+            helm-mode-fuzzy-match                 t
+            helm-recentf-fuzzy-match              t
+            helm-semantic-fuzzy-match             t)
+
+      ;; C-c h i settings
+      (setq helm-semantic-fuzzy-match t
+            helm-imenu-fuzzy-match    t)
+
+      (defun spacemacs//helm-hide-minibuffer-maybe ()
+        "Hide minibuffer in Helm session if we use the header line as input field."
+        (when (with-helm-buffer helm-echo-input-in-header-line)
+          (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
+            (overlay-put ov 'window (selected-window))
+            (overlay-put ov 'face
+                         (let ((bg-color (face-background 'default nil)))
+                           `(:background ,bg-color :foreground ,bg-color)))
+            (setq-local cursor-type nil))))
+
+      (add-hook 'helm-minibuffer-set-up-hook
+                'spacemacs//helm-hide-minibuffer-maybe)
+
+      (setq helm-locate-fuzzy-match t)
+      (setq helm-apropos-fuzzy-match t)
+      (setq helm-lisp-fuzzy-completion t)
+
+      (define-key minibuffer-local-map (kbd "C-c C-l") 'helm-minibuffer-history)
+
+      (helm-adaptive-mode)
+      (helm-mode)
+      (ido-mode -1)
+
+    :config
+      ;; Write $<FOO>/ in helm-find-files to expand any of the following folder
+      ;; shortcuts (just like ~/)
+      (add-to-list 'helm-sources-using-default-as-input 'helm-source-man-pages)
+
+    :bind (("C-x b"     . helm-mini)
+           ("C-x C-b"   . helm-mini)
+           ("C-h a"     . helm-apropos)
+           ("M-y"       . helm-show-kill-ring) ; Tweak/remove if annoying
+           ("M-x"       . helm-M-x)
+           ("s-x"       . helm-M-x)
+           ("C-x C-f"   . helm-find-files)
+           ("C-x C-r"   . helm-recentf)
+           ("C-c h o"   . helm-occur)
+           ("C-c h s"   . helm-swoop)
+           ("C-c h y"   . helm-yas-complete)
+           ("C-c h Y"   . helm-yas-create-snippet-on-region)
+           ("C-c h SPC" . helm-all-mark-rings)
+           ("C-c h x"   . helm-register)
+           ([f10] . helm-buffers-list)
+           ([S-f10] . helm-recentf)
+  ; I think I need to install something to use this:
+  ;         ("C-c h M-:" . helm-eval-expression-with-eldoc)
+           :map helm-command-map
+                ("C-c h" . helm-execute-persistent-action)
+           :map helm-map
+                ;; rebind tab to run persistent action
+                ("<tab>" . helm-execute-persistent-action)
+                ;; Also rebind <tab> in terminals (i.e., the cryptic "C-i") to do the same
+                ("C-i"   . helm-execute-persistent-action)
+                ;; List actions using C-z
+                ("C-z"   . helm-select-action)))
