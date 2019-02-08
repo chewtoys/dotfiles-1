@@ -213,6 +213,25 @@
   (interactive)
   (text-scale-set 0))
 
+(require 'recentf)
+
+;; get rid of `find-file-read-only' and replace it with something
+;; more useful.
+(global-set-key (kbd "C-x C-r") 'ido-recentf-open)
+
+;; enable recent files mode.
+(recentf-mode t)
+
+; 50 files ought to be enough.
+(setq recentf-max-saved-items 50)
+
+(defun ido-recentf-open ()
+  "Use `ido-completing-read' to \\[find-file] a recent file"
+  (interactive)
+  (if (find-file (ido-completing-read "Find recent file: " recentf-list))
+      (message "Opening file...")
+    (message "Aborting")))
+
 (define-key global-map (kbd "C-)") 'juev/reset-text-size)
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C-=") 'text-scale-increase)
@@ -253,13 +272,13 @@
       uniquify-ignore-buffers-re "^\\*"
       uniquify-min-dir-content 20)
 
-(setq quelpa-self-upgrade-p nil)
-(setq quelpa-update-melpa-p nil)
-(use-package quelpa :ensure t)
+;; (setq quelpa-self-upgrade-p nil)
+;; (setq quelpa-update-melpa-p nil)
+;; (use-package quelpa :ensure t)
 
-(use-package quelpa-use-package :ensure t)
-(setq use-package-ensure-function 'quelpa)
-(setq use-package-always-ensure t)
+;; (use-package quelpa-use-package :ensure t)
+;; ;; (setq use-package-ensure-function 'quelpa)
+;; ;; (setq use-package-always-ensure t)
 
 (use-package server
   :config
@@ -495,6 +514,22 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   (load-theme 'material-light t))
   ;; (set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2"))
 
+(use-package neotree :ensure t
+  :bind ("C-c C-n" . neotree-toggle)
+  :config
+  (progn
+    (setq neo-smart-open t)
+    (setq projectile-switch-project-action 'neotree-projectile-action)
+    (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
+    (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
+    (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
+    (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
+    (evil-define-key 'normal neotree-mode-map (kbd "g") 'neotree-refresh)
+    (evil-define-key 'normal neotree-mode-map (kbd "n") 'neotree-next-line)
+    (evil-define-key 'normal neotree-mode-map (kbd "p") 'neotree-previous-line)
+    (evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
+    (evil-define-key 'normal neotree-mode-map (kbd "H") 'neotree-hidden-file-toggle)))
+
 (use-package flycheck :ensure t)
 
 (use-package go-mode
@@ -585,10 +620,18 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   :ensure t
   :mode ("\\.proto\\'" . protobuf-mode))
 
-(use-package dired+
-  :quelpa (dired+ :fetcher github :repo "emacsmirror/dired-plus")
+;; (use-package dired+
+;;   :quelpa (dired+ :fetcher github :repo "emacsmirror/dired-plus")
+;;   :config
+;;   (diredp-toggle-find-file-reuse-dir 1))
+
+(use-package dired
   :config
-  (diredp-toggle-find-file-reuse-dir 1))
+  (progn
+    (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file) ; was dired-advertised-find-file
+    (define-key dired-mode-map (kbd "^") (lambda () (interactive) (find-alternate-file "..")))  ; was dired-up-directory))
+
+(use-package dired-x)
 
 (use-package evil
   :ensure t
@@ -632,3 +675,4 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   :config (global-evil-matchit-mode 1))
 
 (use-package org-evil :ensure t)
+(put 'dired-find-alternate-file 'disabled nil)
