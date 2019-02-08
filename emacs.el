@@ -684,9 +684,9 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   (progn
     (evil-leader/set-leader "<SPC>")
     (evil-leader/set-key
-     "f" 'find-file
-     "b" 'switch-to-buffer
-     "k" 'kill-buffer)))
+      "f" 'helm-find-files
+      "b" 'switch-to-buffer
+      "k" 'kill-buffer)))
 
 (use-package evil-mark-replace :ensure t)
 (use-package evil-matchit
