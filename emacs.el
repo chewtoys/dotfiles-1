@@ -114,6 +114,9 @@
 (if (eq system-type 'windows-nt)
          (set-default-font "Fira Code 12" nil t))
 
+(defalias 'e 'find-file)
+(defalias 'eo 'find-file-other-window)
+
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 (add-hook 'prog-mode-hook 'subword-mode)
