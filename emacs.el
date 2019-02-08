@@ -645,6 +645,9 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 
 (use-package evil
   :ensure t
+  :init
+  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+  (setq evil-want-keybinding nil)
   :config
   (evil-mode))
 
@@ -655,6 +658,12 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   (setq evil-magit-want-horizontal-movement nil))
 
 (define-key evil-normal-state-map (kbd "q") 'magit-mode-bury-buffer)
+
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
 
 (use-package spaceline
   :ensure t
