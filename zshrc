@@ -75,3 +75,7 @@ fg() {
         builtin fg %"$@"
     fi
 }
+
+ function diff {
+     colordiff -u "$@" | less -RF
+ }
