@@ -108,8 +108,8 @@
     (set-face-attribute 'whitespace-space nil :background nil :foreground "gray80")
     (set-face-attribute 'whitespace-trailing nil :background "plum1" :foreground "gray80")
     (setq whitespace-style '(face tabs spaces tabs-mark space-mark trailing))
-    (set-frame-size (selected-frame) 190 60)
-    (set-default-font "Fira Code 14" nil t))
+    (set-frame-size (selected-frame) 130 60)
+    (set-default-font "Source Code Pro 14" nil t))
 
 (if (eq system-type 'windows-nt)
          (set-default-font "Fira Code 12" nil t))
