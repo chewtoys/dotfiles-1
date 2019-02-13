@@ -693,3 +693,11 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 
 (use-package org-evil :ensure t)
 (put 'dired-find-alternate-file 'disabled nil)
+
+(use-package vlf
+  :ensure t
+  :config
+  (progn
+    (require 'vlf-setup)
+    (custom-set-variables
+     '(vlf-application 'dont-ask))))
