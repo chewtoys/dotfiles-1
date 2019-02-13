@@ -25,7 +25,7 @@ antigen bundle zsh-users/zsh-syntax-highlighting
 # Extra zsh completions
 antigen bundle zsh-users/zsh-completions
 # Load the theme
-antigen theme https://github.com/halfo/lambda-mod-zsh-theme lambda-mod
+# antigen theme https://github.com/halfo/lambda-mod-zsh-theme lambda-mod
 
 # Tell antigen that you're done
 antigen apply
@@ -79,3 +79,7 @@ fg() {
  function diff {
      colordiff -u "$@" | less -RF
  }
+
+precmd() { print "" }
+PS1="⟩⟩⟩ "
+RPS1="%{$fg[magenta]%}%20<...<%~%<<%{$reset_color%}"
