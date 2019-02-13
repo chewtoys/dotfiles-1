@@ -14,7 +14,7 @@ alias pr="cd ~/Projects"
 alias g="git"
 alias h="history"
 
-alias e="emacsclient -n"
+alias e="/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -n"
 
 # Detect which `ls` flavor is in use
 if ls --color > /dev/null 2>&1; then # GNU `ls`

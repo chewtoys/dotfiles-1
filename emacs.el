@@ -220,7 +220,7 @@
 
 ;; get rid of `find-file-read-only' and replace it with something
 ;; more useful.
-;; (global-set-key (kbd "C-x C-r") 'ido-recentf-open)
+(global-set-key (kbd "C-x C-r") 'ido-recentf-open)
 
 ;; enable recent files mode.
 (recentf-mode t)
@@ -228,12 +228,12 @@
 ; 50 files ought to be enough.
 (setq recentf-max-saved-items 50)
 
-;; (defun ido-recentf-open ()
-;;   "Use `ido-completing-read' to \\[find-file] a recent file"
-;;   (interactive)
-;;   (if (find-file (ido-completing-read "Find recent file: " recentf-list))
-;;       (message "Opening file...")
-;;     (message "Aborting")))
+(defun ido-recentf-open ()
+  "Use `ido-completing-read' to \\[find-file] a recent file"
+  (interactive)
+  (if (find-file (ido-completing-read "Find recent file: " recentf-list))
+      (message "Opening file...")
+    (message "Aborting")))
 
 (define-key global-map (kbd "C-)") 'juev/reset-text-size)
 (define-key global-map (kbd "C-+") 'text-scale-increase)
@@ -275,11 +275,11 @@
       uniquify-ignore-buffers-re "^\\*"
       uniquify-min-dir-content 20)
 
-(setq quelpa-self-upgrade-p nil)
-(setq quelpa-update-melpa-p nil)
-(use-package quelpa :ensure t)
+;; (setq quelpa-self-upgrade-p nil)
+;; (setq quelpa-update-melpa-p nil)
+;; (use-package quelpa :ensure t)
 
-(use-package quelpa-use-package :ensure t)
+;; (use-package quelpa-use-package :ensure t)
 ;; (setq use-package-ensure-function 'quelpa)
 ;; (setq use-package-always-ensure t)
 
@@ -618,10 +618,10 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   :ensure t
   :mode ("\\.proto\\'" . protobuf-mode))
 
-(use-package dired+
-  :quelpa (dired+ :fetcher github :repo "emacsmirror/dired-plus")
-  :config
-  (diredp-toggle-find-file-reuse-dir 1))
+;; (use-package dired+
+;;   :quelpa (dired+ :fetcher github :repo "emacsmirror/dired-plus")
+;;   :config
+;;   (diredp-toggle-find-file-reuse-dir 1))
 
 (use-package dired
   :config
@@ -647,49 +647,49 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   (require 'spaceline-config)
 (spaceline-emacs-theme))
 
-;; (use-package evil
-;;   :ensure t
-;;   :init
-;;   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
-;;   (setq evil-want-keybinding nil)
-;;   :config
-;;   (evil-mode))
+(use-package evil
+  :ensure t
+  :init
+  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+  (setq evil-want-keybinding nil)
+  :config
+  (evil-mode))
 
-;; (use-package evil-magit
-;;   :ensure t
-;;   :after magit
-;;   :init
-;;   (setq evil-magit-want-horizontal-movement nil))
+(use-package evil-magit
+  :ensure t
+  :after magit
+  :init
+  (setq evil-magit-want-horizontal-movement nil))
 
-;; (define-key evil-normal-state-map (kbd "q") 'magit-mode-bury-buffer)
+(define-key evil-normal-state-map (kbd "q") 'magit-mode-bury-buffer)
 
-;; (use-package evil-collection
-;;   :after evil
-;;   :ensure t
-;;   :config
-;;   (evil-collection-init))
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
 
-;; (use-package evil-surround
-;;   :ensure t
-;;   :config
-;;   (global-evil-surround-mode 1))
+(use-package evil-surround
+  :ensure t
+  :config
+  (global-evil-surround-mode 1))
 
-;; (use-package evil-leader
-;;   :ensure t
-;;   :init
-;;   (global-evil-leader-mode)
-;;   :config
-;;   (progn
-;;     (evil-leader/set-leader "<SPC>")
-;;     (evil-leader/set-key
-;;       "f" 'find-file
-;;       "b" 'switch-to-buffer
-;;       "k" 'kill-buffer)))
+(use-package evil-leader
+  :ensure t
+  :init
+  (global-evil-leader-mode)
+  :config
+  (progn
+    (evil-leader/set-leader "<SPC>")
+    (evil-leader/set-key
+      "f" 'find-file
+      "b" 'switch-to-buffer
+      "k" 'kill-buffer)))
 
-;; (use-package evil-mark-replace :ensure t)
-;; (use-package evil-matchit
-;;   :ensure t
-;;   :config (global-evil-matchit-mode 1))
+(use-package evil-mark-replace :ensure t)
+(use-package evil-matchit
+  :ensure t
+  :config (global-evil-matchit-mode 1))
 
-;; (use-package org-evil :ensure t)
-;; (put 'dired-find-alternate-file 'disabled nil)
+(use-package org-evil :ensure t)
+(put 'dired-find-alternate-file 'disabled nil)
