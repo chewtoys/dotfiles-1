@@ -630,8 +630,8 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
     (if (executable-find "gls")
         (progn
           (setq insert-directory-program "gls")
-          (setq dired-listing-switches "-lFaGh1v --group-directories-first"))
-      (setq dired-listing-switches "-ahlF"))
+          (setq dired-listing-switches "-FaGh1 --group-directories-first"))
+      (setq dired-listing-switches "-ahF"))
     (setq ls-lisp-dirs-first t)
     (setq dired-recursive-copies 'always)
     (setq dired-recursive-deletes 'always)
