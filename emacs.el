@@ -284,25 +284,22 @@
 ;; (setq use-package-always-ensure t)
 
 (use-package server
-  :config
-  (unless (server-running-p) (server-start)))
+  :config (unless (server-running-p) (server-start)))
 
 (use-package diminish :ensure t)
 
 (use-package exec-path-from-shell :ensure t
   :config
-  (setq exec-path-from-shell-check-startup-files nil)
-  (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-initialize)))
+  (progn
+    (setq exec-path-from-shell-check-startup-files nil)
+    (when (memq window-system '(mac ns x))
+      (exec-path-from-shell-initialize))))
 
-(use-package better-defaults
-  :ensure t
-  :config
-  (when window-system
-    (menu-bar-mode)))
+(use-package better-defaults :ensure t
+  :config (when window-system
+            (menu-bar-mode)))
 
-(use-package ido-vertical-mode
-  :ensure t
+(use-package ido-vertical-mode :ensure t
   :defer t
   :init
   (progn
@@ -314,17 +311,14 @@
     (setq ido-enable-flex-matching t
           ido-everywhere t)))
 
-(use-package rainbow-delimiters
-  :ensure t
+(use-package rainbow-delimiters :ensure t
   :hook
   ((clojure-mode . rainbow-delimiters-mode)
    (prog-mode . rainbow-delimiters-mode)))
 
-(use-package projectile
-  :ensure t
+(use-package projectile :ensure t
   ;; :diminish projectile-mode
-  :config
-  (projectile-global-mode))
+  :config (projectile-global-mode))
 
 (defun juev/magit-kill-buffers ()
   "Restore window configuration and kill all Magit buffers.
@@ -334,8 +328,7 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
     (magit-restore-window-configuration)
     (mapc #'kill-buffer buffers)))
 
-(use-package magit
-  :ensure t
+(use-package magit :ensure t
   :defer t
   :bind (("C-x v s" . magit-status)
          ("C-x v p" . magit-push))
@@ -350,22 +343,18 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
     (bind-key "q" #'juev/magit-kill-buffers magit-status-mode-map)
     (add-to-list 'magit-no-confirm 'stage-all-changes)))
 
-(use-package markdown-mode
-  :ensure t
+(use-package markdown-mode :ensure t
   :mode (("\.markdown$" . markdown-mode)
          ("\.md$"       . markdown-mode))
-  :config
-  (progn
-    (add-hook 'markdown-mode-hook #'visual-line-mode)))
+  :hook (markdown-mode . visual-line-mode))
 
-(use-package yaml-mode
-  :ensure t
+(use-package yaml-mode :ensure t
   :mode (("\\.yml$" . yaml-mode))
-  :config
-  (add-hook 'yaml-mode-hook (lambda () (electric-indent-local-mode -1))))
+  :hook
+  (yaml-mode-hook . (lambda ()
+                      (electric-indent-local-mode -1))))
 
-(use-package mmm-mode
-  :ensure t
+(use-package mmm-mode :ensure t
   :diminish mmm-mode
   :config
   (progn
@@ -378,8 +367,7 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
         :back "^---")))
     (mmm-add-mode-ext-class 'markdown-mode nil 'yaml-header-matters)))
 
-(use-package which-key
-  :ensure t
+(use-package which-key :ensure t
   :diminish which-key-mode
   :init
   (progn
@@ -391,68 +379,57 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 (use-package guess-language         ; Automatically detect language for Flyspell
   :ensure t
   :commands guess-language-mode
-  :init (add-hook 'text-mode-hook #'guess-language-mode)
+  :hook (text-mode-hook . guess-language-mode)
   :config
   (setq guess-language-languages '(en ru)
         guess-language-min-paragraph-length 35)
   :diminish guess-language-mode)
 
-(use-package helpful
-  :ensure t
-  :bind
-  ("C-h k" . helpful-key)
-  ("C-h f" . helpful-callable)
-  ("C-h v" . helpful-variable)
-  ("C-h C" . helpful-command)
-  ("C-h F" . helpful-function)
+(use-package helpful :ensure t
+  :bind (("C-h k" . helpful-key)
+         ("C-h f" . helpful-callable)
+         ("C-h v" . helpful-variable)
+         ("C-h C" . helpful-command)
+         ("C-h F" . helpful-function))
   (:map emacs-lisp-mode-map
         ("C-c C-d" . helpful-at-point)))
 
-(use-package ace-window
-  :ensure t
+(use-package ace-window :ensure t
   :bind (("M-o" . ace-window)))
 
-(use-package expand-region
-  :ensure t
+(use-package expand-region :ensure t
   :bind ("C-=" . er/expand-region))
 
-(use-package ansible
-  :ensure t
-  :config
-  (add-hook 'yaml-mode-hook '(lambda () (ansible 1)))
-  (setq ansible::vault-password-file "~/.vault_pass"))
+(use-package ansible :ensure t
+  :hook
+  (yaml-mode-hook . (lambda ()
+                      (ansible 1)))
+  :config (setq ansible::vault-password-file "~/.vault_pass"))
 
-(use-package git-gutter
-  :ensure t
+(use-package git-gutter :ensure t
   :diminish 'git-gutter-mode
-  :config
-  (global-git-gutter-mode +1))
+  :config (global-git-gutter-mode +1))
 
-(use-package clang-format
-  :ensure t
-  :config
-  (global-set-key (kbd "C-c i") 'clang-format-region)
-  (global-set-key (kbd "C-c u") 'clang-format-buffer)
+(use-package clang-format :ensure t
+  :bind (("C-c i" . clang-format-region)
+         ("C-c u" . clang-format-buffer))
+  :config (setq clang-format-style-option "llvm"))
 
-  (setq clang-format-style-option "llvm"))
-
-(use-package yasnippet
-  :ensure t
+(use-package yasnippet :ensure t
   ;; :diminish yas-minor-mode
   :bind (:map yas-minor-mode-map
               ("C-x i i" . yas-insert-snippet)
               ("C-x i n" . yas-new-snippet)
               ("C-x i v" . yas-visit-snippet-file)
               ("C-x i g" . yas-reload-all))
-  :init
-  (use-package yasnippet-snippets :ensure t)
+  :init (use-package yasnippet-snippets :ensure t)
   :config
-  (yas-reload-all)
-  (add-to-list 'yas-snippet-dirs (locate-user-emacs-file "snippets"))
-  (yas-global-mode 1))
+  (progn
+    (yas-reload-all)
+    (add-to-list 'yas-snippet-dirs (locate-user-emacs-file "snippets"))
+    (yas-global-mode 1)))
 
-(use-package company
-  :ensure t
+(use-package company :ensure t
   :diminish company-mode
   :demand t
   :bind (("C-c /" . company-files)
@@ -466,50 +443,42 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
          ("C-n" . company-select-next)
          ("C-p" . company-select-previous))
   :config
-  (global-company-mode +1)
-  (setq company-dabbrev-downcase nil)
-  (custom-set-variables
-   '(company-minimum-prefix-length 3)
-   '(company-idle-delay 0)
-   '(company-selection-wrap-around t)
-   '(company-dabbrev-downcase nil)
-   '(company-dabbrev-ignore-case 'nil))
-  ;; Add yasnippet support for all company backends
-  ;; https://github.com/syl20bnr/spacemacs/pull/179
-  (defvar company-mode/enable-yas t
-    "Enable yasnippet for all backends.")
-  (defun company-mode/backend-with-yas (backend)
-    (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-        backend
-      (append (if (consp backend) backend (list backend))
-              '(:with company-yasnippet)))))
+  (progn
+    (global-company-mode +1)
+    (setq company-dabbrev-downcase nil)
+    (custom-set-variables
+     '(company-minimum-prefix-length 3)
+     '(company-idle-delay 0)
+     '(company-selection-wrap-around t)
+     '(company-dabbrev-downcase nil)
+     '(company-dabbrev-ignore-case 'nil))
+    ;; Add yasnippet support for all company backends
+    ;; https://github.com/syl20bnr/spacemacs/pull/179
+    (defvar company-mode/enable-yas t
+      "Enable yasnippet for all backends.")
+    (defun company-mode/backend-with-yas (backend)
+      (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+          backend
+        (append (if (consp backend) backend (list backend))
+                '(:with company-yasnippet))))))
 
 ;; backends for company
-(use-package company-shell
-  :ensure t
-  :config
-  (add-to-list 'company-backends 'company-shell))
-(use-package company-web
-  :ensure t
-  :config
-  (add-to-list 'company-backends 'company-web-html))
-(use-package company-quickhelp
-  :ensure t
-  :bind
-  (:map company-active-map
-        ("C-c h" . company-quickhelp-manual-begin))
-  :config
-  (company-quickhelp-mode))
+(use-package company-shell :ensure t
+  :config (add-to-list 'company-backends 'company-shell))
 
-(use-package hippie-exp
-  :ensure t
-  :config
-  (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand))
+(use-package company-web :ensure t
+  :config (add-to-list 'company-backends 'company-web-html))
 
-(use-package material-theme
-  :ensure t
-  :config
-  (load-theme 'material-light t))
+(use-package company-quickhelp :ensure t
+  :bind (:map company-active-map
+              ("C-c h" . company-quickhelp-manual-begin))
+  :config (company-quickhelp-mode))
+
+(use-package hippie-exp :ensure t
+  :config (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand))
+
+(use-package material-theme :ensure t
+  :config (load-theme 'material-light t))
   ;; (set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2"))
 
 (use-package neotree :ensure t
@@ -530,8 +499,7 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 
 (use-package flycheck :ensure t)
 
-(use-package go-mode
-  :ensure t
+(use-package go-mode :ensure t
   :mode ("\\.go\\'" . go-mode)
   :preface
   (defun go/init-company ()
@@ -540,20 +508,17 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
            company-yasnippet))
     (company-mode)
 
-    (use-package company-go
-      :ensure t
+    (use-package company-go :ensure t
       :after company
       :init
       (push 'company-go company-backends)
-      )
-    )
+      ))
 
   (defun go/setup-env-var (&optional gopath)
     (unless gopath (setq gopath (concat (getenv "HOME") "/go")))
     (setenv "GOPATH" gopath)
     (setenv "PATH" (concat (getenv "PATH") ":" (concat gopath "/bin")))
-    (setq exec-path (append exec-path (list (concat gopath "/bin"))))
-    )
+    (setq exec-path (append exec-path (list (concat gopath "/bin")))))
   :commands (gofmt-before-save)
   :hook
   ((go-mode . hs-minor-mode)
@@ -561,8 +526,7 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
    (go-mode . go/init-company)
    (go-mode . go/setup-env-var)
    (go-mode . (lambda ()
-                (add-hook 'before-save-hook 'gofmt-before-save)))
-   )
+                (add-hook 'before-save-hook 'gofmt-before-save))))
   :bind
   (:map go-mode-map
         ("C-c g a" . go-imports-insert-import)
@@ -581,11 +545,9 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
         ("C-c t t" . go-test-current-test)
         ("C-c t p" . go-test-current-project)
         ("C-c t b" . go-test-current-benchmark)
-        ("C-c t x" . go-run))
-  )
+        ("C-c t x" . go-run)))
 
-(use-package go-snippets
-  :ensure t
+(use-package go-snippets :ensure t
   :after yasnippets
   :config
   (go-snippets-initialize)
@@ -595,27 +557,23 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 
 (use-package go-gen-test :ensure t)
 
-(use-package go-eldoc
-  :ensure t
+(use-package go-eldoc :ensure t
   :hook
   (go-mode . go-eldoc-setup)
   )
 
-(use-package go-guru
-  :ensure t
+(use-package go-guru :ensure t
   :hook
   (go-mode . go-guru-hl-identifier-mode)
   )
 
 (use-package go-playground :ensure t)
 
-(use-package gorepl-mode
-  :ensure t
+(use-package gorepl-mode :ensure t
   :hook
   (go-mode . gorepl-mode))
 
-(use-package protobuf-mode
-  :ensure t
+(use-package protobuf-mode :ensure t
   :mode ("\\.proto\\'" . protobuf-mode))
 
 ;; (use-package dired+
@@ -641,25 +599,20 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 
 (use-package dired-x)
 
-(use-package spaceline
-  :ensure t
+(use-package spaceline :ensure t
   :config
   (require 'spaceline-config)
 (spaceline-emacs-theme))
 
-(use-package evil
-  :ensure t
+(use-package evil :ensure t
   :init
   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
   (setq evil-want-keybinding nil)
-  :config
-  (evil-mode))
+  :config (evil-mode))
 
-(use-package evil-magit
-  :ensure t
+(use-package evil-magit :ensure t
   :after magit
-  :init
-  (setq evil-magit-want-horizontal-movement nil))
+  :init (setq evil-magit-want-horizontal-movement nil))
 
 (define-key evil-normal-state-map (kbd "q") 'magit-mode-bury-buffer)
 
@@ -669,13 +622,11 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   :config
   (evil-collection-init))
 
-(use-package evil-surround
-  :ensure t
+(use-package evil-surround :ensure t
   :config
   (global-evil-surround-mode 1))
 
-(use-package evil-leader
-  :ensure t
+(use-package evil-leader :ensure t
   :init
   (global-evil-leader-mode)
   :config
@@ -687,28 +638,24 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
       "k" 'kill-buffer)))
 
 (use-package evil-mark-replace :ensure t)
-(use-package evil-matchit
-  :ensure t
+(use-package evil-matchit :ensure t
   :config (global-evil-matchit-mode 1))
 
 (use-package org-evil :ensure t)
 (put 'dired-find-alternate-file 'disabled nil)
 
-(use-package vlf
-  :ensure t
+(use-package vlf :ensure t
   :config
   (progn
     (require 'vlf-setup)
     (custom-set-variables
      '(vlf-application 'dont-ask))))
 
-(use-package log4j-mode
-  :ensure t
+(use-package log4j-mode :ensure t
   :disabled t
-  :init
-  (add-hook #'log4j-mode-hook #'view-mode)
-  (add-hook #'log4j-mode-hook #'read-only-mode)
-  (add-hook #'log4j-mode-hook 'eos/turn-on-hl-line))
+  :hook
+  ((log4j-mode-hook . view-mode)
+   (log4j-mode-hook . read-only-mode)))
 
 (use-package view
   :config
