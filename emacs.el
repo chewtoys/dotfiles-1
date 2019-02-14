@@ -103,13 +103,15 @@
 (setq use-dialog-box nil)
 
 (when window-system
+  (progn
     (require 'whitespace)
     (global-whitespace-mode +1)
     (set-face-attribute 'whitespace-space nil :background nil :foreground "gray80")
     (set-face-attribute 'whitespace-trailing nil :background "plum1" :foreground "gray80")
     (setq whitespace-style '(face tabs spaces tabs-mark space-mark trailing))
-    (set-frame-size (selected-frame) 130 60)
-    (set-default-font "Source Code Pro 14" nil t))
+    (set-frame-size (selected-frame) 180 60)
+    ;; https://github.com/adobe-fonts/source-code-pro
+    (set-default-font "Source Code Pro 14" nil t)))
 
 (if (eq system-type 'windows-nt)
          (set-default-font "Fira Code 12" nil t))
@@ -269,19 +271,6 @@
    (set-selection-coding-system 'utf-8))
 
 (require 'uniquify)
-;; (setq uniquify-buffer-name-style 'forward
-;;       uniquify-separator "/"
-;;       uniquify-after-kill-buffer-p t
-;;       uniquify-ignore-buffers-re "^\\*"
-;;       uniquify-min-dir-content 20)
-
-;; (setq quelpa-self-upgrade-p nil)
-;; (setq quelpa-update-melpa-p nil)
-;; (use-package quelpa :ensure t)
-
-;; (use-package quelpa-use-package :ensure t)
-;; (setq use-package-ensure-function 'quelpa)
-;; (setq use-package-always-ensure t)
 
 (use-package server
   :config (unless (server-running-p) (server-start)))
@@ -486,16 +475,7 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   :config
   (progn
     (setq neo-smart-open t)
-    (setq projectile-switch-project-action 'neotree-projectile-action)
-    (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
-    (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
-    (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
-    (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
-    (evil-define-key 'normal neotree-mode-map (kbd "g") 'neotree-refresh)
-    (evil-define-key 'normal neotree-mode-map (kbd "n") 'neotree-next-line)
-    (evil-define-key 'normal neotree-mode-map (kbd "p") 'neotree-previous-line)
-    (evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
-    (evil-define-key 'normal neotree-mode-map (kbd "H") 'neotree-hidden-file-toggle)))
+    (setq projectile-switch-project-action 'neotree-projectile-action)))
 
 (use-package flycheck :ensure t)
 
@@ -550,99 +530,31 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 (use-package go-snippets :ensure t
   :after yasnippets
   :config
-  (go-snippets-initialize)
-  )
+  (go-snippets-initialize))
 
 (use-package go-dlv :ensure t)
 
 (use-package go-gen-test :ensure t)
 
 (use-package go-eldoc :ensure t
-  :hook
-  (go-mode . go-eldoc-setup)
-  )
+  :hook (go-mode . go-eldoc-setup))
 
 (use-package go-guru :ensure t
-  :hook
-  (go-mode . go-guru-hl-identifier-mode)
-  )
+  :hook (go-mode . go-guru-hl-identifier-mode))
 
 (use-package go-playground :ensure t)
 
 (use-package gorepl-mode :ensure t
-  :hook
-  (go-mode . gorepl-mode))
+  :hook (go-mode . gorepl-mode))
 
 (use-package protobuf-mode :ensure t
   :mode ("\\.proto\\'" . protobuf-mode))
 
-;; (use-package dired+
-;;   :quelpa (dired+ :fetcher github :repo "emacsmirror/dired-plus")
-;;   :config
-;;   (diredp-toggle-find-file-reuse-dir 1))
-
-(use-package dired
-  :config
-  (progn
-    ;; brew install coreutils
-    (if (executable-find "gls")
-        (progn
-          (setq insert-directory-program "gls")
-          (setq dired-listing-switches "-FaGh1 --group-directories-first"))
-      (setq dired-listing-switches "-ahF"))
-    (setq ls-lisp-dirs-first t)
-    (setq dired-recursive-copies 'always)
-    (setq dired-recursive-deletes 'always)
-    (setq dired-ls-F-marks-symlinks t)
-    (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
-    (define-key dired-mode-map (kbd "^") (lambda () (interactive) (find-alternate-file "..")))))
-
-(use-package dired-x)
-
 (use-package spaceline :ensure t
   :config
-  (require 'spaceline-config)
-(spaceline-emacs-theme))
-
-(use-package evil :ensure t
-  :init
-  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
-  (setq evil-want-keybinding nil)
-  :config (evil-mode))
-
-(use-package evil-magit :ensure t
-  :after magit
-  :init (setq evil-magit-want-horizontal-movement nil))
-
-(define-key evil-normal-state-map (kbd "q") 'magit-mode-bury-buffer)
-
-(use-package evil-collection
-  :after evil
-  :ensure t
-  :config
-  (evil-collection-init))
-
-(use-package evil-surround :ensure t
-  :config
-  (global-evil-surround-mode 1))
-
-(use-package evil-leader :ensure t
-  :init
-  (global-evil-leader-mode)
-  :config
   (progn
-    (evil-leader/set-leader "<SPC>")
-    (evil-leader/set-key
-      "f" 'find-file
-      "b" 'switch-to-buffer
-      "k" 'kill-buffer)))
-
-(use-package evil-mark-replace :ensure t)
-(use-package evil-matchit :ensure t
-  :config (global-evil-matchit-mode 1))
-
-(use-package org-evil :ensure t)
-(put 'dired-find-alternate-file 'disabled nil)
+    (require 'spaceline-config)
+    (spaceline-emacs-theme)))
 
 (use-package vlf :ensure t
   :config
@@ -659,21 +571,33 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 
 (use-package view
   :config
-  (defun View-goto-line-last (&optional line)
-    "goto last line"
-    (interactive "P")
-    (goto-line (line-number-at-pos (point-max))))
+  (progn
+    (defun View-goto-line-last (&optional line)
+      "goto last line"
+      (interactive "P")
+      (goto-line (line-number-at-pos (point-max))))
 
-  (define-key view-mode-map (kbd "e") 'View-scroll-half-page-forward)
-  (define-key view-mode-map (kbd "u") 'View-scroll-half-page-backward)
+    (define-key view-mode-map (kbd "e") 'View-scroll-half-page-forward)
+    (define-key view-mode-map (kbd "u") 'View-scroll-half-page-backward)
 
-  ;; less like
-  (define-key view-mode-map (kbd "N") 'View-search-last-regexp-backward)
-  (define-key view-mode-map (kbd "?") 'View-search-regexp-backward?)
-  (define-key view-mode-map (kbd "g") 'View-goto-line)
-  (define-key view-mode-map (kbd "G") 'View-goto-line-last)
-  ;; vi/w3m like
-  (define-key view-mode-map (kbd "h") 'backward-char)
-  (define-key view-mode-map (kbd "j") 'next-line)
-  (define-key view-mode-map (kbd "k") 'previous-line)
-  (define-key view-mode-map (kbd "l") 'forward-char))
+    ;; less like
+    (define-key view-mode-map (kbd "N") 'View-search-last-regexp-backward)
+    (define-key view-mode-map (kbd "?") 'View-search-regexp-backward?)
+    (define-key view-mode-map (kbd "g") 'View-goto-line)
+    (define-key view-mode-map (kbd "G") 'View-goto-line-last)
+    ;; vi/w3m like
+    (define-key view-mode-map (kbd "h") 'backward-char)
+    (define-key view-mode-map (kbd "j") 'next-line)
+    (define-key view-mode-map (kbd "k") 'previous-line)
+    (define-key view-mode-map (kbd "l") 'forward-char)))
+
+(put 'dired-find-alternate-file 'disabled nil)
+
+(use-package ivy :ensure t
+  :config
+  (progn
+    (setq ivy-use-virtual-buffers t)
+    (setq ivy-count-format "(%d/%d) ")
+    (use-package swiper :ensure t
+      :bind ("C-s" . swiper))
+    (use-package counsel :ensure t)))
