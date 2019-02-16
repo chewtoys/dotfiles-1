@@ -17,6 +17,9 @@
 
 (setq package-enable-at-startup nil)
 
+(setq gc-cons-threshold 64000000)
+(add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 800000)))
+
 (setq user-full-name "Denis Evsyukov"
       user-mail-address "denis@evsyukov.org")
 
@@ -26,6 +29,8 @@
 (setq inhbit-startup-message t)
 (setq initial-scratch-message "")
 (setq inhibit-startup-echo-area-message t)
+
+(setq auto-window-vscroll nil)
 
 (setq visible-bell nil)
 (setq ring-bell-function 'ignore)
@@ -277,6 +282,9 @@
 
 (use-package diminish :ensure t)
 
+(use-package realgud :ensure t :defer t)
+(use-package command-log-mode :defer t)
+
 (use-package exec-path-from-shell :ensure t
   :config
   (progn
@@ -300,12 +308,12 @@
     (setq ido-enable-flex-matching t
           ido-everywhere t)))
 
-(use-package rainbow-delimiters :ensure t
+(use-package rainbow-delimiters :ensure t :defer t
   :hook
   ((clojure-mode . rainbow-delimiters-mode)
    (prog-mode . rainbow-delimiters-mode)))
 
-(use-package projectile :ensure t
+(use-package projectile :ensure t :defer t
   ;; :diminish projectile-mode
   :config (projectile-global-mode))
 
@@ -316,6 +324,8 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   (let ((buffers (magit-mode-get-buffers)))
     (magit-restore-window-configuration)
     (mapc #'kill-buffer buffers)))
+
+(use-package git-commit :ensure t :defer t)
 
 (use-package magit :ensure t
   :defer t
@@ -332,18 +342,23 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
     (bind-key "q" #'juev/magit-kill-buffers magit-status-mode-map)
     (add-to-list 'magit-no-confirm 'stage-all-changes)))
 
-(use-package markdown-mode :ensure t
-  :mode (("\.markdown$" . markdown-mode)
-         ("\.md$"       . markdown-mode))
-  :hook (markdown-mode . visual-line-mode))
+(use-package magit-filenotify :ensure t :defer t)
+(use-package magit-find-file :ensure t :defer t)
+(use-package git-timemachine :ensure t :defer t)
 
-(use-package yaml-mode :ensure t
+(use-package markdown-mode :ensure t :defer t
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
+
+(use-package yaml-mode :ensure t :defer t
   :mode (("\\.yml$" . yaml-mode))
   :hook
   (yaml-mode-hook . (lambda ()
                       (electric-indent-local-mode -1))))
 
-(use-package mmm-mode :ensure t
+(use-package mmm-mode :ensure t :defer t
   :diminish mmm-mode
   :config
   (progn
@@ -356,17 +371,16 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
         :back "^---")))
     (mmm-add-mode-ext-class 'markdown-mode nil 'yaml-header-matters)))
 
-(use-package which-key :ensure t
+(use-package which-key :ensure t :defer t
   :diminish which-key-mode
   :init
   (progn
     (which-key-setup-side-window-right)
     (which-key-mode)))
 
-(use-package rust-mode :ensure t)
+(use-package rust-mode :ensure t :defer t)
 
-(use-package guess-language         ; Automatically detect language for Flyspell
-  :ensure t
+(use-package guess-language :ensure t :defer t
   :commands guess-language-mode
   :hook (text-mode-hook . guess-language-mode)
   :config
@@ -374,7 +388,7 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
         guess-language-min-paragraph-length 35)
   :diminish guess-language-mode)
 
-(use-package helpful :ensure t
+(use-package helpful :ensure t :defer t
   :bind (("C-h k" . helpful-key)
          ("C-h f" . helpful-callable)
          ("C-h v" . helpful-variable)
@@ -383,28 +397,28 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   (:map emacs-lisp-mode-map
         ("C-c C-d" . helpful-at-point)))
 
-(use-package ace-window :ensure t
+(use-package ace-window :ensure t :defer t
   :bind (("M-o" . ace-window)))
 
-(use-package expand-region :ensure t
+(use-package expand-region :ensure t :defer t
   :bind ("C-=" . er/expand-region))
 
-(use-package ansible :ensure t
+(use-package ansible :ensure t :defer t
   :hook
   (yaml-mode-hook . (lambda ()
                       (ansible 1)))
   :config (setq ansible::vault-password-file "~/.vault_pass"))
 
-(use-package git-gutter :ensure t
+(use-package git-gutter :ensure t :defer t
   :diminish 'git-gutter-mode
   :config (global-git-gutter-mode +1))
 
-(use-package clang-format :ensure t
+(use-package clang-format :ensure t :defer t
   :bind (("C-c i" . clang-format-region)
          ("C-c u" . clang-format-buffer))
   :config (setq clang-format-style-option "llvm"))
 
-(use-package yasnippet :ensure t
+(use-package yasnippet :ensure t :defer t
   ;; :diminish yas-minor-mode
   :bind (:map yas-minor-mode-map
               ("C-x i i" . yas-insert-snippet)
@@ -418,7 +432,7 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
     (add-to-list 'yas-snippet-dirs (locate-user-emacs-file "snippets"))
     (yas-global-mode 1)))
 
-(use-package company :ensure t
+(use-package company :ensure t :defer t
   :diminish company-mode
   :demand t
   :bind (("C-c /" . company-files)
@@ -452,25 +466,25 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
                 '(:with company-yasnippet))))))
 
 ;; backends for company
-(use-package company-shell :ensure t
+(use-package company-shell :ensure t :defer t
   :config (add-to-list 'company-backends 'company-shell))
 
-(use-package company-web :ensure t
+(use-package company-web :ensure t :defer t
   :config (add-to-list 'company-backends 'company-web-html))
 
-(use-package company-quickhelp :ensure t
+(use-package company-quickhelp :ensure t :defer t
   :bind (:map company-active-map
               ("C-c h" . company-quickhelp-manual-begin))
   :config (company-quickhelp-mode))
 
-(use-package hippie-exp :ensure t
+(use-package hippie-exp :ensure t :defer t
   :config (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand))
 
 (use-package material-theme :ensure t
   :config (load-theme 'material-light t))
   ;; (set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2"))
 
-(use-package neotree :ensure t
+(use-package neotree :ensure t :defer t
   :bind ("C-c C-n" . neotree-toggle)
   :config
   (progn
@@ -479,7 +493,7 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 
 (use-package flycheck :ensure t)
 
-(use-package go-mode :ensure t
+(use-package go-mode :ensure t :defer t
   :mode ("\\.go\\'" . go-mode)
   :preface
   (defun go/init-company ()
@@ -488,7 +502,7 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
            company-yasnippet))
     (company-mode)
 
-    (use-package company-go :ensure t
+    (use-package company-go :ensure t :defer t
       :after company
       :init
       (push 'company-go company-backends)
@@ -527,27 +541,27 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
         ("C-c t b" . go-test-current-benchmark)
         ("C-c t x" . go-run)))
 
-(use-package go-snippets :ensure t
+(use-package go-snippets :ensure t :defer t
   :after yasnippets
   :config
   (go-snippets-initialize))
 
-(use-package go-dlv :ensure t)
+(use-package go-dlv :ensure t :defer t)
 
-(use-package go-gen-test :ensure t)
+(use-package go-gen-test :ensure t :defer t)
 
-(use-package go-eldoc :ensure t
+(use-package go-eldoc :ensure t :defer t
   :hook (go-mode . go-eldoc-setup))
 
-(use-package go-guru :ensure t
+(use-package go-guru :ensure t :defer t
   :hook (go-mode . go-guru-hl-identifier-mode))
 
-(use-package go-playground :ensure t)
+(use-package go-playground :ensure t :defer t)
 
-(use-package gorepl-mode :ensure t
+(use-package gorepl-mode :ensure t :defer t
   :hook (go-mode . gorepl-mode))
 
-(use-package protobuf-mode :ensure t
+(use-package protobuf-mode :ensure t :defer t
   :mode ("\\.proto\\'" . protobuf-mode))
 
 (use-package spaceline :ensure t
@@ -556,7 +570,7 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
     (require 'spaceline-config)
     (spaceline-emacs-theme)))
 
-(use-package vlf :ensure t
+(use-package vlf :ensure t :defer t
   :config
   (progn
     (require 'vlf-setup)
@@ -569,7 +583,7 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   ((log4j-mode-hook . view-mode)
    (log4j-mode-hook . read-only-mode)))
 
-(use-package view
+(use-package view :ensure t :defer t
   :config
   (progn
     (defun View-goto-line-last (&optional line)
@@ -593,11 +607,23 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 
 (put 'dired-find-alternate-file 'disabled nil)
 
-(use-package ivy :ensure t
+(use-package ivy :ensure t :defer t
   :config
   (progn
     (setq ivy-use-virtual-buffers t)
     (setq ivy-count-format "(%d/%d) ")
-    (use-package swiper :ensure t
-      :bind ("C-s" . swiper))
-    (use-package counsel :ensure t)))
+    (use-package swiper :ensure t :defer t
+      :bind (("C-S-s" . isearch-forward)            ;; Keep isearch-forward on Shift-Ctrl-s
+             ("C-s" . swiper)                       ;; Use swiper for search and reverse search
+             ("C-S-r" . isearch-backward)           ;; Keep isearch-backward on Shift-Ctrl-r
+             ("C-r" . swiper)))
+    (use-package counsel :ensure t :defer t)
+    (use-package avy :ensure t :defer t
+      :bind (("C-:" . avy-goto-char)))
+    (use-package ivy-posframe :ensure t :defer t
+      :if (>= emacs-major-version 26)
+      :config (setq ivy-display-function #'ivy-posframe-display))))
+
+(use-package prescient :ensure t :defer t)
+(use-package ivy-prescient :ensure t :defer t)
+(use-package company-prescient :ensure t :defer t)
