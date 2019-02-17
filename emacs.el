@@ -113,8 +113,8 @@
   (progn
     (require 'whitespace)
     (global-whitespace-mode +1)
-    (set-face-attribute 'whitespace-space nil :background nil :foreground "gray80")
-    (set-face-attribute 'whitespace-trailing nil :background "plum1" :foreground "gray80")
+    (set-face-attribute 'whitespace-space nil :background nil :foreground "dark slate gray")
+    (set-face-attribute 'whitespace-trailing nil :background "plum1" :foreground "dark slate gray")
     (setq whitespace-style '(face tabs spaces tabs-mark space-mark trailing))
     (set-frame-size (selected-frame) 180 60)
     ;; https://github.com/adobe-fonts/source-code-pro
