@@ -662,6 +662,7 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   :hook (haskell-mode . intero-mode))
 
 (use-package guru-mode :ensure t
+  :diminish t
   :config (guru-global-mode +1))
 
 (use-package god-mode :ensure t
