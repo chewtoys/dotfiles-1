@@ -495,9 +495,12 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 (use-package hippie-exp :ensure t
   :config (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand))
 
-(use-package material-theme :ensure t
-  :config (load-theme 'material-light t))
-  ;; (set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2"))
+;; (use-package material-theme :ensure t
+;;   :config (load-theme 'material-light t))
+;;   ;; (set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2"))
+
+(use-package dracula-theme :ensure t
+  :config (load-theme 'dracula))
 
 (use-package neotree :ensure t
   :bind ("C-c C-n" . neotree-toggle)
