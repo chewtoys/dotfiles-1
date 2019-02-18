@@ -33,6 +33,10 @@
 (setq user-full-name "Denis Evsyukov"
       user-mail-address "denis@evsyukov.org")
 
+(setq secrets-file "~/.emacs.secrets")
+(when (file-exists-p secrets-file)
+  (load secrets-file t))
+
 (load "~/.emacs.secrets" t)
 
 (setq inhibit-splash-screen t)
