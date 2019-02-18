@@ -1,3 +1,6 @@
+zstyle :omz:plugins:ssh-agent agent-forwarding on
+zstyle :omz:plugins:ssh-agent identities id_rsa work
+
 source /usr/local/share/antigen/antigen.zsh
 
 # Load the oh-my-zsh's library
@@ -12,6 +15,7 @@ antigen bundle golang
 antigen bundle rust
 antigen bundle vscode
 antigen bundle z
+antigen bundle ssh-agent
 
 # Syntax highlighting bundle.
 antigen bundle zsh-users/zsh-syntax-highlighting
