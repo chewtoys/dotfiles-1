@@ -1,7 +1,11 @@
-(load "~/.emacs-proxy.el" t)
+(setq custom-proxy "~/.emacs-proxy.el")
+
+(when (file-exists-p custom-proxy)
+  (load custom-proxy t))
 
 (setq custom-file "~/.emacs-custom.el")
-;; (load custom-file t)
+(when (file-exists-p custom-file)
+  (load custom-file t))
 
 (require 'package)
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
@@ -280,7 +284,7 @@
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 (use-package server
-  :config (unless (server-running-p) (server-start)))
+  :config (or (server-running-p) (server-mode)))
 
 (use-package diminish :ensure t)
 (use-package bind-key :ensure t)
@@ -661,7 +665,7 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   :hook (haskell-mode . intero-mode))
 
 (use-package guru-mode :ensure t
-  :diminish t
+  :diminish guru
   :config (guru-global-mode +1))
 
 (use-package god-mode :ensure t
