@@ -348,8 +348,10 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
     (bind-key "q" #'juev/magit-kill-buffers magit-status-mode-map)
     (add-to-list 'magit-no-confirm 'stage-all-changes)))
 
-(use-package magit-filenotify :ensure t)
-(use-package magit-find-file :ensure t)
+(use-package magit-filenotify :ensure t
+  :after magit)
+(use-package magit-find-file :ensure t
+  :after magit)
 
 (use-package markdown-mode :ensure t
   :mode (("README\\.md\\'" . gfm-mode)
@@ -365,6 +367,7 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 
 (use-package mmm-mode :ensure t
   :diminish mmm-mode
+  :defer 5
   :config
   (progn
     (setq mmm-global-mode 'maybe)
