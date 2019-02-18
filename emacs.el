@@ -3,24 +3,28 @@
 (setq custom-file "~/.emacs-custom.el")
 ;; (load custom-file t)
 
-(eval-when-compile
-  (require 'cl))
 (require 'package)
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize nil)
+(setq package-enable-at-startup nil)
 
 ;; Bootstrap `use-package'
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 
+(setq use-package-expand-minimally t)
 (setq package-enable-at-startup nil)
 
 (setq byte-compile-warnings '(not free-vars unresolved noruntime lexical make-local))
 
 (setq gc-cons-threshold 64000000)
 (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 800000)))
+
+(defvar file-name-handler-alist-old file-name-handler-alist)
+(setq file-name-handler-alist nil)
+(setq message-log-max 16384)
 
 (setq user-full-name "Denis Evsyukov"
       user-mail-address "denis@evsyukov.org")
@@ -67,18 +71,6 @@
 
 (setq tab-always-indent 'complete)
 
-(setq hippie-expand-try-functions-list
-      '(try-expand-dabbrev
-        try-expand-dabbrev-all-buffers
-        try-expand-dabbrev-from-kill
-        try-complete-file-name-partially
-        try-complete-file-name
-        try-expand-all-abbrevs
-        try-expand-list
-        try-expand-line
-        try-complete-lisp-symbol-partially
-        try-complete-lisp-symbol))
-
 (auto-compression-mode t)
 
 (global-font-lock-mode t)
@@ -116,12 +108,14 @@
     (set-face-attribute 'whitespace-space nil :background nil :foreground "dark slate gray")
     (set-face-attribute 'whitespace-trailing nil :background "plum1" :foreground "dark slate gray")
     (setq whitespace-style '(face tabs spaces tabs-mark space-mark trailing))
-    (set-frame-size (selected-frame) 180 60)
+    ;; (set-frame-size (selected-frame) 180 60)
+    (setq initial-frame-alist '( (tool-bar-lines . 0) (width . 180) (height . 60)))
+    (setq deafult-frame-alist '( (tool-bar-lines . 0) (width . 180) (height . 60)))
     ;; https://github.com/adobe-fonts/source-code-pro
     (set-default-font "Source Code Pro 14" nil t)))
 
 (if (eq system-type 'windows-nt)
-         (set-default-font "Fira Code 12" nil t))
+    (set-default-font "Fira Code 12" nil t))
 
 (defalias 'e 'find-file)
 (defalias 'eo 'find-file-other-window)
@@ -234,7 +228,7 @@
 ;; enable recent files mode.
 (recentf-mode t)
 
-; 50 files ought to be enough.
+                                        ; 50 files ought to be enough.
 (setq recentf-max-saved-items 50)
 
 (defun ido-recentf-open ()
@@ -275,9 +269,15 @@
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
 (unless (eq system-type 'windows-nt)
-   (set-selection-coding-system 'utf-8))
+  (set-selection-coding-system 'utf-8))
 
 (require 'uniquify)
+
+(use-package benchmark-init
+  :ensure t
+  :config
+  ;; To disable collection of benchmark data after init is done.
+  (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 (use-package server
   :config (unless (server-running-p) (server-start)))
@@ -285,15 +285,16 @@
 (use-package diminish :ensure t)
 (use-package bind-key :ensure t)
 
-(use-package realgud :ensure t)
+;; (use-package realgud :ensure t)
 (use-package command-log-mode :ensure t)
 
-(use-package exec-path-from-shell :ensure t
+(use-package exec-path-from-shell
+  :if (memq window-system '(mac ns))
+  :ensure t
+  :custom
+  (exec-path-from-shell-check-startup-files nil)
   :config
-  (progn
-    (setq exec-path-from-shell-check-startup-files nil)
-    (when (memq window-system '(mac ns x))
-      (exec-path-from-shell-initialize))))
+  (exec-path-from-shell-initialize))
 
 (use-package better-defaults :ensure t
   :config (when window-system
@@ -327,18 +328,17 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
     (magit-restore-window-configuration)
     (mapc #'kill-buffer buffers)))
 
-(use-package git-commit :ensure t)
+;; (use-package git-commit :ensure t)
 
 (use-package magit :ensure t
-  :defer t
+  :defer 5
   :bind (("C-x v s" . magit-status)
          ("C-x v p" . magit-push))
-  :init
-  (progn
-    (setq magit-last-seen-setup-instructions "1.4.0")
-    (setq magit-bury-buffer-function (lambda(&optional kill-buffer) (interactive) (magit-restore-window-configuration t)))
-    (setq magit-commit-show-diff nil
-          magit-revert-buffers 1))
+  :custom
+  (magit-last-seen-setup-instructions "1.4.0")
+  (magit-bury-buffer-function (lambda(&optional kill-buffer) (interactive) (magit-restore-window-configuration t)))
+  (magit-commit-show-diff nil)
+  (magit-revert-buffers 1)
   :config
   (progn
     (bind-key "q" #'juev/magit-kill-buffers magit-status-mode-map)
@@ -346,13 +346,12 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 
 (use-package magit-filenotify :ensure t)
 (use-package magit-find-file :ensure t)
-(use-package git-timemachine :ensure t)
 
 (use-package markdown-mode :ensure t
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
-  :init (setq markdown-command "multimarkdown"))
+  :custom (markdown-command "multimarkdown"))
 
 (use-package yaml-mode :ensure t
   :mode (("\\.yml$" . yaml-mode))
@@ -433,19 +432,19 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
          ("C-c u" . clang-format-buffer))
   :config (setq clang-format-style-option "llvm"))
 
-(use-package yasnippet :ensure t
-  ;; :diminish yas-minor-mode
-  :bind (:map yas-minor-mode-map
-              ("C-x i i" . yas-insert-snippet)
-              ("C-x i n" . yas-new-snippet)
-              ("C-x i v" . yas-visit-snippet-file)
-              ("C-x i g" . yas-reload-all))
-  :init (use-package yasnippet-snippets :ensure t)
-  :config
-  (progn
-    (yas-reload-all)
-    (add-to-list 'yas-snippet-dirs (locate-user-emacs-file "snippets"))
-    (yas-global-mode 1)))
+;; (use-package yasnippet :ensure t
+;;   ;; :diminish yas-minor-mode
+;;   :bind (:map yas-minor-mode-map
+;;               ("C-x i i" . yas-insert-snippet)
+;;               ("C-x i n" . yas-new-snippet)
+;;               ("C-x i v" . yas-visit-snippet-file)
+;;               ("C-x i g" . yas-reload-all))
+;;   :init (use-package yasnippet-snippets :ensure t)
+;;   :config
+;;   (progn
+;;     (yas-reload-all)
+;;     (add-to-list 'yas-snippet-dirs (locate-user-emacs-file "snippets"))
+;;     (yas-global-mode 1)))
 
 (use-package company :ensure t
   :diminish company-mode
@@ -495,12 +494,12 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 (use-package hippie-exp :ensure t
   :config (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand))
 
-;; (use-package material-theme :ensure t
-;;   :config (load-theme 'material-light t))
-;;   ;; (set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2"))
+(use-package material-theme :ensure t
+  :config (load-theme 'material t))
+;; (set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2"))
 
-(use-package dracula-theme :ensure t
-  :config (load-theme 'dracula))
+;; (use-package dracula-theme :ensure t
+;;   :config (load-theme 'dracula))
 
 (use-package neotree :ensure t
   :bind ("C-c C-n" . neotree-toggle)
@@ -559,10 +558,10 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
         ("C-c t b" . go-test-current-benchmark)
         ("C-c t x" . go-run)))
 
-(use-package go-snippets :ensure t :defer t
-  :after yasnippets
-  :config
-  (go-snippets-initialize))
+;; (use-package go-snippets :ensure t :defer t
+;;   :after yasnippets
+;;   :config
+;;   (go-snippets-initialize))
 
 (use-package go-dlv :ensure t :defer t)
 
@@ -633,25 +632,25 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   (progn
     (setq ivy-use-virtual-buffers t)
     (setq ivy-count-format "(%d/%d) ")
-    (use-package swiper :ensure t :defer t
+    (use-package swiper :ensure t
       :bind (("C-S-s" . isearch-forward)            ;; Keep isearch-forward on Shift-Ctrl-s
              ("C-s" . swiper)                       ;; Use swiper for search and reverse search
              ("C-S-r" . isearch-backward)           ;; Keep isearch-backward on Shift-Ctrl-r
              ("C-r" . swiper)))
-    (use-package counsel :ensure t :defer t)
-    (use-package avy :ensure t :defer t
+    (use-package counsel :ensure t)
+    (use-package avy :ensure t
       :bind (("C-:" . avy-goto-char)))
-    (use-package ivy-posframe :ensure t :defer t
+    (use-package ivy-posframe :ensure t
       :if (>= emacs-major-version 26)
       :config (setq ivy-display-function #'ivy-posframe-display))))
 
-(use-package prescient
+(use-package prescient :ensure t
   :defer t
   :config (prescient-persist-mode))
-(use-package ivy-prescient
+(use-package ivy-prescient :ensure t
   :after ivy
   :config (ivy-prescient-mode))
-(use-package company-prescient
+(use-package company-prescient :ensure t
   :after company
   :config (company-prescient-mode))
 
@@ -679,3 +678,9 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
                         'box)))
   (add-hook 'god-mode-enabled-hook 'god-update-cursor)
   (add-hook 'god-mode-disabled-hook 'god-update-cursor))
+
+(defvar before-user-init-time (current-time)
+  "Value of `current-time' when Emacs begins loading `user-init-file'.")
+(message "Loading Emacs...done (%.3fs)"
+         (float-time (time-subtract before-user-init-time
+                                    before-init-time)))
