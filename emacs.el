@@ -113,8 +113,8 @@
     (set-face-attribute 'whitespace-trailing nil :background "plum1" :foreground "dark slate gray")
     (setq whitespace-style '(face tabs spaces tabs-mark space-mark trailing))
     ;; (set-frame-size (selected-frame) 180 60)
-    (setq initial-frame-alist '( (tool-bar-lines . 0) (width . 180) (height . 60)))
-    (setq deafult-frame-alist '( (tool-bar-lines . 0) (width . 180) (height . 60)))
+    (setq initial-frame-alist '( (tool-bar-lines . 0) (width . 160) (height . 60)))
+    (setq deafult-frame-alist '( (tool-bar-lines . 0) (width . 160) (height . 60)))
     ;; https://github.com/adobe-fonts/source-code-pro
     (set-default-font "Source Code Pro 14" nil t)))
 
@@ -643,10 +643,7 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
              ("C-r" . swiper)))
     (use-package counsel :ensure t)
     (use-package avy :ensure t
-      :bind (("C-:" . avy-goto-char)))
-    (use-package ivy-posframe :ensure t
-      :if (>= emacs-major-version 26)
-      :config (setq ivy-display-function #'ivy-posframe-display))))
+      :bind (("C-:" . avy-goto-char)))))
 
 (use-package prescient :ensure t
   :defer t
