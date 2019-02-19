@@ -1,5 +1,4 @@
 (setq custom-proxy "~/.emacs-proxy.el")
-
 (when (file-exists-p custom-proxy)
   (load custom-proxy t))
 
@@ -8,8 +7,14 @@
   (load custom-file t))
 
 (require 'package)
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+(setq package-archives
+      '(("melpa stable" . "https://stable.melpa.org/packages/")
+        ("melpa"        . "https://melpa.org/packages/")
+        ("org"          . "https://orgmode.org/elpa/"))
+      package-archive-priorities
+      '(("melpa stable" . 10)
+        ("org"          . 8)
+        ("melpa"        . 0)))
 (package-initialize nil)
 (setq package-enable-at-startup nil)
 
@@ -505,8 +510,8 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 (use-package hippie-exp :ensure t
   :config (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand))
 
-(use-package material-theme :ensure t
-  :config (load-theme 'material t))
+;; (use-package material-theme :ensure t
+;;   :config (load-theme 'material t))
 ;; (set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2"))
 
 ;; (use-package dracula-theme :ensure t
@@ -672,20 +677,18 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   :diminish guru
   :config (guru-global-mode +1))
 
-(use-package god-mode :ensure t
-  :disabled t
-  ;; Make god-mode a little bit more vi-like
-  :bind (("<escape>" . god-local-mode)
-         :map god-local-mode-map ("i" . god-local-mode))
-  :config
-  ;; change curser to bar when in god-mode
-  (defun god-update-cursor ()
-    "Toggle curser style to bar when in god-mode"
-    (setq cursor-type (if (or god-local-mode buffer-read-only)
-                          'bar
-                        'box)))
-  (add-hook 'god-mode-enabled-hook 'god-update-cursor)
-  (add-hook 'god-mode-disabled-hook 'god-update-cursor))
+(use-package solarized-theme :ensure t
+  :init (load-theme 'solarized-light)
+  :custom
+  (solarized-distinct-fringe-background t)
+  (solarized-use-variable-pitch nil)
+  (solarized-high-contrast-mode-line t)
+  (solarized-scale-org-headlines nil)
+  (solarized-height-minus-1 1.0)
+  (solarized-height-plus-1 1.0)
+  (solarized-height-plus-2 1.0)
+  (solarized-height-plus-3 1.0)
+  (solarized-height-plus-4 1.0))
 
 (defvar before-user-init-time (current-time)
   "Value of `current-time' when Emacs begins loading `user-init-file'.")
