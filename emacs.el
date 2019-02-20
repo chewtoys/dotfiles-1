@@ -7,14 +7,8 @@
   (load custom-file t))
 
 (require 'package)
-(setq package-archives
-      '(("melpa stable" . "https://stable.melpa.org/packages/")
-        ("melpa"        . "https://melpa.org/packages/")
-        ("org"          . "https://orgmode.org/elpa/"))
-      package-archive-priorities
-      '(("melpa stable" . 10)
-        ("org"          . 8)
-        ("melpa"        . 0)))
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize nil)
 (setq package-enable-at-startup nil)
 
@@ -285,6 +279,7 @@
 
 (require 'uniquify)
 
+(use-package no-littering :ensure t)
 (use-package benchmark-init
   :ensure t
   :config
