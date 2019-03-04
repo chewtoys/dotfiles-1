@@ -679,6 +679,10 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   (solarized-height-plus-3 1.0)
   (solarized-height-plus-4 1.0))
 
+(use-package smartparens :ensure t
+  :config
+  (smartparens-global-mode))
+
 (defvar before-user-init-time (current-time)
   "Value of `current-time' when Emacs begins loading `user-init-file'.")
 (message "Loading Emacs...done (%.3fs)"
