@@ -288,16 +288,29 @@
   "Replace text in yasnippet template."
   (yas-expand-snippet (buffer-string) (point-min) (point-max)))
 
+;; (custom-set-variables
+;;  '(auto-insert 'other)
+;;  '(auto-insert-directory "~/autoinsert/")
+;;  '(auto-insert-alist '((("\\.\\([Hh]\\|hh\\|hpp\\)\\'" . "C / C++ header") . ["template.h" c++-mode my/autoinsert-yas-expand])
+;;                        (("\\.\\([C]\\|cc\\|cpp\\)\\'" . "C++ source") . ["template.cc" my/autoinsert-yas-expand])
+;;                        (("\\.sh\\'" . "Shell script") . ["template.sh" my/autoinsert-yas-expand])
+;;                        (("\\.el\\'" . "Emacs Lisp") . ["template.el" my/autoinsert-yas-expand])
+;;                        (("\\.pl\\'" . "Perl script") . ["template.pl" my/autoinsert-yas-expand])
+;;                        (("\\.pm\\'" . "Perl module") . ["template.pm" my/autoinsert-yas-expand])
+;;                        (("\\.py\\'" . "Python script") . ["template.py" my/autoinsert-yas-expand])
+;;                        (("[mM]akefile\\'" . "Makefile") . ["Makefile" my/autoinsert-yas-expand])
+;;                        (("\\.tex\\'" . "TeX/LaTeX") . ["template.tex" my/autoinsert-yas-expand]))))
+
 (use-package autoinsert
   :init
   (progn
     (setq auto-insert-directory (juev/emacs-subdirectory "templates/"))
     ;; Don't want to be prompted before insertion:
-    (setq auto-insert-query nil))
+    (setq auto-insert-query nil)
+    (auto-insert-mode 1)
+    (add-hook 'find-file-hook 'auto-insert))
   :config
   (progn
-    (auto-insert-mode 1)
-    (add-hook 'find-file-hook 'auto-insert)
     (define-auto-insert "\\.py$" ["=template=.py" juev/autoinsert-yas-expand])
     (define-auto-insert "\\.sh$" ["default-sh.sh" juev/autoinsert-yas-expand])
     (define-auto-insert "\\.html?$" ["default-html.html" juev/autoinsert-yas-expand])))
