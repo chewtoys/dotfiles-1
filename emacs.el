@@ -467,19 +467,19 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 
 (use-package yasnippet :ensure t
   :config
-  (yas-global-mode 1))
-  ;; :diminish yas-minor-mode
+  (yas-global-mode 1)
+  :diminish yas-minor-mode
   ;; :bind (:map yas-minor-mode-map
   ;;             ("C-x i i" . yas-insert-snippet)
   ;;             ("C-x i n" . yas-new-snippet)
   ;;             ("C-x i v" . yas-visit-snippet-file)
   ;;             ("C-x i g" . yas-reload-all))
-  ;; :init (use-package yasnippet-snippets :ensure t)
-  ;; :config
-  ;; (progn
-  ;;   (yas-reload-all)
-  ;;   (add-to-list 'yas-snippet-dirs (locate-user-emacs-file "snippets"))
-  ;;   (yas-global-mode 1)))
+  :init (use-package yasnippet-snippets :ensure t)
+  :config
+  (progn
+    ;; (yas-reload-all)
+    (add-to-list 'yas-snippet-dirs (locate-user-emacs-file "snippets"))
+    (yas-global-mode 1)))
 
 (use-package company :ensure t
   :diminish company-mode
@@ -503,16 +503,16 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
      '(company-idle-delay 0)
      '(company-selection-wrap-around t)
      '(company-dabbrev-downcase nil)
-     '(company-dabbrev-ignore-case 'nil))))
+     '(company-dabbrev-ignore-case 'nil))
     ;; Add yasnippet support for all company backends
     ;; https://github.com/syl20bnr/spacemacs/pull/179
-    ;; (defvar company-mode/enable-yas t
-    ;;   "Enable yasnippet for all backends.")
-    ;; (defun company-mode/backend-with-yas (backend)
-    ;;   (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-    ;;       backend
-    ;;     (append (if (consp backend) backend (list backend))
-    ;;             '(:with company-yasnippet))))))
+    (defvar company-mode/enable-yas t
+      "Enable yasnippet for all backends.")
+    (defun company-mode/backend-with-yas (backend)
+      (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+          backend
+        (append (if (consp backend) backend (list backend))
+                '(:with company-yasnippet))))))
 
 ;; backends for company
 (use-package company-shell :ensure t
@@ -527,14 +527,6 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   :config (company-quickhelp-mode))
 
 (use-package hippie-exp :ensure t)
-  ;; :config (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand))
-
-;; (use-package material-theme :ensure t
-;;   :config (load-theme 'material t))
-;; (set-face-attribute 'mode-line nil :foreground "ivory" :background "DarkOrange2"))
-
-;; (use-package dracula-theme :ensure t
-;;   :config (load-theme 'dracula))
 
 (use-package neotree :ensure t
   :bind ("C-c C-n" . neotree-toggle)
@@ -705,18 +697,21 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 (use-package intero :ensure t
   :hook (haskell-mode . intero-mode))
 
-(use-package solarized-theme :ensure t
-  :init (load-theme 'solarized-light)
-  :custom
-  (solarized-distinct-fringe-background t)
-  (solarized-use-variable-pitch nil)
-  (solarized-high-contrast-mode-line t)
-  (solarized-scale-org-headlines nil)
-  (solarized-height-minus-1 1.0)
-  (solarized-height-plus-1 1.0)
-  (solarized-height-plus-2 1.0)
-  (solarized-height-plus-3 1.0)
-  (solarized-height-plus-4 1.0))
+(use-package material-theme :ensure t
+  :init (load-theme 'material t))
+
+;; (use-package solarized-theme :ensure t
+;;   :init (load-theme 'solarized-light)
+;;   :custom
+;;   (solarized-distinct-fringe-background t)
+;;   (solarized-use-variable-pitch nil)
+;;   (solarized-high-contrast-mode-line t)
+;;   (solarized-scale-org-headlines nil)
+;;   (solarized-height-minus-1 1.0)
+;;   (solarized-height-plus-1 1.0)
+;;   (solarized-height-plus-2 1.0)
+;;   (solarized-height-plus-3 1.0)
+;;   (solarized-height-plus-4 1.0))
 
 (use-package smartparens :ensure t
   :config
