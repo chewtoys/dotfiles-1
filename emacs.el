@@ -84,7 +84,7 @@
 
 (blink-cursor-mode -1)
 
-(electric-pair-mode t)
+;; (electric-pair-mode t)
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
@@ -281,6 +281,27 @@
 
 (require 'uniquify)
 
+(defconst juev/emacs-directory (concat (getenv "HOME") "/.emacs.d/"))
+(defun juev/emacs-subdirectory (d) (expand-file-name d juev/emacs-directory))
+
+(defun juev/autoinsert-yas-expand()
+  "Replace text in yasnippet template."
+  (yas-expand-snippet (buffer-string) (point-min) (point-max)))
+
+(use-package autoinsert
+  :init
+  (progn
+    (setq auto-insert-directory (juev/emacs-subdirectory "templates/"))
+    ;; Don't want to be prompted before insertion:
+    (setq auto-insert-query nil))
+  :config
+  (progn
+    (auto-insert-mode 1)
+    (add-hook 'find-file-hook 'auto-insert)
+    (define-auto-insert "\\.py$" ["=template=.py" juev/autoinsert-yas-expand])
+    (define-auto-insert "\\.sh$" ["default-sh.sh" juev/autoinsert-yas-expand])
+    (define-auto-insert "\\.html?$" ["default-html.html" juev/autoinsert-yas-expand])))
+
 (use-package no-littering :ensure t)
 (use-package benchmark-init
   :ensure t
@@ -444,19 +465,21 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
          ("C-c u" . clang-format-buffer))
   :config (setq clang-format-style-option "google"))
 
-;; (use-package yasnippet :ensure t
-;;   ;; :diminish yas-minor-mode
-;;   :bind (:map yas-minor-mode-map
-;;               ("C-x i i" . yas-insert-snippet)
-;;               ("C-x i n" . yas-new-snippet)
-;;               ("C-x i v" . yas-visit-snippet-file)
-;;               ("C-x i g" . yas-reload-all))
-;;   :init (use-package yasnippet-snippets :ensure t)
-;;   :config
-;;   (progn
-;;     (yas-reload-all)
-;;     (add-to-list 'yas-snippet-dirs (locate-user-emacs-file "snippets"))
-;;     (yas-global-mode 1)))
+(use-package yasnippet :ensure t
+  :config
+  (yas-global-mode 1))
+  ;; :diminish yas-minor-mode
+  ;; :bind (:map yas-minor-mode-map
+  ;;             ("C-x i i" . yas-insert-snippet)
+  ;;             ("C-x i n" . yas-new-snippet)
+  ;;             ("C-x i v" . yas-visit-snippet-file)
+  ;;             ("C-x i g" . yas-reload-all))
+  ;; :init (use-package yasnippet-snippets :ensure t)
+  ;; :config
+  ;; (progn
+  ;;   (yas-reload-all)
+  ;;   (add-to-list 'yas-snippet-dirs (locate-user-emacs-file "snippets"))
+  ;;   (yas-global-mode 1)))
 
 (use-package company :ensure t
   :diminish company-mode
@@ -480,16 +503,16 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
      '(company-idle-delay 0)
      '(company-selection-wrap-around t)
      '(company-dabbrev-downcase nil)
-     '(company-dabbrev-ignore-case 'nil))
+     '(company-dabbrev-ignore-case 'nil))))
     ;; Add yasnippet support for all company backends
     ;; https://github.com/syl20bnr/spacemacs/pull/179
-    (defvar company-mode/enable-yas t
-      "Enable yasnippet for all backends.")
-    (defun company-mode/backend-with-yas (backend)
-      (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-          backend
-        (append (if (consp backend) backend (list backend))
-                '(:with company-yasnippet))))))
+    ;; (defvar company-mode/enable-yas t
+    ;;   "Enable yasnippet for all backends.")
+    ;; (defun company-mode/backend-with-yas (backend)
+    ;;   (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+    ;;       backend
+    ;;     (append (if (consp backend) backend (list backend))
+    ;;             '(:with company-yasnippet))))))
 
 ;; backends for company
 (use-package company-shell :ensure t
@@ -503,8 +526,8 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
               ("C-c h" . company-quickhelp-manual-begin))
   :config (company-quickhelp-mode))
 
-(use-package hippie-exp :ensure t
-  :config (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand))
+(use-package hippie-exp :ensure t)
+  ;; :config (add-to-list 'hippie-expand-try-functions-list 'yas-hippie-try-expand))
 
 ;; (use-package material-theme :ensure t
 ;;   :config (load-theme 'material t))
