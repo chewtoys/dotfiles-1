@@ -657,7 +657,23 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
     (define-key view-mode-map (kbd "k") 'previous-line)
     (define-key view-mode-map (kbd "l") 'forward-char)))
 
-(put 'dired-find-alternate-file 'disabled nil)
+(use-package dired-single :ensure t
+  :config
+  (progn
+    (setq dired-single-use-magic-buffer t)
+    (defun my-dired-init ()
+      "Bunch of stuff to run for dired, either immediately or when it's loaded."
+      ;; <add other stuff here>
+      (define-key dired-mode-map [return] 'dired-single-buffer)
+      (define-key dired-mode-map [mouse-1] 'dired-single-buffer-mouse)
+      (define-key dired-mode-map "^"
+        (function
+         (lambda nil (interactive) (dired-single-buffer "..")))))
+    (if (boundp 'dired-mode-map)
+        (my-dired-init)
+      (add-hook 'dired-load-hook 'my-dired-init))
+    (setq-default dired-omit-files-p t) ; Buffer-local variable
+    (setq dired-omit-files "^\\..*$")))
 
 (use-package ivy :ensure t
   :config
