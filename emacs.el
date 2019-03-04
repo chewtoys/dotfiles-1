@@ -442,7 +442,7 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 (use-package clang-format :ensure t :defer t
   :bind (("C-c i" . clang-format-region)
          ("C-c u" . clang-format-buffer))
-  :config (setq clang-format-style-option "llvm"))
+  :config (setq clang-format-style-option "google"))
 
 ;; (use-package yasnippet :ensure t
 ;;   ;; :diminish yas-minor-mode
