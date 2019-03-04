@@ -259,6 +259,8 @@
 (global-set-key (kbd "s-<right>") #'end-of-line)
 (global-set-key (kbd "s-<up>") #'backward-paragraph)
 (global-set-key (kbd "s-<down>") #'forward-paragraph)
+(global-set-key (kbd "M-<up>") #'backward-paragraph)
+(global-set-key (kbd "M-<down>") #'forward-paragraph)
 (global-set-key (kbd "s-}") #'next-buffer)
 (global-set-key (kbd "s-{") #'previous-buffer)
 (global-set-key (kbd "s-w") #'kill-ring-save)
@@ -580,9 +582,6 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 (use-package go-eldoc :ensure t :defer t
   :hook (go-mode . go-eldoc-setup))
 
-(use-package go-guru :ensure t :defer t
-  :hook (go-mode . go-guru-hl-identifier-mode))
-
 (use-package go-playground :ensure t :defer t)
 
 (use-package gorepl-mode :ensure t :defer t
@@ -666,10 +665,6 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 
 (use-package intero :ensure t
   :hook (haskell-mode . intero-mode))
-
-(use-package guru-mode :ensure t
-  :diminish guru
-  :config (guru-global-mode +1))
 
 (use-package solarized-theme :ensure t
   :init (load-theme 'solarized-light)
