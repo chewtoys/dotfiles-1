@@ -683,6 +683,8 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 (use-package dired-single :ensure t
   :config
   (progn
+    (setq insert-directory-program "gls" dired-use-ls-dired t)
+    (setq dired-listing-switches "-lXGh --group-directories-first")
     (setq dired-single-use-magic-buffer t)
     (defun my-dired-init ()
       "Bunch of stuff to run for dired, either immediately or when it's loaded."
