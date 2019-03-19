@@ -112,13 +112,13 @@
   (progn
     (require 'whitespace)
     (global-whitespace-mode +1)
-    (set-face-attribute 'whitespace-space nil :background nil :foreground "light gray")
-    (set-face-attribute 'whitespace-trailing nil :background "tomato" :foreground "light gray")
+    (set-face-attribute 'whitespace-space nil :background nil :foreground "dark slate gray")
+    (set-face-attribute 'whitespace-trailing nil :background "tomato" :foreground "dark slate gray")
     (setq whitespace-style '(face tabs spaces tabs-mark space-mark trailing))
     (setq initial-frame-alist '( (tool-bar-lines . 0) (width . 160) (height . 60)))
     (setq deafult-frame-alist '( (tool-bar-lines . 0) (width . 160) (height . 60)))
     ;; https://github.com/adobe-fonts/source-code-pro
-    (set-default-font "Source Code Pro 14" nil t)))
+    (set-default-font "Fira Code 14" nil t)))
 
 (if (eq system-type 'windows-nt)
     (set-default-font "Fira Code 12" nil t))
@@ -747,6 +747,8 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 (use-package smartparens :ensure t
   :config
   (smartparens-global-mode))
+
+(use-package ledger-mode :ensure t)
 
 (defvar before-user-init-time (current-time)
   "Value of `current-time' when Emacs begins loading `user-init-file'.")
