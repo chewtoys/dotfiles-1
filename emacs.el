@@ -118,7 +118,7 @@
     (setq initial-frame-alist '( (tool-bar-lines . 0) (width . 160) (height . 60)))
     (setq deafult-frame-alist '( (tool-bar-lines . 0) (width . 160) (height . 60)))
     ;; https://github.com/adobe-fonts/source-code-pro
-    (set-default-font "Fira Code 14" nil t)))
+    (set-default-font "Fira Code 15" nil t)))
 
 (if (eq system-type 'windows-nt)
     (set-default-font "Fira Code 12" nil t))
@@ -525,9 +525,11 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
          :map company-search-map
          ("C-n" . company-select-next)
          ("C-p" . company-select-previous))
+ :hook
+  (progn-mode-hook . (company-mode))
   :config
   (progn
-    (global-company-mode +1)
+    ;; (global-company-mode +1)
     (setq company-dabbrev-downcase nil)
     (custom-set-variables
      '(company-minimum-prefix-length 3)
