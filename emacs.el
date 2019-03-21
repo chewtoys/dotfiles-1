@@ -6,19 +6,34 @@
 (when (file-exists-p custom-file)
   (load custom-file t))
 
-(require 'package)
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-(package-initialize nil)
-(setq package-enable-at-startup nil)
+;; Automatic installation and launch of straight.el
+(let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
+      (bootstrap-version 3))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+;; use-package
+(straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
 
-;; Bootstrap `use-package'
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+;; (require 'package)
+;; (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+;; (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+;; (package-initialize nil)
+;; (setq package-enable-at-startup nil)
 
-(setq use-package-expand-minimally t)
-(setq package-enable-at-startup nil)
+;; ;; Bootstrap `use-package'
+;; (unless (package-installed-p 'use-package)
+;;   (package-refresh-contents)
+;;   (package-install 'use-package))
+
+;; (setq use-package-expand-minimally t)
+;; (setq package-enable-at-startup nil)
 
 (setq byte-compile-warnings '(not free-vars unresolved noruntime lexical make-local))
 
@@ -284,9 +299,9 @@
 (defconst juev/emacs-directory (concat (getenv "HOME") "/.emacs.d/"))
 (defun juev/emacs-subdirectory (d) (expand-file-name d juev/emacs-directory))
 
-(defun juev/autoinsert-yas-expand()
-  "Replace text in yasnippet template."
-  (yas-expand-snippet (buffer-string) (point-min) (point-max)))
+;; (defun juev/autoinsert-yas-expand()
+;;   "Replace text in yasnippet template."
+;;   (yas-expand-snippet (buffer-string) (point-min) (point-max)))
 
 ;; (custom-set-variables
 ;;  '(auto-insert 'other)
@@ -316,8 +331,8 @@
     (define-auto-insert "\\.html?$" ["default-html.html" juev/autoinsert-yas-expand])))
 
 (when (eq system-type 'darwin)
-  (setq mac-command-modifier 'meta)
-  (setq mac-option-modifier 'none)
+  ;; (setq mac-command-modifier 'meta)
+  ;; (setq mac-option-modifier 'none)
   ;; Make mouse wheel / trackpad scrolling less jerky
   (setq mouse-wheel-scroll-amount '(1
                                     ((shift) . 5)
@@ -333,9 +348,9 @@
   (global-set-key (kbd "M-ˍ") 'ns-do-hide-others) ;; what describe-key reports for cmd-option-h
   )
 
-(use-package no-littering :ensure t)
+(use-package no-littering)
 (use-package benchmark-init
-  :ensure t
+
   :config
   ;; To disable collection of benchmark data after init is done.
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
@@ -343,25 +358,25 @@
 (use-package server
   :config (or (server-running-p) (server-mode)))
 
-(use-package diminish :ensure t)
-(use-package bind-key :ensure t)
+(use-package diminish)
+(use-package bind-key)
 
-;; (use-package realgud :ensure t)
-(use-package command-log-mode :ensure t)
+;; (use-package realgud)
+(use-package command-log-mode)
 
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns))
-  :ensure t
+
   :custom
   (exec-path-from-shell-check-startup-files nil)
   :config
   (exec-path-from-shell-initialize))
 
-(use-package better-defaults :ensure t
+(use-package better-defaults
   :config (when window-system
             (menu-bar-mode)))
 
-(use-package ido-vertical-mode :ensure t
+(use-package ido-vertical-mode
   :init
   (progn
     (ido-mode t)
@@ -372,12 +387,12 @@
     (setq ido-enable-flex-matching t
           ido-everywhere t)))
 
-(use-package rainbow-delimiters :ensure t
+(use-package rainbow-delimiters
   :hook
   ((clojure-mode . rainbow-delimiters-mode)
    (prog-mode . rainbow-delimiters-mode)))
 
-(use-package projectile :ensure t
+(use-package projectile
   ;; :diminish projectile-mode
   :config (projectile-global-mode))
 
@@ -389,9 +404,9 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
     (magit-restore-window-configuration)
     (mapc #'kill-buffer buffers)))
 
-;; (use-package git-commit :ensure t)
+;; (use-package git-commit)
 
-(use-package magit :ensure t
+(use-package magit
   :defer 5
   :bind (("C-x v s" . magit-status)
          ("C-x v p" . magit-push))
@@ -405,24 +420,24 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
     (bind-key "q" #'juev/magit-kill-buffers magit-status-mode-map)
     (add-to-list 'magit-no-confirm 'stage-all-changes)))
 
-(use-package magit-filenotify :ensure t
+(use-package magit-filenotify
   :after magit)
-(use-package magit-find-file :ensure t
+(use-package magit-find-file
   :after magit)
 
-(use-package markdown-mode :ensure t
+(use-package markdown-mode
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
   :custom (markdown-command "multimarkdown"))
 
-(use-package yaml-mode :ensure t
+(use-package yaml-mode
   :mode (("\\.yml$" . yaml-mode))
   :hook
   (yaml-mode-hook . (lambda ()
                       (electric-indent-local-mode -1))))
 
-(use-package mmm-mode :ensure t
+(use-package mmm-mode
   :diminish mmm-mode
   :defer 5
   :config
@@ -436,29 +451,29 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
         :back "^---")))
     (mmm-add-mode-ext-class 'markdown-mode nil 'yaml-header-matters)))
 
-(use-package which-key :ensure t
+(use-package which-key
   :diminish which-key-mode
   :init
   (progn
     (which-key-setup-side-window-right)
     (which-key-mode)))
 
-(use-package rust-mode :ensure t
+(use-package rust-mode
   :mode "\\.rs\\'"
   :config
-  (use-package flycheck-rust :ensure t
+  (use-package flycheck-rust
     :after flycheck
     :commands flycheck-rust-setup
     :init (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
-  (use-package cargo :ensure t
+  (use-package cargo
     :commands cargo-minor-mode
     :init (add-hook 'rust-mode-hook #'cargo-minor-mode))
-  (use-package racer :ensure t
+  (use-package racer
     :commands racer-mode
     :hook (rust-mode . racer-mode)
     :config (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)))
 
-(use-package guess-language :ensure t
+(use-package guess-language
   :commands guess-language-mode
   :hook (text-mode-hook . guess-language-mode)
   :config
@@ -466,7 +481,7 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
         guess-language-min-paragraph-length 35)
   :diminish guess-language-mode)
 
-(use-package helpful :ensure t
+(use-package helpful
   :bind (("C-h k" . helpful-key)
          ("C-h f" . helpful-callable)
          ("C-h v" . helpful-variable)
@@ -475,44 +490,44 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
   (:map emacs-lisp-mode-map
         ("C-c C-d" . helpful-at-point)))
 
-(use-package ace-window :ensure t
+(use-package ace-window
   :bind (("M-o" . ace-window)))
 
-(use-package expand-region :ensure t
+(use-package expand-region
   :bind ("C-=" . er/expand-region))
 
-(use-package ansible :ensure t :defer t
+(use-package ansible  :defer t
   :hook
   (yaml-mode-hook . (lambda ()
                       (ansible 1)))
   :config (setq ansible::vault-password-file "~/.vault_pass"))
 
-(use-package git-gutter :ensure t
+(use-package git-gutter
   :diminish 'git-gutter-mode
   :config (global-git-gutter-mode +1))
 
-(use-package clang-format :ensure t :defer t
+(use-package clang-format  :defer t
   :bind (("C-c i" . clang-format-region)
          ("C-c u" . clang-format-buffer))
   :config (setq clang-format-style-option "google"))
 
-(use-package yasnippet :ensure t
-  :config
-  (yas-global-mode 1)
-  :diminish yas-minor-mode
-  ;; :bind (:map yas-minor-mode-map
-  ;;             ("C-x i i" . yas-insert-snippet)
-  ;;             ("C-x i n" . yas-new-snippet)
-  ;;             ("C-x i v" . yas-visit-snippet-file)
-  ;;             ("C-x i g" . yas-reload-all))
-  :init (use-package yasnippet-snippets :ensure t)
-  :config
-  (progn
-    ;; (yas-reload-all)
-    (add-to-list 'yas-snippet-dirs (locate-user-emacs-file "snippets"))
-    (yas-global-mode 1)))
+;; (use-package yasnippet
+;;   :config
+;;   (yas-global-mode 1)
+;;   :diminish yas-minor-mode
+;;   ;; :bind (:map yas-minor-mode-map
+;;   ;;             ("C-x i i" . yas-insert-snippet)
+;;   ;;             ("C-x i n" . yas-new-snippet)
+;;   ;;             ("C-x i v" . yas-visit-snippet-file)
+;;   ;;             ("C-x i g" . yas-reload-all))
+;;   :init (use-package yasnippet-snippets)
+;;   :config
+;;   (progn
+;;     ;; (yas-reload-all)
+;;     (add-to-list 'yas-snippet-dirs (locate-user-emacs-file "snippets"))
+;;     (yas-global-mode 1)))
 
-(use-package company :ensure t
+(use-package company
   :diminish company-mode
   :demand t
   :bind (("C-c /" . company-files)
@@ -536,41 +551,41 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
      '(company-idle-delay 0)
      '(company-selection-wrap-around t)
      '(company-dabbrev-downcase nil)
-     '(company-dabbrev-ignore-case 'nil))
+     '(company-dabbrev-ignore-case 'nil))))
     ;; Add yasnippet support for all company backends
     ;; https://github.com/syl20bnr/spacemacs/pull/179
-    (defvar company-mode/enable-yas t
-      "Enable yasnippet for all backends.")
-    (defun company-mode/backend-with-yas (backend)
-      (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
-          backend
-        (append (if (consp backend) backend (list backend))
-                '(:with company-yasnippet))))))
+    ;; (defvar company-mode/enable-yas t
+    ;;   "Enable yasnippet for all backends.")
+    ;; (defun company-mode/backend-with-yas (backend)
+    ;;   (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+    ;;       backend
+    ;;     (append (if (consp backend) backend (list backend))
+    ;;             '(:with company-yasnippet))))))
 
 ;; backends for company
-(use-package company-shell :ensure t
+(use-package company-shell
   :config (add-to-list 'company-backends 'company-shell))
 
-(use-package company-web :ensure t
+(use-package company-web
   :config (add-to-list 'company-backends 'company-web-html))
 
-(use-package company-quickhelp :ensure t
+(use-package company-quickhelp
   :bind (:map company-active-map
               ("C-c h" . company-quickhelp-manual-begin))
   :config (company-quickhelp-mode))
 
-(use-package hippie-exp :ensure t)
+(use-package hippie-exp)
 
-(use-package neotree :ensure t
+(use-package neotree
   :bind ("C-c C-n" . neotree-toggle)
   :config
   (progn
     (setq neo-smart-open t)
     (setq projectile-switch-project-action 'neotree-projectile-action)))
 
-(use-package flycheck :ensure t)
+(use-package flycheck)
 
-(use-package go-mode :ensure t :defer t
+(use-package go-mode  :defer t
   :mode ("\\.go\\'" . go-mode)
   :preface
   (defun go/init-company ()
@@ -579,11 +594,11 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
            company-yasnippet))
     (company-mode)
 
-    (use-package company-go :ensure t
+    (use-package company-go
       :after company
       :init
       (push 'company-go company-backends)
-      ))
+     ))
 
   (defun go/setup-env-var (&optional gopath)
     (unless gopath (setq gopath (concat (getenv "HOME") "/go")))
@@ -618,49 +633,49 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
         ("C-c t b" . go-test-current-benchmark)
         ("C-c t x" . go-run)))
 
-;; (use-package go-snippets :ensure t :defer t
+;; (use-package go-snippets  :defer t
 ;;   :after yasnippets
 ;;   :config
 ;;   (go-snippets-initialize))
 
-(use-package go-dlv :ensure t :defer t)
+(use-package go-dlv  :defer t)
 
-(use-package go-gen-test :ensure t :defer t)
+(use-package go-gen-test  :defer t)
 
-(use-package go-eldoc :ensure t :defer t
+(use-package go-eldoc  :defer t
   :hook (go-mode . go-eldoc-setup))
 
-(use-package go-playground :ensure t :defer t)
+(use-package go-playground  :defer t)
 
-(use-package gorepl-mode :ensure t :defer t
+(use-package gorepl-mode  :defer t
   :hook (go-mode . gorepl-mode))
 
-(use-package protobuf-mode :ensure t :defer t
+(use-package protobuf-mode  :defer t
   :mode ("\\.proto\\'" . protobuf-mode))
 
-(use-package spaceline :ensure t
+(use-package spaceline
   :config
   (progn
     (require 'spaceline-config)
     (spaceline-emacs-theme)))
 
-(use-package vlf :ensure t
+(use-package vlf
   :config
   (progn
     (require 'vlf-setup)
     (custom-set-variables
      '(vlf-application 'dont-ask))))
 
-(use-package logview :ensure t
+(use-package logview
   :defer t)
 
-(use-package log4j-mode :ensure t
+(use-package log4j-mode
   :disabled t
   :hook
   ((log4j-mode-hook . view-mode)
    (log4j-mode-hook . read-only-mode)))
 
-(use-package view :ensure t
+(use-package view
   :config
   (progn
     (defun View-goto-line-last (&optional line)
@@ -682,7 +697,7 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
     (define-key view-mode-map (kbd "k") 'previous-line)
     (define-key view-mode-map (kbd "l") 'forward-char)))
 
-(use-package dired-single :ensure t
+(use-package dired-single
   :config
   (progn
     (setq insert-directory-program "gls" dired-use-ls-dired t)
@@ -702,40 +717,40 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
     (setq-default dired-omit-files-p t) ; Buffer-local variable
     (setq dired-omit-files "^\\..*$")))
 
-(use-package ivy :ensure t
+(use-package ivy
   :config
   (progn
     (setq ivy-use-virtual-buffers t)
     (setq ivy-count-format "(%d/%d) ")
-    (use-package swiper :ensure t
+    (use-package swiper
       :bind (("C-S-s" . isearch-forward)            ;; Keep isearch-forward on Shift-Ctrl-s
              ("C-s" . swiper)                       ;; Use swiper for search and reverse search
              ("C-S-r" . isearch-backward)           ;; Keep isearch-backward on Shift-Ctrl-r
              ("C-r" . swiper)))
-    (use-package counsel :ensure t)
-    (use-package avy :ensure t
+    (use-package counsel)
+    (use-package avy
       :bind (("C-:" . avy-goto-char)))))
 
-(use-package prescient :ensure t
+(use-package prescient
   :defer t
   :config (prescient-persist-mode))
-(use-package ivy-prescient :ensure t
+(use-package ivy-prescient
   :after ivy
   :config (ivy-prescient-mode))
-(use-package company-prescient :ensure t
+(use-package company-prescient
   :after company
   :config (company-prescient-mode))
 
-(use-package haskell-mode :ensure t
+(use-package haskell-mode
   :hook (haskell-mode . haskell-indentation-mode))
 
-(use-package intero :ensure t
+(use-package intero
   :hook (haskell-mode . intero-mode))
 
-(use-package material-theme :ensure t
+(use-package material-theme
   :init (load-theme 'material t))
 
-;; (use-package solarized-theme :ensure t
+;; (use-package solarized-theme
 ;;   :init (load-theme 'solarized-light)
 ;;   :custom
 ;;   (solarized-distinct-fringe-background t)
@@ -748,11 +763,15 @@ Attribution: URL `https://manuel-uberti.github.io/emacs/2018/02/17/magit-bury-bu
 ;;   (solarized-height-plus-3 1.0)
 ;;   (solarized-height-plus-4 1.0))
 
-(use-package smartparens :ensure t
+(use-package smartparens
   :config
   (smartparens-global-mode))
 
-(use-package ledger-mode :ensure t)
+(use-package ledger-mode)
+
+(use-package find-file-in-project
+  :bind
+  ("C-c ." . find-file-in-project))
 
 (defvar before-user-init-time (current-time)
   "Value of `current-time' when Emacs begins loading `user-init-file'.")
