@@ -52,7 +52,7 @@
 	# Make `git rebase` safer on OS X
 	# More info: <http://www.git-tower.com/blog/make-git-rebase-safe-on-osx/>
 	trustctime = false
-	editor = "emacsclient"
+	editor = "emacsclient -t"
 	autocrlf = input
 	precomposeunicode = false
 	quotepath = false
@@ -116,4 +116,5 @@
 	prompt = false
 
 [mergetool "ediff"]
-cmd = emacsclient -c -a \"\" --eval \"(ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \\\"$BASE\\\" nil \\\"$MERGED\\\")\"
+	cmd = /usr/local/bin/ediff-merge-script $LOCAL $REMOTE $MERGED $BASE
+	trustExitCode = true

@@ -9,3 +9,4 @@ ln -sf $(pwd)/tmux.conf ~/.tmux.conf
 ln -sf $(pwd)/zshrc ~/.zshrc
 ln -sf $(pwd)/zprofile ~/.zprofile
 ln -sf $(pwd)/colordiffrc ~/.colordiffrc
+ln -sf $(pwd)/ediff-merge-script /usr/local/bin/ediff-merge-script
