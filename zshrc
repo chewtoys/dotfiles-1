@@ -102,6 +102,11 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+# Load aliases
+if [ -f ~/.aliases ]; then
+    . ~/.aliases
+fi
+
 # Add cargo to the PATH
 source $HOME/.cargo/env
 
