@@ -1,68 +1,108 @@
-zstyle :omz:plugins:ssh-agent agent-forwarding on
-zstyle :omz:plugins:ssh-agent identities id_rsa work
+# If you come from bash you might have to change your $PATH.
+# export PATH=$HOME/bin:/usr/local/bin:$PATH
 
-source /usr/local/share/antigen/antigen.zsh
+PATH="/usr/local/bin:$(getconf PATH)"
 
-# Load the oh-my-zsh's library
-antigen use oh-my-zsh
+# Path to your oh-my-zsh installation.
+export ZSH="/Users/juev/.oh-my-zsh"
 
-# from oh-my-zsh
-antigen bundle cargo
-antigen bundle colorize
-antigen bundle extract
-antigen bundle git
-antigen bundle golang
-antigen bundle rust
-antigen bundle vscode
-antigen bundle z
-antigen bundle ssh-agent
+# Set name of the theme to load --- if set to "random", it will
+# load a random theme each time oh-my-zsh is loaded, in which case,
+# to know which specific one was loaded, run: echo $RANDOM_THEME
+# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
+# ZSH_THEME="robbyrussell"
+ZSH_THEME="spaceship"
 
-# Syntax highlighting bundle.
-antigen bundle zsh-users/zsh-syntax-highlighting
-# Extra zsh completions
-antigen bundle zsh-users/zsh-completions
-# Load the theme
-antigen theme https://github.com/halfo/lambda-mod-zsh-theme lambda-mod
+# Set list of themes to pick from when loading at random
+# Setting this variable when ZSH_THEME=random will cause zsh to load
+# a theme from this variable instead of looking in ~/.oh-my-zsh/themes/
+# If set to an empty array, this variable will have no effect.
+# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
 
-# Tell antigen that you're done
-antigen apply
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
 
-zstyle ':completion:*' rehash true
+# Uncomment the following line to use hyphen-insensitive completion.
+# Case-sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
 
-local aliasfile="${HOME}/.dotfiles/bash/aliases"
+# Uncomment the following line to disable bi-weekly auto-update checks.
+DISABLE_AUTO_UPDATE="true"
 
-if [ -r ${aliasfile} ]; then
-  source ${aliasfile}
-fi
+# Uncomment the following line to change how often to auto-update (in days).
+# export UPDATE_ZSH_DAYS=13
 
-if [ -r ~/.private ]; then
-  source ~/.private
-fi
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
 
-export LC_CTYPE=en_US.UTF-8
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
+
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+# COMPLETION_WAITING_DOTS="true"
+
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# You can set one of the optional three formats:
+# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# or set a custom format using the strftime function format specifications,
+# see 'man strftime' for details.
+# HIST_STAMPS="mm/dd/yyyy"
+
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
+
+# Which plugins would you like to load?
+# Standard plugins can be found in ~/.oh-my-zsh/plugins/*
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(
+    z
+    git
+    osx
+)
+
+source $ZSH/oh-my-zsh.sh
+
+# User configuration
+
+# export MANPATH="/usr/local/man:$MANPATH"
+
+# You may need to manually set your language environment
 export LANG=en_US.UTF-8
-export LESSCHARSET=utf-8
 
-# added by travis gem
-[ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
+# Preferred editor for local and remote sessions
+# if [[ -n $SSH_CONNECTION ]]; then
+#   export EDITOR='vim'
+# else
+#   export EDITOR='mvim'
+# fi
 
-# rbenv
-if type "rbenv" > /dev/null; then
-  eval "$(rbenv init -)"
-fi
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
 
-fg() {
-    if [[ $# -eq 1 && $1 = - ]]; then
-        builtin fg %-
-    else
-        builtin fg %"$@"
-    fi
-}
+# ssh
+export SSH_KEY_PATH="~/.ssh/rsa_id"
 
- function diff {
-     colordiff -u "$@" | less -RF
- }
+# Set personal aliases, overriding those provided by oh-my-zsh libs,
+# plugins, and themes. Aliases can be placed here, though oh-my-zsh
+# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# For a full list of active aliases, run `alias`.
+#
+# Example aliases
+# alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# precmd() { print "" }
-# PS1="⟩⟩⟩ "
-# RPS1="%{$fg[magenta]%}%20<...<%~%<<%{$reset_color%}"
+# Add cargo to the PATH
+source $HOME/.cargo/env
+
+export EDITOR=emacsclient
