@@ -11,3 +11,4 @@ ln -sf $(pwd)/zprofile ~/.zprofile
 ln -sf $(pwd)/colordiffrc ~/.colordiffrc
 ln -sf $(pwd)/ediff-merge-script /usr/local/bin/ediff-merge-script
 ln -sf $(pwd)/aliases  ~/.aliases
+ln -sf $(pwd)/stack ~/.stack
