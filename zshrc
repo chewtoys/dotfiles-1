@@ -4,7 +4,7 @@
 PATH="/usr/local/bin:$(getconf PATH)"
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/juev/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -93,6 +93,11 @@ export LANG=en_US.UTF-8
 # ssh
 export SSH_KEY_PATH="~/.ssh/rsa_id"
 
+# Load private file
+if [ -f ~/.private ]; then
+  source ~/.private
+fi
+
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -104,10 +109,18 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 
 # Load aliases
 if [ -f ~/.aliases ]; then
-    . ~/.aliases
+    source ~/.aliases
 fi
 
 # Add cargo to the PATH
 source $HOME/.cargo/env
+
+if [ -f /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+  source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
+
+if [ -f /usr/local/share/zsh-completions ]; then
+  fpath=(/usr/local/share/zsh-completions $fpath)
+fi
 
 export EDITOR=emacsclient
