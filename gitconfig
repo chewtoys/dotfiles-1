@@ -52,7 +52,7 @@
 	# Make `git rebase` safer on OS X
 	# More info: <http://www.git-tower.com/blog/make-git-rebase-safe-on-osx/>
 	trustctime = false
-	editor = "emacsclient -t"
+	editor = "vim"
 	autocrlf = input
 	precomposeunicode = false
 	quotepath = false
@@ -92,8 +92,8 @@
 
 	# Include summaries of merged commits in newly created merge commit messages
 	log = true
-        # tool = vimdiff
-        tool = ediff
+        tool = vimdiff
+        # tool = ediff
 	conflictstyle = diff3
 
 [push]
@@ -103,7 +103,7 @@
 	default = simple
 
 [github]
-	user = Juev
+	user = juev
 [credential]
 	helper = osxkeychain
 [pull]
