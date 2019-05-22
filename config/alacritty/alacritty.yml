@@ -49,7 +49,7 @@ window:
   # Values for `decorations` (macOS only):
   #     - transparent: Title bar, transparent background and title bar buttons
   #     - buttonless: Title bar, transparent background, but no title bar buttons
-  decorations: buttonless
+  decorations: none
 
   # When true, alacritty starts maximized.
   start_maximized: true
@@ -73,7 +73,7 @@ scrolling:
   faux_multiplier: 3
 
   # Scroll to the bottom when new text is written to the terminal.
-  auto_scroll: false
+  auto_scroll: true
 
 # Spaces per Tab (changes require restart)
 #
@@ -300,7 +300,7 @@ mouse:
   triple_click: { threshold: 300 }
 
   # If this is `true`, the cursor is temporarily hidden when typing.
-  hide_when_typing: false
+  hide_when_typing: true
 
   url:
     # URL launcher
@@ -314,8 +314,8 @@ mouse:
     #   - (macOS) open
     #   - (Linux) xdg-open
     #   - (Windows) explorer
-    #launcher:
-    #  program: xdg-open
+    launcher:
+      program: open
     #  args: []
 
     # URL modifiers
@@ -491,7 +491,6 @@ key_bindings:
   - { key: C,        mods: Command, action: Copy                             }
   - { key: H,        mods: Command, action: Hide                             }
   - { key: Q,        mods: Command, action: Quit                             }
-  - { key: W,        mods: Command, action: Quit                             }
 
   - { key: Paste,                   action: Paste                            }
   - { key: Copy,                    action: Copy                             }
