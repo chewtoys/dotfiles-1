@@ -9,3 +9,5 @@ export NVM_DIR="$HOME/.nvm"
 [ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
 
 eval "$(rbenv init -)"
+
+[ -f /usr/local/etc/profile.d/z.sh ] && source /usr/local/etc/profile.d/z.sh
