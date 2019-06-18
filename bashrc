@@ -106,6 +106,8 @@ for file in ~/.bash/{bash_prompt,aliases,functions,path,exports,services}; do
 done
 unset file
 
+[[ -r ~/.bash_custom ]] && [[ -f ~/.bash_custom ]] && source ~/.bash_custom
+
 # Case-insensitive globbing (used in pathname expansion)
 shopt -s nocaseglob
 
