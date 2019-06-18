@@ -6,11 +6,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 
 # added by travis gem
-[ -f /Users/juev/.travis/travis.sh ] && source /Users/juev/.travis/travis.sh
+[ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
 
-# autojump
-[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
-
-eval "$(stack --bash-completion-script stack)"
-source /usr/local/etc/bash_completion.d/git-completion.bash
-source $(brew --prefix autoenv)/activate.sh
+eval "$(rbenv init -)"
