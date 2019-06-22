@@ -3,4 +3,4 @@
 echo "Installing HomeBrew"
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 echo "Installing sofware"
-brew install autoconf antigen bash bash-completion bat cmake coreutils emacs fish fortune gdbm gettext git glib gmp gnu-tar gnutls go haskell-stack jemalloc libevent libffi libidn2 libpng libssh2 libtasn1 libtermkey libunistring libuv libvterm luajit maven micro midnight-commander msgpack ncurses neovim nettle openssl p11-kit pandoc pcre pcre2 pkg-config pv python@2 rbenv readline reattach-to-user-namespace ripgrep rlwrap ruby-build rustup-init s-lang sbcl sqlite telnet the_silver_searcher tmux tree unibilium upx wget xz z zsh
+brew install bash bash-completion@2 bat coreutils fortune git go haskell-stack maven pandoc rbenv pyenv ripgrep rlwrap rustup-init the_silver_searcher tmux tree upx wget xz z
