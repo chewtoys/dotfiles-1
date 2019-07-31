@@ -10,4 +10,4 @@ fi
         . $(brew --prefix)/etc/bash_completion.d/git-completion.bash
 }
 
-export PATH="/usr/local/sbin:$PATH"
+if [ -e ~/.nix-profile/etc/profile.d/nix.sh ]; then . ~/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
