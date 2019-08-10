@@ -7,6 +7,8 @@ export EDITOR="emacsclient -nc" # $EDITOR opens in terminal
 
 export TERMINAL="urxvt"
 
+export PROMPT_COMMAND='history -a'
+
 # Larger bash history (allow 32³ entries; default is 500)
 export HISTSIZE=50000000
 export HISTFILESIZE=$HISTSIZE
