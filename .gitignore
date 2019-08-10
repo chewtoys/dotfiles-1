@@ -1,3 +1,4 @@
 lein/repl-port
 lein/self-installs
 emacs.d/
+stack/
