@@ -32,11 +32,7 @@ export DBUS_SESSION_BUS_ADDRESS=unix:path=/var/run/user/$(id -u)/bus
 export GTK_IM_MODULE=ibus
 export QT_IM_MODULE=ibus
 export XMODIFIERS="@im=ibus"
-<<<<<<< HEAD
 
 export GOPROXY=https://proxy.golang.org
-||||||| merged common ancestors
-=======
 
 export WEBSITE=~/Projects/juev.org/_posts
->>>>>>> Added new-post script
