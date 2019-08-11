@@ -1,0 +1,5 @@
+# Java
+#export JAVA_HOME=$HOME/.jdk/jdk8
+
+export PYENV_ROOT=$HOME/.pyenv
+export PATH=~/bin:$PYENV_ROOT/bin:$GOPATH/bin:/usr/local/bin/:$PATH:~/.cargo/bin/

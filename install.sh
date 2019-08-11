@@ -1,18 +1,15 @@
 #!/bin/sh
 # set -x
 
-ln -sf $(pwd)/bin_files ~/bin
-ln -sf $(pwd)/dircolors ~/.dircolors
-ln -sf $(pwd)/gemrc ~/.gemrc
-ln -sf $(pwd)/gitconfig ~/.gitconfig
-ln -sf $(pwd)/gitignore ~/.gitignore
-ln -sf $(pwd)/inputrc ~/.inputrc
-ln -sf $(pwd)/tmux.conf ~/.tmux.conf
-ln -sf $(pwd)/colordiffrc ~/.colordiffrc
-ln -sf $(pwd)/ediff-merge-script /usr/local/bin/ediff-merge-script
-ln -sf $(pwd)/aliases ~/.aliases
-ln -sf $(pwd)/bash_files ~/.bash
-ln -sf $(pwd)/bashrc ~/.bashrc
-ln -sf $(pwd)/bash_profile ~/.bash_profile
-
-cp -r $(pwd)/stack ~/.stack
+ln -sf $(pwd)/bin $HOME/bin
+ln -sf $(pwd)/dircolors $HOME/.dircolors
+ln -sf $(pwd)/gemrc $HOME/.gemrc
+ln -sf $(pwd)/gitconfig $HOME/.gitconfig
+ln -sf $(pwd)/gitignore $HOME/.gitignore
+ln -sf $(pwd)/inputrc $HOME/.inputrc
+ln -sf $(pwd)/tmux.conf $HOME/.tmux.conf
+ln -sf $(pwd)/colordiffrc $HOME/.colordiffrc
+ln -sf $(pwd)/aliases $HOME/.aliases
+ln -sf $(pwd)/bash $HOME/.bash
+ln -sf $(pwd)/bashrc $HOME/.bashrc
+ln -sf $(pwd)/bash_profile $HOME/.bash_profile
