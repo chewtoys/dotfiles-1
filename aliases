@@ -128,3 +128,5 @@ alias unlock="loginctl unlock-sessions"
 
 alias less="bat -p"
 alias cat="bat -p"
+
+alias please="sudo"
