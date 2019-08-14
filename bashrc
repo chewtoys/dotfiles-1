@@ -129,3 +129,5 @@ done
 
 # print a fortune when the terminal opens
 fortune -a -s
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
