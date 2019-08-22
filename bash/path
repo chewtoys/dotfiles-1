@@ -3,4 +3,4 @@
 
 export PYENV_ROOT=$HOME/.pyenv
 export GNU=/usr/local/opt/coreutils/libexec/gnubin:/usr/local/opt/gnu-tar/libexec/gnubin:/usr/local/opt/gnu-sed/libexec/gnubin
-export PATH=~/bin:$PYENV_ROOT/bin:$GNU:$PATH:~/.cargo/bin/:~/go/bin
+export PATH=~/bin:/.local/bin:$PYENV_ROOT/bin:$GNU:$PATH:~/.cargo/bin/:~/go/bin
