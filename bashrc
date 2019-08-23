@@ -131,3 +131,5 @@ done
 fortune -a -s
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+__git_complete g __git_main

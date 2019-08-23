@@ -1,39 +1,16 @@
 [include]
-        path = ~/.gitprivate
+	path = ~/.gitprivate
 
 [alias]
-	# View abbreviated SHA, description, and history graph of the latest 20 commits
 	l = log --pretty=oneline -n 20 --graph --abbrev-commit
-
-	# View the current working tree status using the short format
 	s = status -s
-
-	# Show the diff between the latest commit and the current state
 	d = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
-
-	# Pull in remote changes for the current repository and all its submodules
-	p = !"git pull; git submodule foreach git pull origin master"
-
-	# Clone a repository including all submodules
-	c = clone --recursive
-
-	# Commit all changes
-	ca = !git add -A && git commit -av
-
-	# Show verbose output about tags, branches or remotes
-	tags = tag -l
-	branches = branch -a
-	remotes = remote -v
-
-	# Amend the currently staged files to the latest commit
-	amend = commit --amend --reuse-message=HEAD
-
-	# Interactive rebase with the given number of latest commits
-	reb = "!r() { git rebase -i HEAD~$1; }; r"
-
-	# Remove branches that have already been merged with master
-	# a.k.a. ‘delete merged’
-	dm = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
+	amend = !git add -A && git commit --amend --no-edit
+	p = !git push origin $(git rev-parse --abbrev-ref HEAD)
+	c = "!git add -A && git commit -m "
+	cc = "!git commit --amend -m "
+	co = !git checkout
+	f = !git fetch --all && git rebase origin/master
 
 [apply]
 	# Detect whitespace errors when applying a patch
@@ -79,21 +56,18 @@
 	untracked = cyan
 
 [diff]
-
 	# Detect copies as well as renames
 	renames = copies
 
 [help]
-
 	# Automatically correct and execute mistyped commands
 	autocorrect = 1
 
 [merge]
-
 	# Include summaries of merged commits in newly created merge commit messages
 	log = true
-        tool = vimdiff
-        # tool = ediff
+	tool = vimdiff
+	# tool = ediff
 	conflictstyle = diff3
 
 [push]
