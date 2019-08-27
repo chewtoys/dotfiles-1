@@ -130,6 +130,4 @@ done
 # print a fortune when the terminal opens
 fortune -a -s
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
 __git_complete g __git_main
