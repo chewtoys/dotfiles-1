@@ -3,6 +3,7 @@
 
 [alias]
 	l = log --pretty=oneline -n 20 --graph --abbrev-commit
+	d = diff
 	s = status --short --branch --ignore-submodules=untracked
 	amend = commit --amend --no-edit
 	p = !git push origin $(git rev-parse --abbrev-ref HEAD)
