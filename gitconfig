@@ -16,6 +16,8 @@
 	delete = branch -D
 	pr = "!git fetch origin pull/$1/head:pr$1"
 	sync = "!git pull -q -r origin master"
+	m = "!git checkout master && git pull"
+
 [apply]
 	# Detect whitespace errors when applying a patch
 	whitespace = fix

@@ -90,3 +90,4 @@ function g {
 alias gp='git p'
 alias gc='git c'
 alias gco='git co'
+alias gm='git m'
