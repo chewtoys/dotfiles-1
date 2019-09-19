@@ -192,11 +192,11 @@ getcertnames() {
 
 # `v` with no arguments opens the current directory in Vim, otherwise opens the
 # given location
-v() {
+vim() {
 	if [ $# -eq 0 ]; then
-		vim .
+		nvim .
 	else
-		vim "$@"
+		nvim "$@"
 	fi
 }
 
