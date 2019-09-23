@@ -2,5 +2,5 @@
 #export JAVA_HOME=$HOME/.jdk/jdk8
 
 export PYENV_ROOT=$HOME/.pyenv
-export GNU=/usr/local/opt/coreutils/libexec/gnubin:/usr/local/opt/gnu-tar/libexec/gnubin:/usr/local/opt/gnu-sed/libexec/gnubin
+export GNU=/usr/local/opt/coreutils/libexec/gnubin:/usr/local/opt/gnu-tar/libexec/gnubin:/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/findutils/libexec/gnubin
 export PATH=~/.roswell/bin:~/bin:/.local/bin:$PYENV_ROOT/bin:$GNU:$PATH:~/.cargo/bin/:~/go/bin
