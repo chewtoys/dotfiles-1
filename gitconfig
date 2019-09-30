@@ -2,14 +2,14 @@
 	path = ~/.gitprivate
 
 [alias]
-	l = log --pretty=oneline -n 20 --graph --abbrev-commit
+	l = log --pretty=oneline -n 10
 	d = diff
 	s = status --short --branch --ignore-submodules=untracked
 	amend = "!git add . && git commit --amend --no-edit"
 	p = "!git push origin $(git rev-parse --abbrev-ref HEAD)"
 	c = "!git add -A && git commit -m "
 	cc = "!git commit --amend -m "
-	co = !git checkout
+	co = checkout
 	f = !git fetch --all && git rebase origin/master
 	undo = reset HEAD~
 	prune = "!git co master && git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
@@ -17,6 +17,11 @@
 	pr = "!git fetch origin pull/$1/head:pr$1"
 	sync = "!git pull -q -r origin master"
 	m = "!git checkout master && git pull"
+	last = log -1 HEAD
+	pr = pull --rebase
+	br = branch
+	a = add .
+	rh = reset --hard
 
 [apply]
 	# Detect whitespace errors when applying a patch
@@ -98,7 +103,3 @@
 [mergetool "ediff"]
 	cmd = /usr/local/bin/ediff-merge-script $LOCAL $REMOTE $MERGED $BASE
 	trustExitCode = true
-[url "https://github.com/"]
-	insteadOf = git@github.com:
-[url "https://gitlab.com/"]
-	insteadOf = git@gitlab.com:
