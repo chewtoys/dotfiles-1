@@ -28,4 +28,4 @@ export MANPAGER="less -X"
 
 export WEBSITE=~/Projects/juev.org/_posts
 
-export LEDGER_FILE=~/Projects/Github/hledger/current.journal
+export LEDGER_FILE=~/Projects/Github/hledger/main.journal
