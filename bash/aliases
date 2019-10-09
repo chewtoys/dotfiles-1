@@ -79,8 +79,6 @@ alias o='popd'
 alias less="bat -p"
 alias cat="bat -p"
 
-alias vim="nvim"
-
 function g {
    if [ -z "$1" ]; then
      git status
