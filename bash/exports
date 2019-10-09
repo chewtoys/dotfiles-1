@@ -2,10 +2,10 @@
 
 # Make vim to the default editor
 export ALTERNATE_EDITOR=""
-export EDITOR="emacsclient -nc" # $EDITOR opens in terminal
+export EDITOR="vim" # $EDITOR opens in terminal
 # export VISUAL="emacsclient -nc -a emacs"         # $VISUAL opens in GUI mode
 
-export TERMINAL="urxvt"
+export TERMINAL="xterm"
 
 export PROMPT_COMMAND='history -a'
 
@@ -20,21 +20,12 @@ export HISTIGNORE="ls:cd -:pwd:exit:date"
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 
-# Highlight section titles in manual pages
-export LESS_TERMCAP_md="${yellow}"
-
 # Don’t clear the screen after quitting a manual page
 export MANPAGER="less -X"
 
 # Always enable colored `grep` output
 # export GREP_OPTIONS="--color=auto";
 
-export DBUS_SESSION_BUS_ADDRESS=unix:path=/var/run/user/$(id -u)/bus
-
-export GTK_IM_MODULE=ibus
-export QT_IM_MODULE=ibus
-export XMODIFIERS="@im=ibus"
-
-export GOPROXY=https://proxy.golang.org
-
 export WEBSITE=~/Projects/juev.org/_posts
+
+export LEDGER_FILE=~/Projects/Github/hledger/current.journal

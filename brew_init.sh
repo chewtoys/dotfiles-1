@@ -6,7 +6,7 @@ if ! brew ls --versions bash > /dev/null; then
 fi
 
 echo "Installing sofware"
-brew install autojump bash bash-completion@2 bat coreutils fortune git go hunspell pandoc rbenv roswell pyenv ripgrep rlwrap rustup-init the_silver_searcher tmux tree upx wget xz nvim findutils
+brew install autojump bash bash-completion@2 bat coreutils fortune git go hunspell pandoc rbenv roswell pyenv ripgrep rlwrap rustup-init the_silver_searcher tmux tree upx wget xz findutils hledger
 
 echo "Installing go tools..."
 if ! type "goimports" > /dev/null; then
