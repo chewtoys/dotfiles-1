@@ -1,0 +1,9 @@
+[time]
+disabled = false
+format = "[ %T ] "
+
+[directory]
+truncate_to_repo = false
+
+[cmd_duration]
+disabled = true

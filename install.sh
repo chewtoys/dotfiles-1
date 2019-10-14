@@ -13,3 +13,4 @@ ln -sf $(pwd)/aliases $HOME/.aliases
 ln -sf $(pwd)/bash $HOME/.bash
 ln -sf $(pwd)/bashrc $HOME/.bashrc
 ln -sf $(pwd)/bash_profile $HOME/.bash_profile
+ln -sf $(pwd)/config/starship.toml $HOME/.config/starship.toml
