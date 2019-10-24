@@ -12,6 +12,10 @@ eval "$(rbenv init -)"
 eval "$(pyenv init -)"
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+# Remap CTRL-T to CTRL-X CTRL-T
+bind "$(bind -s | grep __fzf_select | sed 's/\\C-t/\\C-x\\C-t/')"
+bind '"\C-t": transpose-chars'
+
 [ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
 
 export BASH_COMPLETION_COMPAT_DIR="/usr/local/etc/bash_completion.d"
