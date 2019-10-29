@@ -85,7 +85,7 @@ case $OSTYPE in
 esac
 
 # Load the shell dotfiles, and then some:
-for file in ~/.bash/{sensible.bash,bash_prompt,aliases,functions,path,exports,services,hstr}; do
+for file in ~/.bash/{sensible.bash,bash_prompt,aliases,functions,path,exports,services}; do
 	[[ -r "$file" ]] && [[ -f "$file" ]] && source "$file"
 done
 unset file
