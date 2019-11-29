@@ -92,7 +92,7 @@
 [credential]
 	helper = osxkeychain
 [pull]
-	rebase = true
+	rebase = merges
 [branch]
 	autosetuprebase = always
 [mergetool]
