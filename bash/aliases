@@ -95,3 +95,5 @@ alias gs='git s'
 alias gu='git pull'
 alias gd='git d'
 alias gpf='git p -f'
+
+alias v='nvim'
