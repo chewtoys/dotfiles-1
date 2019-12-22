@@ -11,18 +11,6 @@ export NVM_DIR="$HOME/.nvm"
 eval "$(rbenv init -)"
 eval "$(pyenv init -)"
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-# Remap CTRL-T to CTRL-X CTRL-T
-bind "$(bind -s | grep __fzf_select | sed 's/\\C-t/\\C-x\\C-t/')"
-bind '"\C-t": transpose-chars'
-
-export FZF_DEFAULT_COMMAND='fd --type f --follow'
-export FZF_DEFAULT_OPTS="--layout=reverse --inline-info"
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND="fd --type d --follow"
-
-bind -x '"\C-p": vim $(fzf);'
-
 [ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
 
 export BASH_COMPLETION_COMPAT_DIR="/usr/local/etc/bash_completion.d"
