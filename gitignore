@@ -28,4 +28,5 @@ Session.vim
 .vscode
 .envrc
 .python-version
-
+.idea
+*.iml
