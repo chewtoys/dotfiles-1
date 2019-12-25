@@ -95,6 +95,7 @@ alias gs='git s'
 alias gu='git pull'
 alias gd='git d'
 alias gpf='git p -f'
+alias grh='git reset --hard'
 
 alias v='nvim'
 alias vim='/usr/local/bin/nvim'
