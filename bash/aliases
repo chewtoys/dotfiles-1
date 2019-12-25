@@ -97,3 +97,4 @@ alias gd='git d'
 alias gpf='git p -f'
 
 alias v='nvim'
+alias vim='/usr/local/bin/nvim'

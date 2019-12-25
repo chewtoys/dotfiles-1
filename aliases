@@ -130,3 +130,6 @@ alias less="bat -p"
 alias cat="bat -p"
 
 alias please="sudo"
+
+alias v='/usr/local/bin/nvim'
+alias vim='/usr/local/bin/nvim'
