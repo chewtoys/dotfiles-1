@@ -13,6 +13,16 @@ eval "$(pyenv init -)"
 
 [ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
 
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+# Remap CTRL-T to CTRL-X CTRL-T
+bind "$(bind -s | grep __fzf_select | sed 's/\\C-t/\\C-x\\C-t/')"
+bind '"\C-t": transpose-chars'
+
+export FZF_DEFAULT_COMMAND='fd --type f --follow'
+export FZF_DEFAULT_OPTS="--layout=reverse --inline-info"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND="fd --type d --follow"
+
 export BASH_COMPLETION_COMPAT_DIR="/usr/local/etc/bash_completion.d"
 [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
 
