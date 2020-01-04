@@ -61,6 +61,9 @@ command -v sha1sum > /dev/null || alias sha1sum="shasum"
 # URL-encode strings
 alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
 
+# Run webserver in current directory
+alias web='python -m http.server 8000'
+
 # Intuitive map function
 # For example, to list all directories that contain a certain file:
 # find . -name .gitattributes | map dirname
