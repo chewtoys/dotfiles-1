@@ -6,62 +6,42 @@ if ! brew ls --versions bash > /dev/null; then
 fi
 
 echo "Installing sofware"
-brew install autojump
-brew install bash
-brew install bash-completion@2
-brew install bat
-brew install coreutils
-brew install clang-format
-brew install fortune
-brew install git
-brew install go
-brew install hunspell
-brew install pandoc
-brew install rbenv
-brew install roswell
-brew install pyenv
-brew install ripgrep
-brew install rlwrap
-brew install rustup-init
-brew install the_silver_searcher
-brew install tmux
-brew install tree
-brew install upx
-brew install wget
-brew install xz
-brew install findutils
-brew install hledger
-brew install ledger
-brew install starship
-brew install fd
-brew install vale
-brew install llvm
+if ! type "autojump" > /dev/null; then brew install autojump; fi
+if test ! -f "/usr/local/bin/bash" > /dev/null; then brew install bash; fi
+if test ! -d "/usr/local/Cellar/bash-completion@2/" > /dev/null; then brew install bash-completion@2; fi
+if ! type "bat" > /dev/null; then brew install bat; fi
+if test ! -d "/usr/local/Cellar/coreutils/" > /dev/null; then brew install coreutils; fi
+if ! type "clang-format" > /dev/null; then brew install clang-format; fi
+if ! type "fortune" > /dev/null; then brew install fortune; fi
+if test ! -d "/usr/local/Cellar/git/" > /dev/null; then brew install git; fi
+if ! type "fortune" > /dev/null; then brew install go; fi
+if ! type "hunspell" > /dev/null; then brew install hunspell; fi
+if ! type "pandoc" > /dev/null; then brew install pandoc; fi
+if ! type "rbenv" > /dev/null; then brew install rbenv; fi
+if ! type "ros" > /dev/null; then brew install roswell; fi
+if ! type "pyenv" > /dev/null; then brew install pyenv; fi
+if ! type "rg" > /dev/null; then brew install ripgrep; fi
+if ! type "rlwrap" > /dev/null; then brew install rlwrap; fi
+if ! type "rustup" > /dev/null; then brew install rustup-init; fi
+if ! type "ag" > /dev/null; then brew install the_silver_searcher; fi
+if ! type "tmux" > /dev/null; then brew install tmux; fi
+if ! type "tree" > /dev/null; then brew install tree; fi
+if ! type "upx" > /dev/null; then brew install upx; fi
+if ! type "wget" > /dev/null; then brew install wget; fi
+if ! type "xz" > /dev/null; then brew install xz; fi
+if test ! -d "/usr/local/Cellar/findutils/" > /dev/null; then brew install findutils; fi
+if ! type "hledger" > /dev/null; then brew install hledger; fi
+if ! type "ledger" > /dev/null; then brew install ledger; fi
+if ! type "starship" > /dev/null; then brew install starship; fi
+if ! type "fd" > /dev/null; then brew install fd; fi
+if ! type "vale" > /dev/null; then brew install vale; fi
+if ! type "ccls" > /dev/null; then brew install ccls; fi
 
 if ! type "goimports" > /dev/null; then
     echo "Installing go tools..."
     go get -u golang.org/x/tools/...
 fi
 
-go get -u github.com/klauspost/asmfmt/cmd/asmfmt
-go get -u github.com/go-delve/delve/cmd/dlv
-go get -u github.com/kisielk/errcheck
-go get -u github.com/davidrjenni/reftools/cmd/fillstruct
-go get -u github.com/mdempsky/gocode
-go get -u github.com/stamblerre/gocode
-go get -u github.com/rogpeppe/godef
-go get -u github.com/zmb3/gogetdoc
-go get -u golang.org/x/tools/cmd/goimports
-go get -u golang.org/x/lint/golint
-go get -u golang.org/x/tools/gopls
-go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
-go get -u github.com/fatih/gomodifytags
-go get -u golang.org/x/tools/cmd/gorename
-go get -u github.com/jstemmer/gotags
-go get -u golang.org/x/tools/cmd/guru
-go get -u github.com/josharian/impl
-go get -u honnef.co/go/tools/cmd/keyify
-go get -u github.com/fatih/motion
-go get -u github.com/koron/iferr
-
 echo "Installing rls"
 rustup component add rls rust-analysis rust-src
+
