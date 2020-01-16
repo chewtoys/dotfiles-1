@@ -67,6 +67,7 @@ if test ! -d "/usr/local/Caskroom/karabiner-elements/" > /dev/null; then brew ca
 if test ! -d "/usr/local/Caskroom/marked/" > /dev/null; then brew cask install marked; fi
 if test ! -d "/usr/local/Caskroom/postman/" > /dev/null; then brew cask install postman; fi
 if test ! -d "/usr/local/Caskroom/the-unarchiver/" > /dev/null; then brew cask install the-unarchiver; fi
+if test ! -d "/usr/local/Caskroom/arq/" > /dev/null; then brew cask install arq; fi
 
 if ! type "goimports" > /dev/null; then
     echo "Installing go tools..."
