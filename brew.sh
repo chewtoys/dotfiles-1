@@ -68,6 +68,7 @@ if test ! -d "/usr/local/Caskroom/marked/" > /dev/null; then brew cask install m
 if test ! -d "/usr/local/Caskroom/postman/" > /dev/null; then brew cask install postman; fi
 if test ! -d "/usr/local/Caskroom/the-unarchiver/" > /dev/null; then brew cask install the-unarchiver; fi
 if test ! -d "/usr/local/Caskroom/arq/" > /dev/null; then brew cask install arq; fi
+if test ! -d "/usr/local/Caskroom/telegram-desktop/" > /dev/null; then brew cask install telegram-desktop; fi
 
 if ! type "goimports" > /dev/null; then
     echo "Installing go tools..."
