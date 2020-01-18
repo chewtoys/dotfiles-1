@@ -38,6 +38,7 @@ if test ! -d "/usr/local/Cellar/vale/" > /dev/null; then brew install vale; fi
 if test ! -d "/usr/local/Cellar/ccls/" > /dev/null; then brew install ccls; fi
 if test ! -d "/usr/local/Cellar/httpie/" > /dev/null; then brew install httpie; fi
 if test ! -d "/usr/local/Cellar/neovim/" > /dev/null; then brew install neovim; fi
+if test ! -d "/usr/local/Cellar/protobuf/" > /dev/null; then brew install protobuf; fi
 
 # Casks
 if test ! -d "/usr/local/Caskroom/" > /dev/null; then brew tap caskroom/cask; fi
