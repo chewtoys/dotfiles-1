@@ -99,3 +99,5 @@ unset file
 fortune -a -s
 
 __git_complete g __git_main
+
+source ~/Library/Preferences/org.dystroy.broot/launcher/bash/br
