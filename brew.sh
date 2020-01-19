@@ -70,6 +70,7 @@ if test ! -d "/usr/local/Caskroom/postman/" > /dev/null; then brew cask install 
 if test ! -d "/usr/local/Caskroom/the-unarchiver/" > /dev/null; then brew cask install the-unarchiver; fi
 if test ! -d "/usr/local/Caskroom/arq/" > /dev/null; then brew cask install arq; fi
 if test ! -d "/usr/local/Caskroom/telegram-desktop/" > /dev/null; then brew cask install telegram-desktop; fi
+if test ! -d "/usr/local/Caskroom/font-jetbrains-mono/" > /dev/null; then brew cask install homebrew/cask-fonts/font-jetbrains-mono; fi
 
 if ! type "goimports" > /dev/null; then
     echo "Installing go tools..."
