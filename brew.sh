@@ -17,12 +17,9 @@ if test ! -d "/usr/local/Cellar/git/" > /dev/null; then brew install git; fi
 if test ! -d "/usr/local/Cellar/go/" > /dev/null; then brew install go; fi
 if test ! -d "/usr/local/Cellar/hunspell/" > /dev/null; then brew install hunspell; fi
 if test ! -d "/usr/local/Cellar/pandoc/" > /dev/null; then brew install pandoc; fi
-if test ! -d "/usr/local/Cellar/rbenv/" > /dev/null; then brew install rbenv; fi
-if test ! -d "/usr/local/Cellar/roswell/" > /dev/null; then brew install roswell; fi
 if test ! -d "/usr/local/Cellar/pyenv/" > /dev/null; then brew install pyenv; fi
 if test ! -d "/usr/local/Cellar/ripgrep/" > /dev/null; then brew install ripgrep; fi
 if test ! -d "/usr/local/Cellar/rlwrap/" > /dev/null; then brew install rlwrap; fi
-if test ! -d "/usr/local/Cellar/rustup-init/" > /dev/null; then brew install rustup-init; fi
 if test ! -d "/usr/local/Cellar/the_silver_searcher/" > /dev/null; then brew install the_silver_searcher; fi
 if test ! -d "/usr/local/Cellar/tmux/" > /dev/null; then brew install tmux; fi
 if test ! -d "/usr/local/Cellar/tree/" > /dev/null; then brew install tree; fi
@@ -35,7 +32,6 @@ if test ! -d "/usr/local/Cellar/ledger/" > /dev/null; then brew install ledger; 
 if test ! -d "/usr/local/Cellar/starship/" > /dev/null; then brew install starship; fi
 if test ! -d "/usr/local/Cellar/fd/" > /dev/null; then brew install fd; fi
 if test ! -d "/usr/local/Cellar/vale/" > /dev/null; then brew install vale; fi
-if test ! -d "/usr/local/Cellar/ccls/" > /dev/null; then brew install ccls; fi
 if test ! -d "/usr/local/Cellar/httpie/" > /dev/null; then brew install httpie; fi
 if test ! -d "/usr/local/Cellar/neovim/" > /dev/null; then brew install neovim; fi
 if test ! -d "/usr/local/Cellar/protobuf/" > /dev/null; then brew install protobuf; fi
@@ -75,9 +71,4 @@ if test ! -d "/usr/local/Caskroom/font-jetbrains-mono/" > /dev/null; then brew c
 if ! type "goimports" > /dev/null; then
     echo "Installing go tools..."
     go get -u golang.org/x/tools/...
-fi
-
-if ! type "rls" > /dev/null; then
-    echo "Installing rls"
-    rustup component add rls rust-analysis rust-src
 fi
