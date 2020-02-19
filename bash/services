@@ -8,7 +8,6 @@ export NVM_DIR="$HOME/.nvm"
 # added by travis gem
 [ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
 
-eval "$(rbenv init -)"
 eval "$(pyenv init -)"
 
 [ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
