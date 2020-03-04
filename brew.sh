@@ -38,36 +38,38 @@ if test ! -d "/usr/local/Cellar/protobuf/" >/dev/null; then brew install protobu
 if test ! -d "/usr/local/Cellar/rustup-init/" >/dev/null; then brew install rustup-init; fi
 
 # Casks
-if test ! -d "/usr/local/Caskroom/" >/dev/null; then brew tap caskroom/cask; fi
-if test ! -d "/usr/local/Caskroom/joplin/" >/dev/null; then brew cask install joplin; fi
-if test ! -d "/usr/local/Caskroom/alfred/" >/dev/null; then brew cask install alfred; fi
-if test ! -d "/usr/local/Caskroom/firefox/" >/dev/null; then brew cask install firefox; fi
-if test ! -d "/usr/local/Caskroom/google-chrome/" >/dev/null; then brew cask install google-chrome; fi
-if test ! -d "/usr/local/Caskroom/font-source-code-pro/" >/dev/null; then brew cask install font-source-code-pro; fi
-if test ! -d "/usr/local/Caskroom/emacs/" >/dev/null; then brew cask install emacs; fi
-if test ! -d "/usr/local/Caskroom/java8/" >/dev/null; then brew cask install java8; fi
-if test ! -d "/usr/local/Caskroom/mactex-no-gui/" >/dev/null; then brew cask install mactex-no-gui; fi
-if test ! -d "/usr/local/Caskroom/macvim/" >/dev/null; then brew cask install macvim; fi
-if test ! -d "/usr/local/Caskroom/podman/" >/dev/null; then brew cask install podman; fi
-if test ! -d "/usr/local/Caskroom/visual-studio-code/" >/dev/null; then brew cask install visual-studio-code; fi
-if test ! -d "/usr/local/Caskroom/bettertouchtool/" >/dev/null; then brew cask install bettertouchtool; fi
-if test ! -d "/usr/local/Caskroom/appcleaner/" >/dev/null; then brew cask install appcleaner; fi
-if test ! -d "/usr/local/Caskroom/sublime-text/" >/dev/null; then brew cask install sublime-text; fi
-if test ! -d "/usr/local/Caskroom/sublime-merge/" >/dev/null; then brew cask install sublime-merge; fi
-if test ! -d "/usr/local/Caskroom/imageoptim/" >/dev/null; then brew cask install imageoptim; fi
-if test ! -d "/usr/local/Caskroom/anki/" >/dev/null; then brew cask install anki; fi
-if test ! -d "/usr/local/Caskroom/dropbox/" >/dev/null; then brew cask install dropbox; fi
-if test ! -d "/usr/local/Caskroom/bartender/" >/dev/null; then brew cask install bartender; fi
-if test ! -d "/usr/local/Caskroom/bitwarden/" >/dev/null; then brew cask install bitwarden; fi
-if test ! -d "/usr/local/Caskroom/1password/" >/dev/null; then brew cask install 1password; fi
-if test ! -d "/usr/local/Caskroom/iterm2/" >/dev/null; then brew cask install iterm2; fi
-if test ! -d "/usr/local/Caskroom/karabiner-elements/" >/dev/null; then brew cask install karabiner-elements; fi
-if test ! -d "/usr/local/Caskroom/marked/" >/dev/null; then brew cask install marked; fi
-if test ! -d "/usr/local/Caskroom/postman/" >/dev/null; then brew cask install postman; fi
-if test ! -d "/usr/local/Caskroom/the-unarchiver/" >/dev/null; then brew cask install the-unarchiver; fi
-if test ! -d "/usr/local/Caskroom/arq/" >/dev/null; then brew cask install arq; fi
-if test ! -d "/usr/local/Caskroom/telegram-desktop/" >/dev/null; then brew cask install telegram-desktop; fi
-if test ! -d "/usr/local/Caskroom/font-jetbrains-mono/" >/dev/null; then brew cask install homebrew/cask-fonts/font-jetbrains-mono; fi
+if test ! -d "/usr/local/Caskroom/" > /dev/null; then brew tap caskroom/cask; fi
+if test ! -d "/usr/local/Caskroom/joplin/" > /dev/null; then brew cask install joplin; fi
+if test ! -d "/usr/local/Caskroom/alfred/" > /dev/null; then brew cask install alfred; fi
+if test ! -d "/usr/local/Caskroom/firefox/" > /dev/null; then brew cask install firefox; fi
+if test ! -d "/usr/local/Caskroom/google-chrome/" > /dev/null; then brew cask install google-chrome; fi
+if test ! -d "/usr/local/Caskroom/font-source-code-pro/" > /dev/null; then brew cask install font-source-code-pro; fi
+if test ! -d "/usr/local/Caskroom/emacs/" > /dev/null; then brew cask install emacs; fi
+if test ! -d "/usr/local/Caskroom/java8/" > /dev/null; then brew cask install java8; fi
+if test ! -d "/usr/local/Caskroom/mactex-no-gui/" > /dev/null; then brew cask install mactex-no-gui; fi
+if test ! -d "/usr/local/Caskroom/macvim/" > /dev/null; then brew cask install macvim; fi
+if test ! -d "/usr/local/Caskroom/podman/" > /dev/null; then brew cask install podman; fi
+if test ! -d "/usr/local/Caskroom/visual-studio-code/" > /dev/null; then brew cask install visual-studio-code; fi
+if test ! -d "/usr/local/Caskroom/bettertouchtool/" > /dev/null; then brew cask install bettertouchtool; fi
+if test ! -d "/usr/local/Caskroom/appcleaner/" > /dev/null; then brew cask install appcleaner; fi
+if test ! -d "/usr/local/Caskroom/sublime-text/" > /dev/null; then brew cask install sublime-text; fi
+if test ! -d "/usr/local/Caskroom/sublime-merge/" > /dev/null; then brew cask install sublime-merge; fi
+if test ! -d "/usr/local/Caskroom/imageoptim/" > /dev/null; then brew cask install imageoptim; fi
+if test ! -d "/usr/local/Caskroom/anki/" > /dev/null; then brew cask install anki; fi
+if test ! -d "/usr/local/Caskroom/dropbox/" > /dev/null; then brew cask install dropbox; fi
+if test ! -d "/usr/local/Caskroom/bartender/" > /dev/null; then brew cask install bartender; fi
+if test ! -d "/usr/local/Caskroom/bitwarden/" > /dev/null; then brew cask install bitwarden; fi
+if test ! -d "/usr/local/Caskroom/1password/" > /dev/null; then brew cask install 1password; fi
+if test ! -d "/usr/local/Caskroom/iterm2/" > /dev/null; then brew cask install iterm2; fi
+if test ! -d "/usr/local/Caskroom/karabiner-elements/" > /dev/null; then brew cask install karabiner-elements; fi
+if test ! -d "/usr/local/Caskroom/marked/" > /dev/null; then brew cask install marked; fi
+if test ! -d "/usr/local/Caskroom/postman/" > /dev/null; then brew cask install postman; fi
+if test ! -d "/usr/local/Caskroom/the-unarchiver/" > /dev/null; then brew cask install the-unarchiver; fi
+if test ! -d "/usr/local/Caskroom/arq/" > /dev/null; then brew cask install arq; fi
+if test ! -d "/usr/local/Caskroom/telegram-desktop/" > /dev/null; then brew cask install telegram-desktop; fi
+if test ! -d "/usr/local/Caskroom/font-jetbrains-mono/" > /dev/null; then brew cask install homebrew/cask-fonts/font-jetbrains-mono; fi
+if test ! -d "/usr/local/Caskroom/font-cascadia-pl/" > /dev/null; then brew cask install homebrew/cask-fonts/font-cascadia-pl ; fi
+if test ! -d "/usr/local/Caskroom/font-cascadia-mono-pl/" > /dev/null; then brew cask install homebrew/cask-fonts/font-cascadia-mono-pl ; fi
 
 if ! type "goimports" >/dev/null; then
     echo "Installing go tools..."
