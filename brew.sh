@@ -36,6 +36,7 @@ if test ! -d "/usr/local/Cellar/httpie/" >/dev/null; then brew install httpie; f
 if test ! -d "/usr/local/Cellar/neovim/" >/dev/null; then brew install neovim; fi
 if test ! -d "/usr/local/Cellar/protobuf/" >/dev/null; then brew install protobuf; fi
 if test ! -d "/usr/local/Cellar/rustup-init/" >/dev/null; then brew install rustup-init; fi
+if test ! -d "/usr/local/Cellar/sk/" >/dev/null; then brew install sk; fi
 
 # Casks
 if test ! -d "/usr/local/Caskroom/" > /dev/null; then brew tap caskroom/cask; fi
