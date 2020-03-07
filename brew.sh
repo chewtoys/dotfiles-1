@@ -11,7 +11,6 @@ if test ! -d "/usr/local/Cellar/bash/" >/dev/null; then brew install bash; fi
 if test ! -d "/usr/local/Cellar/bash-completion@2/" >/dev/null; then brew install bash-completion@2; fi
 if test ! -d "/usr/local/Cellar/bat/" >/dev/null; then brew install bat; fi
 if test ! -d "/usr/local/Cellar/coreutils/" >/dev/null; then brew install coreutils; fi
-if test ! -d "/usr/local/Cellar/clang-format/" >/dev/null; then brew install clang-format; fi
 if test ! -d "/usr/local/Cellar/fortune/" >/dev/null; then brew install fortune; fi
 if test ! -d "/usr/local/Cellar/git/" >/dev/null; then brew install git; fi
 if test ! -d "/usr/local/Cellar/go/" >/dev/null; then brew install go; fi
@@ -31,7 +30,6 @@ if test ! -d "/usr/local/Cellar/hledger/" >/dev/null; then brew install hledger;
 if test ! -d "/usr/local/Cellar/ledger/" >/dev/null; then brew install ledger; fi
 if test ! -d "/usr/local/Cellar/starship/" >/dev/null; then brew install starship; fi
 if test ! -d "/usr/local/Cellar/fd/" >/dev/null; then brew install fd; fi
-if test ! -d "/usr/local/Cellar/vale/" >/dev/null; then brew install vale; fi
 if test ! -d "/usr/local/Cellar/httpie/" >/dev/null; then brew install httpie; fi
 if test ! -d "/usr/local/Cellar/neovim/" >/dev/null; then brew install neovim; fi
 if test ! -d "/usr/local/Cellar/protobuf/" >/dev/null; then brew install protobuf; fi
@@ -71,6 +69,7 @@ if test ! -d "/usr/local/Caskroom/telegram-desktop/" > /dev/null; then brew cask
 if test ! -d "/usr/local/Caskroom/font-jetbrains-mono/" > /dev/null; then brew cask install homebrew/cask-fonts/font-jetbrains-mono; fi
 if test ! -d "/usr/local/Caskroom/font-cascadia-pl/" > /dev/null; then brew cask install homebrew/cask-fonts/font-cascadia-pl ; fi
 if test ! -d "/usr/local/Caskroom/font-cascadia-mono-pl/" > /dev/null; then brew cask install homebrew/cask-fonts/font-cascadia-mono-pl ; fi
+if test ! -d "/usr/local/Caskroom/proxyman/" > /dev/null; then brew cask install proxyman ; fi
 
 if ! type "goimports" >/dev/null; then
     echo "Installing go tools..."
