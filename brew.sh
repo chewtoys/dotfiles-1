@@ -85,7 +85,3 @@ if ! type "clippy" >/dev/null; then
     echo "Installing clippy"
     rustup component add clippy
 fi
-
-if ! command -v zoxide >/dev/null 2>&1; then
-    cargo install zoxide -f
-fi
