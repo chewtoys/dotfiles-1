@@ -103,3 +103,5 @@
 [mergetool "ediff"]
 	cmd = /usr/local/bin/ediff-merge-script $LOCAL $REMOTE $MERGED $BASE
 	trustExitCode = true
+[remote "origin"]
+	prune = true
