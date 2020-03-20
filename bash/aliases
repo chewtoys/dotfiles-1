@@ -102,3 +102,5 @@ alias grh='git reset --hard'
 
 alias v='nvim'
 alias vim='/usr/local/bin/nvim'
+
+alias gprune="git branch -vv | grep ': gone]'|  grep -v '*' | awk '{ print $1; }' | xargs -r git branch -d"
