@@ -136,9 +136,15 @@ cask "telegram-desktop"
 cask "the-unarchiver"
 cask "virtualbox"
 cask "visual-studio-code"
+mas "1Blocker", id: 1107421413
+mas "Bear", id: 1091189122
+mas "Day One", id: 1055511498
 mas "Microsoft To Do", id: 1274495053
 mas "Pixelmator", id: 407963104
 mas "Pocket", id: 568494494
+mas "Raindrop.io for Safari", id: 957810159
+mas "SafariMarkdownLinker", id: 1289119450
+mas "Save to Pocket", id: 1477385213
 mas "Slack", id: 803453959
 mas "Things", id: 904280696
 mas "Tweetbot", id: 557168941
