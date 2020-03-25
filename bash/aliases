@@ -53,10 +53,10 @@ alias sudo='sudo '
 alias week='date +%V'
 
 # OS X has no `md5sum`, so use `md5` as a fallback
-command -v md5sum > /dev/null || alias md5sum="md5"
+command -v md5sum >/dev/null || alias md5sum="md5"
 
 # OS X has no `sha1sum`, so use `shasum` as a fallback
-command -v sha1sum > /dev/null || alias sha1sum="shasum"
+command -v sha1sum >/dev/null || alias sha1sum="shasum"
 
 # URL-encode strings
 alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
@@ -82,12 +82,12 @@ alias o='popd'
 alias less="bat -p"
 alias cat="bat -p"
 
-function g {
-   if [ -z "$1" ]; then
-     git status
-   else
-     git "$@"
-   fi
+function g() {
+  if [ -z "$1" ]; then
+    git status
+  else
+    git "$@"
+  fi
 }
 
 alias gp='git p'
@@ -99,8 +99,5 @@ alias gu='git pull'
 alias gd='git d'
 alias gpf='git p -f'
 alias grh='git reset --hard'
-
-alias v='nvim'
-alias vim='/usr/local/bin/nvim'
 
 alias gprune="git branch -vv | grep ': gone]'|  grep -v '*' | awk '{ print $1; }' | xargs -r git branch -d"
