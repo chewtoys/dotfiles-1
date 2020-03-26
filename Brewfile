@@ -66,10 +66,10 @@ brew "libressl"
 brew "mas"
 # Java-based project management
 brew "maven"
+# Sign files & verify signatures. Works with signify in OpenBSD
+brew "minisign"
 # Remote terminal application
 brew "mosh"
-# Ambitious Vim-fork focused on extensibility and agility
-brew "neovim"
 # 7-Zip (high compression file archiver) implementation
 brew "p7zip"
 # Swiss-army knife of markup format conversion
